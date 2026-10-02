@@ -94,14 +94,14 @@ public class AccountController : ControllerBase
         if (string.IsNullOrEmpty(account.PasswordHash) ||
             !_passwordService.VerifyPassword(request.CurrentPassword, account.PasswordHash))
         {
-            return BadRequest(new { message = "Current password is incorrect." });
+            return BadRequest(new { message = "Het huidige wachtwoord is onjuist." });
         }
 
         if (!_passwordService.IsValidPassword(request.NewPassword))
         {
             return BadRequest(new
             {
-                message = "New password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a digit."
+                message = "Het nieuwe wachtwoord moet minstens 8 tekens lang zijn en een hoofdletter, een kleine letter en een cijfer bevatten."
             });
         }
 

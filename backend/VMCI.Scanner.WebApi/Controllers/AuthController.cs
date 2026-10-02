@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
             string.IsNullOrEmpty(account.PasswordHash) ||
             !_passwordService.VerifyPassword(request.Password, account.PasswordHash))
         {
-            return Unauthorized(new { message = "Invalid email or password." });
+            return Unauthorized(new { message = "Ongeldig e-mailadres of wachtwoord." });
         }
 
         // Admin-ness is AccountRole.Code == "ADMIN" (seeded rows: ADMIN/Beheerder, COWORKER/Medewerker).

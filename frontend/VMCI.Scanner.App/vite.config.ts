@@ -1,0 +1,58 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+import path from 'path'
+import fs from 'fs'
+
+// Local HTTPS dev certs (mkcert). These are NOT committed (see .gitignore, *.pem).
+// To enable HTTPS locally, generate them once with mkcert from this directory:
+//   mkcert -install
+//   mkcert -key-file localhost-key.pem -cert-file localhost.pem localhost
+// Until they exist, the dev server falls back to plain HTTP so `npm run dev`
+// and `npm run build` keep working out of the box on a fresh checkout.
+const keyPath = path.resolve(__dirname, 'localhost-key.pem')
+const certPath = path.resolve(__dirname, 'localhost.pem')
+const httpsConfig =
+  fs.existsSync(keyPath) && fs.existsSync(certPath)
+    ? { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) }
+    : undefined
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        navigateFallbackDenylist: [/^\/api\//],
+      },
+      manifest: {
+        name: 'VMCI Scanner',
+        short_name: 'Scanner',
+        description: "VMCI-app om foto's of afbeeldingen snel als pdf te delen",
+        theme_color: '#134560',
+        background_color: '#fdfdfd',
+        display: 'standalone',
+      },
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    https: httpsConfig,
+    port: 3300,
+    proxy: {
+      // Matches backend/VMCI.Scanner.WebApi/Properties/launchSettings.json's HTTPS
+      // applicationUrl (7300 - chosen to avoid clashing with other local backends
+      // on 7000 and 7100). Adjust here if that launch profile ever changes.
+      '/api': {
+        target: 'https://localhost:7300',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+})

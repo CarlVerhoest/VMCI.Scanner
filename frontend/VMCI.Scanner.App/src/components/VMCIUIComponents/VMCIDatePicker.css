@@ -1,0 +1,71 @@
+/*
+ * react-datepicker ships hardcoded light-mode colors with no CSS custom
+ * property hooks, so the popup calendar needs explicit dark-mode overrides
+ * to follow Scanner's theme (see src/styles/theme.css for the variables).
+ * The input itself is a plain Bootstrap `form-control` and already themes
+ * itself automatically.
+ */
+
+.react-datepicker,
+.react-datepicker__header,
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+  font-family: var(--scanner-font-family);
+}
+
+[data-bs-theme='dark'] .react-datepicker {
+  background-color: var(--scanner-surface);
+  color: var(--scanner-text);
+  border-color: var(--scanner-surface-border);
+}
+
+[data-bs-theme='dark'] .react-datepicker__header {
+  background-color: var(--scanner-bg);
+  border-bottom-color: var(--scanner-surface-border);
+}
+
+[data-bs-theme='dark'] .react-datepicker__current-month,
+[data-bs-theme='dark'] .react-datepicker__day-name,
+[data-bs-theme='dark'] .react-datepicker__day,
+[data-bs-theme='dark'] .react-datepicker-time__header {
+  color: var(--scanner-text);
+}
+
+[data-bs-theme='dark'] .react-datepicker__month-select,
+[data-bs-theme='dark'] .react-datepicker__year-select {
+  background-color: var(--scanner-surface);
+  color: var(--scanner-text);
+  border-color: var(--scanner-surface-border);
+}
+
+[data-bs-theme='dark'] .react-datepicker__day:hover {
+  background-color: var(--scanner-accent-soft);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--scanner-accent) !important;
+  color: #fff !important;
+}
+
+[data-bs-theme='dark'] .react-datepicker__day--outside-month {
+  color: var(--scanner-text-muted);
+}
+
+[data-bs-theme='dark'] .react-datepicker__day--disabled {
+  color: var(--scanner-surface-border);
+}
+
+[data-bs-theme='dark'] .react-datepicker__navigation-icon::before {
+  border-color: var(--scanner-text-muted);
+}
+
+[data-bs-theme='dark'] .react-datepicker__triangle {
+  fill: var(--scanner-surface) !important;
+  color: var(--scanner-surface) !important;
+  stroke: var(--scanner-surface-border) !important;
+}
+
+.react-datepicker__close-icon::after {
+  background-color: var(--scanner-accent);
+}
