@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API (VMCI.Scanner.WebApi)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-api",
+      "program": "${workspaceFolder}/backend/VMCI.Scanner.WebApi/bin/Debug/net10.0/VMCI.Scanner.WebApi.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/backend/VMCI.Scanner.WebApi",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://localhost:7300;http://localhost:5300"
+      }
+    },
+    {
+      "name": "Frontend (Vite dev server)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}/frontend/VMCI.Scanner.App",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "API + Frontend",
+      "configurations": ["API (VMCI.Scanner.WebApi)", "Frontend (Vite dev server)"]
+    }
+  ]
+}

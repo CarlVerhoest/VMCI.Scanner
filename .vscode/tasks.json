@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-api",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/backend/VMCI.Scanner.WebApi/VMCI.Scanner.WebApi.csproj"],
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    },
+    {
+      "label": "run-api",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/backend/VMCI.Scanner.WebApi",
+        "--launch-profile",
+        "Run Server Only"
+      ],
+      "problemMatcher": "$msCompile",
+      "isBackground": true
+    },
+    {
+      "label": "run-frontend",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/frontend/VMCI.Scanner.App"
+      },
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "test-backend",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["test", "${workspaceFolder}/backend/VMCI.Scanner.sln"],
+      "problemMatcher": "$msCompile",
+      "group": "test"
+    }
+  ]
+}

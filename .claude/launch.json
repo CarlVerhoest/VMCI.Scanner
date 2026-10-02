@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "scanner-api",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "backend/VMCI.Scanner.WebApi", "--launch-profile", "Run Server Only"],
+      "port": 7300,
+      "url": "https://localhost:7300"
+    },
+    {
+      "name": "scanner-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "frontend/VMCI.Scanner.App"],
+      "port": 3300
+    }
+  ]
+}

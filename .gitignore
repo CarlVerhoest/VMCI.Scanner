@@ -1,0 +1,53 @@
+# Operating System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.vscode/settings.json
+.idea/
+*.user
+
+# .NET build output
+bin/
+obj/
+artifacts/
+TestResults/
+
+# Node / Vite
+node_modules/
+dist/
+dev-dist/
+*.tsbuildinfo
+vite.config.d.ts
+
+# Built SPA copied into the API for publishing
+backend/VMCI.Scanner.WebApi/wwwroot/*
+!backend/VMCI.Scanner.WebApi/wwwroot/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env.local
+.env.*.local
+
+# Certificates (mkcert dev certs, service certificates)
+*.pfx
+*.pem
+
+# Secrets: keys GitHub would flag, certificates. The whole folder, so nothing in it slips through.
+# Not in git means it does not travel - every machine needs its own copy (docs/claude-multi-machine.md).
+backend/secrets/
+
+# Claude Code: per-machine state. .claude/settings.json, launch.json and memory/ ARE tracked.
+.claude/settings.local.json
+.claude/worktrees/
+
+# Real sample documents carry personal data and never enter the repository.
+# Deny-by-default with a narrow opt-in: only fabricated "Anonymized-*" files and the README are tracked,
+# so a new real document is ignored the moment it lands.
+docs/Sampledocs/*
+!docs/Sampledocs/README.md
+!docs/Sampledocs/Anonymized-*
