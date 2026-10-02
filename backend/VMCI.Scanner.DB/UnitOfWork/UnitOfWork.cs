@@ -19,11 +19,15 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
 
         Account = new AccountRepository(_context);
+        AccountRole = new AccountRoleRepository(_context);
         // Initialize additional entity-specific repositories here as they're built out.
     }
 
     /// <inheritdoc/>
     public IAccountRepository Account { get; }
+
+    /// <inheritdoc/>
+    public IAccountRoleRepository AccountRole { get; }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync()

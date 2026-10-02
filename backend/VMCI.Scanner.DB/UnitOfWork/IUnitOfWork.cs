@@ -12,6 +12,7 @@ namespace VMCI.Scanner.DB.UnitOfWork;
 public interface IUnitOfWork : IDisposable
 {
     IAccountRepository Account { get; }
+    IAccountRoleRepository AccountRole { get; }
     // Add one property per entity repository here as it's built out
 
     /// <summary>

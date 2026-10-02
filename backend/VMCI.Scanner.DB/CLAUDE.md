@@ -4,7 +4,7 @@ This document describes the exact data access pattern used in the VMCI.Scanner.D
 
 ## Current state
 
-Keep this section current. As of 02/10/2026: `Account` and `AccountRole` are scaffolded from `cverhoest_scanner` into `Models/`, with `Data/ScannerContext.cs` (EF Core 10.0.12); `AccountRepository` exists and is on `IUnitOfWork` as `Account`. Entity-specific repositories are added only as each entity's data access is actually needed (see the Quick Reference Checklist below). The examples in this document use a placeholder `Widget` entity — substitute a real, scaffolded entity name.
+Keep this section current. As of 02/10/2026: `Account` and `AccountRole` are scaffolded from `cverhoest_scanner` into `Models/`, with `Data/ScannerContext.cs` (EF Core 10.0.12); `AccountRepository` and `AccountRoleRepository` exist and are on `IUnitOfWork` as `Account` and `AccountRole` (the latter was added for `VMCI.Scanner.DevTools create-account`, which looks a role up by its `Code`). Entity-specific repositories are added only as each entity's data access is actually needed (see the Quick Reference Checklist below). The examples in this document use a placeholder `Widget` entity — substitute a real, scaffolded entity name.
 
 🚨 **Re-scaffolding overwrites the context constructor.** `--force` regenerates `Data/ScannerContext.cs` whole, so the `ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;` line in the constructor is lost on every re-scaffold and must be put back by hand (see "DbContext Configuration" below). With `--no-onconfiguring` the scaffolder emits no `OnConfiguring` method at all, which satisfies the "stays empty" rule — do not add one.
 
