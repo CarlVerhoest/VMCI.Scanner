@@ -9,11 +9,11 @@
   <ItemGroup>
     <ProjectReference Include="..\VMCI.Scanner.DB\VMCI.Scanner.DB.csproj" />
     <ProjectReference Include="..\VMCI.Scanner.Shared\VMCI.Scanner.Shared.csproj" />
+    <ProjectReference Include="..\VMCI.Scanner.Pdf\VMCI.Scanner.Pdf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

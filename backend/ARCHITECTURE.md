@@ -9,6 +9,7 @@ backend/
 ├── VMCI.Scanner.DB/              ← Data Access Layer (Entity Models, DbContext, Repositories)
 ├── VMCI.Scanner.WebApi/          ← API Layer (Controllers, Services, DTOs)
 ├── VMCI.Scanner.Shared/          ← Shared Code (Enums, Constants, etc.)
+├── VMCI.Scanner.Pdf/             ← Image PDF (PDFsharp) and OCR (Azure Document Intelligence)
 ├── VMCI.Scanner.DevTools/         ← Console app for one-off admin/dev tasks (create-account, ...)
 ├── VMCI.Scanner.Tests.Unit/      ← Unit Tests
 └── VMCI.Scanner.Tests.Integration/ ← Integration Tests
@@ -106,6 +107,26 @@ dotnet ef dbcontext scaffold ...  # THIS IS WRONG!
 ### Further projects
 
 An integration or engine gets its own project (`VMCI.Scanner.<Capability>`) with its own `CLAUDE.md`, is referenced by WebApi for DI registration, and is registered in `Program.cs` **only when its configuration is complete** (logging "skipped: not configured" otherwise). Add a section here for each one: purpose, contains, does NOT contain, referenced by.
+
+---
+
+### VMCI.Scanner.Pdf - PDFs from page images
+
+**Purpose:** turn page images into a PDF, searchable when OCR is configured
+
+**Contains:**
+- ✅ `ImagePdfBuilder` (PDFsharp; JPEG embedded without re-encoding; magic-byte format check)
+- ✅ `IOcrProvider` + `AzureDocumentIntelligenceOcrProvider` (model `prebuilt-read`, PDF output)
+- ✅ `SearchablePdfService` — OCR on top of the image PDF, never a condition for it
+
+**Does NOT contain:**
+- ❌ Database access, controllers, request validation
+- ❌ Email (a mail service gets its own project when chosen)
+
+**Referenced by:** VMCI.Scanner.WebApi. `SearchablePdfService` is always registered; the OCR provider
+only when `DocumentIntelligence:Endpoint` and `Key` are set.
+
+**See:** `backend/VMCI.Scanner.Pdf/CLAUDE.md`
 
 ---
 
@@ -275,7 +296,7 @@ When working on this codebase:
 
 ## Current state
 
-Keep this section current. At scaffold time: `ScannerContext` is scaffolded with `Account` and `AccountRole`, the repository/unit-of-work plumbing targets the concrete context, and login is the only feature.
+Keep this section current. As of 03/10/2026: `ScannerContext` has `Account`, `AccountRole` and `Recipient`. Login is a persistent cookie validated against `Account.SecurityStamp` on every request (`WebApi/Auth/`); administrators manage accounts in the application; `DocumentsController` builds PDFs through `VMCI.Scanner.Pdf`. Email has an interface (`IEmailSender`) but no implementation yet. See `docs/scan-app-plan.md` section 0.
 
 ## Questions?
 

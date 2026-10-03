@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../contexts/AuthContext'
 import { accountService } from '../services/accountService'
+import { passwordRuleError } from '../services/passwordRules'
 
 // Extracts a human-readable message from a failed API call. Handles the plain
 // `{ message: "..." }` bodies returned by AccountController's BadRequest/Unauthorized
@@ -26,7 +27,7 @@ function getErrorMessage(err: unknown, fallback: string): string {
 }
 
 function Account() {
-  const { updateUser } = useAuth()
+  const { updateUser, applySession } = useAuth()
 
   // Profile section state
   const [firstName, setFirstName] = useState('')
@@ -106,13 +107,20 @@ function Account() {
       return
     }
 
+    const ruleError = passwordRuleError(newPassword)
+    if (ruleError) {
+      setPasswordError(ruleError)
+      return
+    }
+
     setIsSavingPassword(true)
     try {
-      await accountService.changePassword(currentPassword, newPassword)
+      // Re-issues this device's cookie; every other device is signed out.
+      applySession(await accountService.changePassword(currentPassword, newPassword))
       setCurrentPassword('')
       setNewPassword('')
       setConfirmNewPassword('')
-      setPasswordSuccess('Wachtwoord gewijzigd.')
+      setPasswordSuccess('Wachtwoord gewijzigd. Op uw andere toestellen moet u opnieuw aanmelden.')
     } catch (err) {
       setPasswordError(getErrorMessage(err, 'Wijzigen van wachtwoord mislukt'))
     } finally {

@@ -8,6 +8,8 @@ import {
   faIdCard,
   faRightFromBracket,
   faBars,
+  faCamera,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../contexts/AuthContext'
 import { ROUTE_PATHS } from '../config/routes'
@@ -22,19 +24,19 @@ interface ResourceLink {
 }
 
 function AppHeader() {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, isReady, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    logout()
-    navigate(ROUTE_PATHS.HOME)
+  const handleLogout = async () => {
+    await logout()
+    navigate(ROUTE_PATHS.LOGIN)
   }
 
   // Primary resource links, shared between the inline (xl and up) navbar and the
   // hamburger dropdown shown on smaller screens so both stay in sync.
   const resourceLinks: ResourceLink[] = [
-    // One entry per top-level entity list, Dutch label, e.g.
-    // { to: ROUTE_PATHS.WIDGETS, icon: faBoxes, label: 'Widgets' },
+    { to: ROUTE_PATHS.HOME, icon: faCamera, label: 'Scannen' },
+    { to: ROUTE_PATHS.ADMIN_ACCOUNTS, icon: faUsers, label: 'Accounts', hidden: !user?.isAdmin },
   ]
 
   const visibleResourceLinks = resourceLinks.filter((item) => !item.hidden)
@@ -101,7 +103,7 @@ function AppHeader() {
                   Account
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={handleLogout}>
+                <NavDropdown.Item onClick={() => void handleLogout()}>
                   <FontAwesomeIcon
                     icon={faRightFromBracket}
                     className="me-2 text-body-secondary"
@@ -111,7 +113,9 @@ function AppHeader() {
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
-          ) : (
+          ) : isReady ? (
+            // Only once the startup session check has answered: a signed-in device must not
+            // flash "Aanmelden" on every page load.
             <button
               type="button"
               className="btn btn-outline-primary"
@@ -119,7 +123,7 @@ function AppHeader() {
             >
               Aanmelden
             </button>
-          )}
+          ) : null}
         </div>
       </Container>
     </Navbar>

@@ -20,6 +20,7 @@ public class UnitOfWork : IUnitOfWork
 
         Account = new AccountRepository(_context);
         AccountRole = new AccountRoleRepository(_context);
+        Recipient = new RecipientRepository(_context);
         // Initialize additional entity-specific repositories here as they're built out.
     }
 
@@ -28,6 +29,9 @@ public class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc/>
     public IAccountRoleRepository AccountRole { get; }
+
+    /// <inheritdoc/>
+    public IRecipientRepository Recipient { get; }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync()

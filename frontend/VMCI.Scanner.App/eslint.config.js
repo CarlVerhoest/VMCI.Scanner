@@ -21,5 +21,24 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
+  },
+  {
+    // The scanner module is lifted into another app unchanged: it may import only from its own
+    // folder, React and OpenCV. See src/scanner/README.md.
+    files: ['src/scanner/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^(?!\\./|react$|react/|@techstark/opencv-js$|vitest$)',
+              message:
+                'The scanner module imports only from its own folder, react and @techstark/opencv-js.',
+            },
+          ],
+        },
+      ],
+    },
   }
 )

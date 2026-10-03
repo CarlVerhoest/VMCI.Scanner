@@ -104,8 +104,14 @@ touching that project:
 
 - [backend/ARCHITECTURE.md](backend/ARCHITECTURE.md) — how the backend projects relate
 - [backend/VMCI.Scanner.DB/CLAUDE.md](backend/VMCI.Scanner.DB/CLAUDE.md) — database-first scaffolding, repository & unit-of-work pattern
-- [backend/VMCI.Scanner.WebApi/CLAUDE.md](backend/VMCI.Scanner.WebApi/CLAUDE.md) — controllers, DTOs, configuration & secrets
+- [backend/VMCI.Scanner.WebApi/CLAUDE.md](backend/VMCI.Scanner.WebApi/CLAUDE.md) — controllers, DTOs, configuration & secrets, cookie authentication
+- [backend/VMCI.Scanner.Pdf/CLAUDE.md](backend/VMCI.Scanner.Pdf/CLAUDE.md) — image PDF and OCR
 - [frontend/VMCI.Scanner.App/CLAUDE.md](frontend/VMCI.Scanner.App/CLAUDE.md) — VMCI components, forms, Dutch copy
 - [frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md](frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md)
+- [frontend/VMCI.Scanner.App/src/scanner/README.md](frontend/VMCI.Scanner.App/src/scanner/README.md) — the reusable scanner module and its isolation rules
+
+The build plan is [docs/scan-app-plan.md](docs/scan-app-plan.md). Its **section 0** records where the
+owner changed the plan (database instead of an accounts file, password login instead of magic
+codes, .NET 10, ...) and wins over the rest of that document.
 
 Add a line here for every new project that gets its own `CLAUDE.md`.

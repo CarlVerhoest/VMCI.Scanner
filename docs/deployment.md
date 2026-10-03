@@ -3,8 +3,11 @@
 The API serves the built frontend: one process, one origin. The frontend is built, copied into the
 API's `wwwroot/`, and the API is published with it.
 
-The hosting target has not been chosen yet. This document covers what is the same for any Windows
-server; add the hosting-specific steps here once it is decided.
+**Hosting: the same environment as the VMCI application** (decided 03/10/2026). That environment's
+details are not written down in this repository yet (the VMCI repository's own deployment guide
+leaves them open too); add the hosting-specific steps here once known. This document covers what is
+the same for any Windows server. HTTPS is mandatory: the camera, the `Secure` login cookie and PWA
+installation all need it.
 
 ## Build and publish
 
@@ -49,11 +52,21 @@ Run from the repository root, in PowerShell 7.
   <site>\
   ├── publish\      ← the published API (content root)
   └── secrets\
-      └── appsettings.secrets.json
+      ├── appsettings.secrets.json
+      └── data-protection-keys\   ← created by the API on first start
   ```
 
-  It must contain at least `Jwt:Key`; the API refuses to start without one. Use a key generated for
-  that server, not a development key. See `docs/security.md`.
+  The secrets file holds `DocumentIntelligence:Key` (without it PDFs are image-only). See
+  `docs/security.md`.
+- **A persistent, writable folder for the Data Protection keys**, which encrypt the login cookie.
+  By default `..\secrets\data-protection-keys\`; set `DataProtection:KeysPath` to put it elsewhere.
+  It must survive every deployment and restart — if it is lost or replaced, every user is signed out
+  on every device and has to sign in again. The application pool identity needs write access. Never
+  deploy by wiping the whole `<site>` folder.
+- **Request size**: a document of 20 pages is up to about 32 MB. Kestrel and IIS in-process are
+  configured from `Limits` in `appsettings.json`, but IIS also checks `web.config`'s
+  `requestLimits maxAllowedContentLength` (default 30,000,000 bytes); raise it to 33,554,432 if IIS
+  answers 404.13 to a large upload.
 - **The connection string**, `ConnectionStrings:DefaultConnection`. The committed `appsettings.json`
   leaves it empty on purpose. Supply it in the secrets file or as the environment variable
   `ConnectionStrings__DefaultConnection`. If it is missing the API still starts, logs a warning, and
@@ -80,4 +93,8 @@ Run from the repository root, in PowerShell 7.
 - `GET /api/info/version` answers 200 with the version.
 - The site root shows the login page, and a page refresh on a deep link (for example `/account`)
   still loads the application.
-- The startup log says `Secrets file ../secrets/appsettings.secrets.json loaded`.
+- The startup log says `Secrets file ../secrets/appsettings.secrets.json loaded`, names the Data
+  Protection keys folder, and says `Document Intelligence registered` (or `skipped`).
+- Restart the site once and check that a signed-in browser is still signed in: proof that the Data
+  Protection keys persist.
+- The OpenCV worker (`assets/cv.worker-*.js`, ~10 MB) is served; the scanner loads it on first use.

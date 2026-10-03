@@ -32,9 +32,10 @@ In this order:
 3. **Create the database.** Run the scripts in `docs/sql/` in date order (the file names sort by
    date) against `localhost`, in SSMS or with `sqlcmd`. They are re-runnable.
 
-4. **Copy `backend/secrets/`** from a machine that has it — by hand, never through git or a chat.
-   It holds `appsettings.secrets.json` with `Jwt:Key`; the API does not start without it. The folder
-   is gitignored. See [docs/security.md](docs/security.md) for its shape.
+4. **Copy `backend/secrets/appsettings.secrets.json`** from a machine that has it — by hand, never
+   through git or a chat. It holds the Azure OCR key; without it the API still starts and makes
+   image-only PDFs. The folder is gitignored; the API creates `data-protection-keys/` in it on first
+   start. See [docs/security.md](docs/security.md).
 
 5. **Trust the .NET development certificate**, if this machine has not done so yet:
 
@@ -71,6 +72,10 @@ In this order:
    Claude Code sessions start the same two servers from `.claude/launch.json` (`scanner-api`,
    `scanner-dev`) instead of this script.
 
+   **On a phone** the camera, the login cookie (`Secure`) and PWA installation all need HTTPS, so
+   testing from a phone on the local network needs the mkcert certificates for the Vite dev server
+   (see `vite.config.ts`), with the machine's LAN name or address added to the certificate.
+
 ## Everyday commands
 
 ```powershell
@@ -84,6 +89,12 @@ dotnet test backend\VMCI.Scanner.sln
 ```
 
 Unit and integration tests. They need neither SQL Server nor the secrets folder.
+
+```powershell
+npm test --prefix frontend\VMCI.Scanner.App
+```
+
+The scanner module's geometry tests (Vitest).
 
 ## Changing the database
 
@@ -110,16 +121,19 @@ described in [backend/VMCI.Scanner.DB/CLAUDE.md](backend/VMCI.Scanner.DB/CLAUDE.
 │   ├── VMCI.Scanner.DB/              scaffolded models, ScannerContext, repositories, unit of work
 │   ├── VMCI.Scanner.Shared/          enums, constants, value types
 │   ├── VMCI.Scanner.WebApi/          controllers, services, DTOs
+│   ├── VMCI.Scanner.Pdf/             image PDF (PDFsharp) and OCR (Azure Document Intelligence)
 │   ├── VMCI.Scanner.DevTools/        console app: create-account
 │   ├── VMCI.Scanner.Tests.Unit/
 │   └── VMCI.Scanner.Tests.Integration/
 └── frontend/
     └── VMCI.Scanner.App/             Vite + React + TypeScript
+        └── src/scanner/              the reusable scanner module (OpenCV.js), see its README
 ```
 
 ## Documentation
 
 - [docs/Domain.md](docs/Domain.md) — the business domain (skeleton for now)
+- [docs/scan-app-plan.md](docs/scan-app-plan.md) — the build plan; section 0 lists where the owner changed it
 - [docs/Project-Status.md](docs/Project-Status.md) — what is done and what is next
 - [docs/security.md](docs/security.md) — authentication, secrets, open decisions
 - [docs/deployment.md](docs/deployment.md) — building and publishing

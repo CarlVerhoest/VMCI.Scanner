@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VMCI.Scanner.DB.UnitOfWork;
+using VMCI.Scanner.WebApi.Auth;
 using VMCI.Scanner.WebApi.DTOs;
 using VMCI.Scanner.WebApi.Extensions;
 using VMCI.Scanner.WebApi.Services;
@@ -70,8 +71,12 @@ public class AccountController : ControllerBase
         return Ok(ToProfileDto(account));
     }
 
+    // Also the forced change after an administrator set a temporary password. It writes a new
+    // SecurityStamp, which signs the account out on every other device, and re-issues this
+    // device's cookie with the new stamp.
     [HttpPost("me/change-password")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    [AllowWhilePasswordChangeRequired]
+    public async Task<ActionResult<SessionDto>> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         if (!ModelState.IsValid)
         {
@@ -84,7 +89,7 @@ public class AccountController : ControllerBase
             return Unauthorized();
         }
 
-        var account = await _unitOfWork.Account.GetByIdAsync(accountId.Value);
+        var account = await _unitOfWork.Account.GetByIdWithRoleAsync(accountId.Value);
         if (account == null)
         {
             return NotFound();
@@ -105,12 +110,20 @@ public class AccountController : ControllerBase
             });
         }
 
+        if (string.Equals(request.NewPassword, request.CurrentPassword, StringComparison.Ordinal))
+        {
+            return BadRequest(new { message = "Het nieuwe wachtwoord moet verschillen van het huidige." });
+        }
+
         account.PasswordHash = _passwordService.HashPassword(request.NewPassword);
+        account.MustChangePassword = false;
+        account.SecurityStamp = Guid.NewGuid();
 
         _unitOfWork.Account.Update(account);
         await _unitOfWork.SaveChangesAsync();
 
-        return Ok();
+        await AuthController.SignInAsync(HttpContext, account);
+        return Ok(AuthController.ToSessionDto(account));
     }
 
     private static AccountProfileDto ToProfileDto(VMCI.Scanner.DB.Models.Account account)

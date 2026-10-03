@@ -1,5 +1,20 @@
 # VMCI.Scanner.App Frontend Guidelines
 
+## 🚨 The scanner module (`src/scanner/`) is portable
+
+It will be lifted into the VMCI application unchanged. Inside that folder: **no imports from
+outside it** except `react` and `@techstark/opencv-js` (ESLint enforces this), no backend calls, no
+UI framework (plain React and `scanner.css`), no hard-coded text (everything through `labels`). The
+app uses it only through `src/scanner/index.ts`. Read `src/scanner/README.md` before changing it.
+
+## Login
+
+The login is an HttpOnly cookie; the frontend never holds a token. `AuthContext` asks
+`GET /api/auth/me` at startup (`isReady` stays false until it answers, so routes wait instead of
+bouncing to the login page). A user with a temporary password is routed to `/change-password` and
+nowhere else; the API enforces the same with a 403 `PASSWORD_CHANGE_REQUIRED`, which the axios
+interceptor turns into that redirect.
+
 ## 🚨 CRITICAL: Use VMCIUIComponents for Lists, Tables, Selects, and Date Pickers
 
 **All list/table, dropdown-select, and date-picker UI in this app MUST be built with the

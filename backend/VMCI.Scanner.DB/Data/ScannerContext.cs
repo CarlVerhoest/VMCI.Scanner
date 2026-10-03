@@ -18,6 +18,8 @@ public partial class ScannerContext : DbContext
 
     public virtual DbSet<AccountRole> AccountRole { get; set; }
 
+    public virtual DbSet<Recipient> Recipient { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -30,6 +32,7 @@ public partial class ScannerContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(256);
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.PasswordHash).HasMaxLength(200);
+            entity.Property(e => e.SecurityStamp).HasDefaultValueSql("(newid())", "DF_Account_SecurityStamp");
             entity.Property(e => e.SurName).HasMaxLength(100);
 
             entity.HasOne(d => d.AccountRole).WithMany(p => p.Account)
@@ -45,6 +48,23 @@ public partial class ScannerContext : DbContext
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())", "DF_AccountRole_Id");
             entity.Property(e => e.Code).HasMaxLength(20);
             entity.Property(e => e.Name).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Recipient>(entity =>
+        {
+            entity.HasIndex(e => new { e.AccountId, e.Email }, "UQ_Recipient_AccountId_Email").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())", "DF_Recipient_Id");
+            entity.Property(e => e.CreatedAt)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysutcdatetime())", "DF_Recipient_CreatedAt");
+            entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.Label).HasMaxLength(100);
+
+            entity.HasOne(d => d.Account).WithMany(p => p.Recipient)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Recipient_Account");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { tokenService } from '../services/tokenService'
-import { authService } from '../services/authService'
-import { accountService } from '../services/accountService'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
+import { authService, Session } from '../services/authService'
+import { setSessionHandlers } from '../services/axiosConfig'
 
 export interface AuthUser {
   id: string
@@ -9,14 +8,18 @@ export interface AuthUser {
   firstName: string
   surName: string
   isAdmin: boolean
+  mustChangePassword: boolean
 }
 
 interface AuthContextType {
   user: AuthUser | null
-  token: string | null
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<void>
-  logout: () => void
+  // False until the startup session check has answered; until then nobody knows whether this
+  // device is signed in, so routes wait instead of bouncing to the login page.
+  isReady: boolean
+  login: (email: string, password: string) => Promise<AuthUser>
+  logout: () => Promise<void>
+  applySession: (session: Session) => void
   updateUser: (partial: Partial<Omit<AuthUser, 'id'>>) => void
 }
 
@@ -31,95 +34,83 @@ export const useAuth = () => {
   return context
 }
 
-interface AuthProviderProps {
-  children: ReactNode
+function toUser(session: Session): AuthUser {
+  return {
+    id: session.accountId,
+    email: session.email,
+    firstName: session.firstName,
+    surName: session.surName,
+    isAdmin: session.isAdmin,
+    mustChangePassword: session.mustChangePassword,
+  }
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null)
-  const [token, setToken] = useState<string | null>(() => tokenService.getToken())
+  const [isReady, setIsReady] = useState(false)
 
-  // On a fresh page load with a still-persisted token (e.g. after F5), `token` starts non-null
-  // (read synchronously from localStorage above) but `user` starts null - nothing has
-  // rehydrated it yet. Without this, isAuthenticated is true (so ProtectedRoute correctly lets
-  // the user through and API calls correctly carry the token) while the header still shows
-  // "Log in" because it additionally checks `user`. Fetch the profile once on mount to close
-  // that gap; if the token is actually expired/invalid, this 401s and the axios response
-  // interceptor in axiosConfig.ts already clears it and redirects to /login.
+  // The login is a persistent HttpOnly cookie, so a device that signed in once is still signed in
+  // on every visit; ask the server who that is.
   useEffect(() => {
-    if (!token) return
-
     let cancelled = false
-
-    const rehydrateUser = async () => {
-      try {
-        const [profile, claims] = await Promise.all([
-          accountService.getProfile(),
-          Promise.resolve(tokenService.decodeClaims(token)),
-        ])
-        if (cancelled || !claims) return
-
-        setUser({
-          id: claims.accountId,
-          email: profile.email,
-          firstName: profile.firstName,
-          surName: profile.surName,
-          isAdmin: claims.isAdmin,
-        })
-      } catch {
-        // Invalid/expired token - the axios 401 interceptor already handles clearing it
-        // and redirecting to /login, nothing further to do here.
-      }
-    }
-
-    void rehydrateUser()
-
+    authService
+      .me()
+      .then((session) => {
+        if (!cancelled) setUser(session ? toUser(session) : null)
+      })
+      .catch(() => {
+        // Server unreachable: treat as signed out for now; the login page says why on retry.
+      })
+      .finally(() => {
+        if (!cancelled) setIsReady(true)
+      })
     return () => {
       cancelled = true
     }
-  }, [token])
+  }, [])
 
-  const login = async (email: string, password: string) => {
-    if (!email || !password) {
-      throw new Error('E-mailadres en wachtwoord zijn verplicht')
-    }
-
-    // Let axios errors (e.g. 401 from a bad login) propagate to the caller -
-    // Login.tsx's catch block is responsible for surfacing them.
-    const result = await authService.login(email, password)
-
-    tokenService.setToken(result.token)
-    setToken(result.token)
-    setUser({
-      id: result.accountId,
-      email: result.email,
-      firstName: result.firstName,
-      surName: result.surName,
-      isAdmin: result.isAdmin,
+  useEffect(() => {
+    setSessionHandlers({
+      onUnauthorized: () => setUser(null),
+      onPasswordChangeRequired: () =>
+        setUser((current) => (current ? { ...current, mustChangePassword: true } : current)),
     })
-  }
+  }, [])
 
-  const logout = () => {
-    tokenService.clearToken()
-    setToken(null)
-    setUser(null)
-  }
+  const login = useCallback(async (email: string, password: string) => {
+    // Axios errors (e.g. the 401 of a bad login) propagate to Login.tsx, which shows them.
+    const next = toUser(await authService.login(email, password))
+    setUser(next)
+    return next
+  }, [])
 
-  // Lets pages that edit the account (e.g. Account.tsx) refresh the cached name/email
-  // locally after a successful save, without requiring a re-login to pick up the change
-  // elsewhere in the app (header, profile menu, etc).
-  const updateUser = (partial: Partial<Omit<AuthUser, 'id'>>) => {
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout()
+    } finally {
+      setUser(null)
+    }
+  }, [])
+
+  const applySession = useCallback((session: Session) => setUser(toUser(session)), [])
+
+  // Lets pages that edit the account (e.g. Account.tsx) refresh the cached name locally.
+  const updateUser = useCallback((partial: Partial<Omit<AuthUser, 'id'>>) => {
     setUser((current) => (current ? { ...current, ...partial } : current))
-  }
+  }, [])
 
-  const value: AuthContextType = {
-    user,
-    token,
-    isAuthenticated: token !== null,
-    login,
-    logout,
-    updateUser,
-  }
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user,
+      isAuthenticated: user !== null,
+      isReady,
+      login,
+      logout,
+      applySession,
+      updateUser,
+    }),
+    [user, isReady, login, logout, applySession, updateUser]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

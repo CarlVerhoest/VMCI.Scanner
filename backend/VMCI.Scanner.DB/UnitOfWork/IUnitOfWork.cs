@@ -13,6 +13,7 @@ public interface IUnitOfWork : IDisposable
 {
     IAccountRepository Account { get; }
     IAccountRoleRepository AccountRole { get; }
+    IRecipientRepository Recipient { get; }
     // Add one property per entity repository here as it's built out
 
     /// <summary>

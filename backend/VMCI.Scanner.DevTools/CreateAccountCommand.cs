@@ -88,6 +88,9 @@ public static class CreateAccountCommand
             SurName = options.Surname,
             IsLocked = false,
             PasswordHash = passwordService.HashPassword(password),
+            // The person running this typed their own password at the prompt: nothing to force.
+            MustChangePassword = false,
+            SecurityStamp = Guid.NewGuid(),
         });
         await unitOfWork.SaveChangesAsync();
 

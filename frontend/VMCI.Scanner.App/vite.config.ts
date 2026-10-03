@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -25,6 +26,18 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         navigateFallbackDenylist: [/^\/api\//],
+        // The scanner's OpenCV worker is ~10 MB: keep it out of the install, cache it on first use.
+        globIgnores: ['**/cv.worker-*.js'],
+        runtimeCaching: [
+          {
+            urlPattern: /\/assets\/cv\.worker-[^/]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'scanner-opencv',
+              expiration: { maxEntries: 2 },
+            },
+          },
+        ],
       },
       manifest: {
         name: 'VMCI Scanner',
@@ -42,6 +55,13 @@ export default defineConfig({
       },
     }),
   ],
+  // The scanner creates its worker with { type: 'module' }.
+  worker: {
+    format: 'es',
+  },
+  test: {
+    include: ['src/**/*.test.ts'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

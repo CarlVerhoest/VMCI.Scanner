@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace VMCI.Scanner.WebApi.Controllers;
 
 // 🚨 The rule for this controller: an endpoint is EITHER anonymous and contentless, OR
-// JWT-protected and detailed. Never both.
+// login-protected and detailed. Never both.
 //
 // Anonymous endpoints here are reachable from a monitoring probe with no credentials, so they
 // return booleans, counts and version strings - and nothing else. No exception types, no

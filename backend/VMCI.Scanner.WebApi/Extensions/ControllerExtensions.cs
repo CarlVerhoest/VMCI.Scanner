@@ -6,7 +6,7 @@ public static class ControllerExtensions
 {
     public static Guid? GetCurrentAccountId(this ControllerBase controller)
     {
-        // Try multiple possible claim names for the user ID to handle different JWT claim mappings
+        // Try multiple possible claim names for the user ID; the login cookie uses NameIdentifier
         var userIdClaim = controller.User?.FindFirst("nameid")?.Value ??
                          controller.User?.FindFirst("sub")?.Value ??
                          controller.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

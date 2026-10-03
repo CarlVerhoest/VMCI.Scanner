@@ -143,18 +143,35 @@ GitHub's secret scanning recognises several key formats (Anthropic `sk-ant-…`,
 - Loaded by `SecretsFile.AddSecretsFile` directly after the `appsettings*.json` files: it beats their values; user secrets and environment variables still beat it.
 - The file itself is optional to the loader, and startup logs
   `Secrets file ../secrets/appsettings.secrets.json loaded` or `not present`.
-- 🚨 **`Jwt:Key` lives here and nowhere else** (decided 02/10/2026, see `docs/security.md`): the
-  committed `appsettings.json` leaves it empty, and the API refuses to start without a key. So in
-  practice every machine needs this file, or the key supplied through user secrets or the `Jwt__Key`
-  environment variable.
+- 🚨 **`DocumentIntelligence:Key` lives here and nowhere else**; the committed `appsettings.json`
+  leaves it empty. Without it the API starts and makes image-only PDFs.
+- 🚨 **The Data Protection keys live next to it**, in `backend/secrets/data-protection-keys/` (or
+  `DataProtection:KeysPath`). They encrypt the login cookie: lose them and every device is signed
+  out. See `docs/security.md`.
 - 🚨 **Not in git, so it does not travel.** Every other development machine and every server needs its own copy (see `docs/claude-multi-machine.md`).
 
 ### Everything else
 
 Which values may sit in the committed `appsettings.json` is a decision for the user, recorded in `docs/security.md`. Until it is made, put nothing secret there. `dotnet user-secrets` overrides whatever is committed:
 ```powershell
-dotnet user-secrets set "Jwt:Key" "..."
+dotnet user-secrets set "DocumentIntelligence:Key" "..."
 ```
+
+## Authentication (cookie)
+
+See `docs/security.md` for the full picture. In code:
+
+- `Auth/ScannerClaims.cs` builds the principal; `Auth/AccountSessionValidator.cs` re-checks it against
+  the database on every request. A new endpoint needs nothing extra for that.
+- **Every new endpoint is blocked while the user still has a temporary password**
+  (`PasswordChangeRequiredFilter`, global). Mark an action `[AllowWhilePasswordChangeRequired]` only
+  if a user must reach it before choosing a password — that list is deliberately short.
+- Administrator endpoints use `[Authorize(Policy = ScannerClaims.AdminPolicy)]`.
+- Code that locks an account or changes a password writes `account.SecurityStamp = Guid.NewGuid()`,
+  and, when it is the caller's own account, re-issues the cookie with `AuthController.SignInAsync`.
+- Integration tests use a cookie client: `ScannerWebApplicationFactory.CreateCookieClient()` (HTTPS,
+  since the cookie is `Secure`) and `SeedAccountAsync`. All test classes share one factory through
+  `[Collection(ApiCollection.Name)]` — a second host in the same process fails to start.
 
 `appsettings.Development.json` contains a Windows-auth localhost connection string (`Trusted_Connection=true`), which is not a secret and is safe to commit.
 

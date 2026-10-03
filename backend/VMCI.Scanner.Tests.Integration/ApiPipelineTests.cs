@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace VMCI.Scanner.Tests.Integration;
 
-// One factory for the whole class: Program.cs sets up a Serilog bootstrap logger, which is meant to be
-// built once per process.
-public class ApiPipelineTests : IClassFixture<ScannerWebApplicationFactory>
+[Collection(ApiCollection.Name)]
+public class ApiPipelineTests
 {
     private readonly HttpClient _client;
 
@@ -27,7 +26,7 @@ public class ApiPipelineTests : IClassFixture<ScannerWebApplicationFactory>
     }
 
     [Fact]
-    public async Task GetAccountMe_WithoutToken_Returns401()
+    public async Task GetAccountMe_WithoutCookie_Returns401_NotARedirect()
     {
         var response = await _client.GetAsync("/api/account/me");
 

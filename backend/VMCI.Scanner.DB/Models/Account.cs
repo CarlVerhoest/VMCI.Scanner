@@ -19,5 +19,11 @@ public partial class Account
 
     public string? PasswordHash { get; set; }
 
+    public bool MustChangePassword { get; set; }
+
+    public Guid SecurityStamp { get; set; }
+
     public virtual AccountRole AccountRole { get; set; } = null!;
+
+    public virtual ICollection<Recipient> Recipient { get; set; } = new List<Recipient>();
 }

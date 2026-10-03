@@ -1,12 +1,7 @@
 // Handing a file the API returned to the browser as a download.
 //
-// Every archived document (the project's Dimona list, an employee's C4, ...) is fetched through
-// axios rather than a plain <a href>, because the endpoints need the JWT the interceptor attaches -
-// a link would arrive unauthenticated and 401. That means the response lands in memory as a Blob
-// and has to be handed over via a temporary object URL, which is what these two do.
-//
-// Shared between projectService and employeeService: two copies of a file-name parser is how the
-// project's downloads and the employee's start naming files differently.
+// Hands a file the app already holds in memory (a PDF the API returned through axios) to the browser
+// through a temporary object URL.
 
 // Reads the server's chosen file name out of Content-Disposition. Prefers RFC 5987's `filename*`
 // (percent-encoded UTF-8) over the plain `filename`, since the stored names carry surnames.
