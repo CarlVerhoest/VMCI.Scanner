@@ -43,4 +43,4 @@ Statuses: **done**, **in progress**, **not started**.
 | Feature | Status | Next action |
 |---|---|---|
 | Security decisions | in progress | Open decision in `docs/security.md` |
-| Deployment to `scanner.vmci.be` (Plesk) | live | Site, database, administrator and OCR (Foundry, Sweden Central) set up 03/10/2026. Redeploy the API so the startup lines reach the log file, then run the remaining checks in `docs/deployment.md` §5 (phone, PWA install) |
+| Deployment to `scanner.vmci.be` (Plesk) | live | Site, database, administrator and OCR (Foundry, Sweden Central) set up and checked 03/10/2026, including on a phone. Only open: confirm the installed PWA is still signed in after a few days (`docs/deployment.md` §5) |
