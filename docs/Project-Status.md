@@ -43,4 +43,4 @@ Statuses: **done**, **in progress**, **not started**.
 | Feature | Status | Next action |
 |---|---|---|
 | Security decisions | in progress | Open decision in `docs/security.md` |
-| Deployment to `scanner.vmci.be` (Plesk) | in progress | Publish profile, `deploy.ps1`, `web.config` and docs are ready; create the site, certificate and database in Plesk (`docs/deployment.md` §0), then the first deploy |
+| Deployment to `scanner.vmci.be` (Plesk) | live | Site, database, administrator and OCR (Foundry, Sweden Central) set up 03/10/2026. Redeploy the API so the startup lines reach the log file, then run the remaining checks in `docs/deployment.md` §5 (phone, PWA install) |

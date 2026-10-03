@@ -25,7 +25,9 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
-Log.Information("Starting Scanner service");
+// Messages logged while the host is being built go through StartupLog: until then only the console
+// bootstrap logger exists, and under IIS nobody sees the console.
+StartupLog.Information("Starting Scanner service");
 
 try
 {
@@ -33,6 +35,7 @@ try
 }
 catch (Exception ex)
 {
+    StartupLog.Flush();
     Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally
@@ -55,11 +58,11 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             var secretsLoaded = builder.AddSecretsFile(env.ContentRootPath, env.EnvironmentName);
             if (secretsLoaded.Count > 0)
             {
-                Log.Information("Secrets files loaded: {Files}", string.Join(", ", secretsLoaded));
+                StartupLog.Information("Secrets files loaded: {Files}", string.Join(", ", secretsLoaded));
             }
             else
             {
-                Log.Information("No secrets files found (looked in ../secrets and ./secrets)");
+                StartupLog.Information("No secrets files found (looked in ../secrets and ./secrets)");
             }
         })
         .ConfigureWebHostDefaults(webBuilder =>
@@ -103,7 +106,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                         // body ever runs. Almost always ASPNETCORE_ENVIRONMENT is not "Development" for
                         // the running process, so appsettings.Development.json never layered over the
                         // empty placeholder. Log loudly at startup instead of only on first request.
-                        Log.Warning(
+                        StartupLog.Warning(
                             "Database not configured: ConnectionStrings:DefaultConnection is empty " +
                             "for environment '{Environment}'. ScannerContext will NOT be registered, " +
                             "so any endpoint using IUnitOfWork will 500 on the first request. " +
@@ -130,7 +133,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                     }
                     var keysDirectory = new DirectoryInfo(Path.GetFullPath(keysPath));
                     dataProtection.PersistKeysToFileSystem(keysDirectory);
-                    Log.Information("Data Protection keys in {KeysPath}", keysDirectory.FullName);
+                    StartupLog.Information("Data Protection keys in {KeysPath}", keysDirectory.FullName);
                 }
 
                 // Cookie login (docs/security.md): persistent and sliding, about 400 days - the most
@@ -214,17 +217,17 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                 {
                     services.AddSingleton(documentIntelligence);
                     services.AddSingleton<IOcrProvider, AzureDocumentIntelligenceOcrProvider>();
-                    Log.Information("Document Intelligence registered ({Endpoint}, model {ModelId})",
+                    StartupLog.Information("Document Intelligence registered ({Endpoint}, model {ModelId})",
                         documentIntelligence.Endpoint, documentIntelligence.ModelId);
                 }
                 else
                 {
-                    Log.Information("Document Intelligence skipped: DocumentIntelligence:Endpoint/Key not configured");
+                    StartupLog.Information("Document Intelligence skipped: DocumentIntelligence:Endpoint/Key not configured");
                 }
                 services.AddScoped<SearchablePdfService>();
 
                 // No mail service yet (postponed): IEmailSender is not registered, so mailing answers 503.
-                Log.Information("Email skipped: no mail service chosen yet");
+                StartupLog.Information("Email skipped: no mail service chosen yet");
 
                 // Configure CORS with specific origins for security
                 services.AddCors(options =>
@@ -293,6 +296,8 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                     });
                 });
 
+                // The configured logger (with the log file) is active by now.
+                StartupLog.Flush();
                 Log.Information("Scanner service configured successfully");
             });
         });

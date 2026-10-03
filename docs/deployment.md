@@ -21,7 +21,7 @@ change that the PWA depends on, or the other way round, deploy both.**
 
 Neither the profile nor the script stores a password. Both ask for the Plesk Web Deploy credentials.
 
-## 0. Once: set up the site in Plesk (not done yet)
+## 0. Once: set up the site in Plesk (done 03/10/2026; database `cverhoest_scanner`)
 
 1. Create the site **`scanner.vmci.be`** (subdomain of `vmci.be`), with the .NET 10 Hosting Bundle as
    for LevelUp.
@@ -91,6 +91,9 @@ a phone downloads it the first time the scanner opens and caches it then.
   - Nothing overwrites or exposes it: the publish profile skips `secrets\`, `web.config` hides the
     segment `secrets` from every request (`requestFiltering`), and the project never publishes a
     `secrets` folder of its own.
+  - Document Intelligence is the Foundry resource **VMCI-Foundry** (Sweden Central, kind
+    AIServices): its endpoint and KEY 1 from *Resource Management → Keys and Endpoint*. The
+    `services.ai.azure.com` and `cognitiveservices.azure.com` endpoints both work.
   - Without the connection string the API starts, but every endpoint that touches the database
     answers 500 (including login). Without the Document Intelligence settings the site runs and
     makes image-only PDFs.
@@ -138,6 +141,19 @@ a phone downloads it the first time the scanner opens and caches it then.
 
   The password is asked twice at a prompt without echo. Everyone else is then created by that
   administrator in the application (Accounts), with a temporary password.
+
+  The connection string in the Production secrets file names the SQL Server as the web server sees
+  it (`ASPHOST827\...`), which a development machine cannot resolve. Override it for the one run
+  with `$env:ConnectionStrings__DefaultConnection`, using the public address `85.17.54.47,784`, and
+  remove the variable afterwards.
+- **Copy production to the local database**: `./scripts/restore-prod-to-local.ps1` (the server
+  defaults to the Plesk host's public address `85.17.54.47,784`; `-Server` overrides it). Shared
+  hosting allows no downloadable `.bak`, and the database user lacks VIEW DEFINITION, so no `.bacpac`
+  either. The script therefore needs only SELECT: it builds an empty copy of the **local** schema,
+  checks each production table's columns against it (any difference stops the run), copies the
+  rows, and only then replaces the local database. It leaves a copy-only
+  `cverhoest_scanner_prod_<timestamp>.bak` in the local instance's backup folder. That file holds
+  production data: never put it in the repository.
 
 ## 5. Check after deploying
 

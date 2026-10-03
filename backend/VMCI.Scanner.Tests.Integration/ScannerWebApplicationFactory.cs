@@ -34,6 +34,10 @@ public class ScannerWebApplicationFactory : WebApplicationFactory<Program>
             {
                 // All tests share one client IP; the rate limit itself is not under test here.
                 ["Limits:LoginAttemptsPer15Minutes"] = "1000",
+                // The developer's secrets file is read in every environment; without this, a machine
+                // with a real key would send test documents to Azure. Tests run without OCR.
+                ["DocumentIntelligence:Endpoint"] = "",
+                ["DocumentIntelligence:Key"] = "",
             });
         });
 
