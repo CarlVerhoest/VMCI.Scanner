@@ -136,5 +136,5 @@ described in [backend/VMCI.Scanner.DB/CLAUDE.md](backend/VMCI.Scanner.DB/CLAUDE.
 - [docs/scan-app-plan.md](docs/scan-app-plan.md) — the build plan; section 0 lists where the owner changed it
 - [docs/Project-Status.md](docs/Project-Status.md) — what is done and what is next
 - [docs/security.md](docs/security.md) — authentication, secrets, open decisions
-- [docs/deployment.md](docs/deployment.md) — building and publishing
+- [docs/deployment.md](docs/deployment.md) — publishing to `scanner.vmci.be` (Plesk, Web Deploy)
 - [backend/ARCHITECTURE.md](backend/ARCHITECTURE.md) — how the backend projects relate

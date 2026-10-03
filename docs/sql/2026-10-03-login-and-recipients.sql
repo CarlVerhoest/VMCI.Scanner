@@ -22,11 +22,12 @@
    ON DELETE NO ACTION for Recipient -> Account: accounts are locked, not deleted, so a
    delete is never expected; if one ever is, it must remove the recipients explicitly.
 
+   No USE statement: run it CONNECTED TO the target database (locally cverhoest_scanner; on
+   the Plesk host the database has another name) - sqlcmd -d <database>, or pick the
+   database in SSMS. Only the initial schema script names a database. docs/deployment.md.
+
    After running: re-scaffold (backend/VMCI.Scanner.DB/CLAUDE.md).
    ===================================================================================== */
-
-USE [cverhoest_scanner];
-GO
 
 IF COL_LENGTH(N'dbo.Account', N'MustChangePassword') IS NULL
 BEGIN

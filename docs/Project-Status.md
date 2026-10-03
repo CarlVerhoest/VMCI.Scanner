@@ -43,4 +43,4 @@ Statuses: **done**, **in progress**, **not started**.
 | Feature | Status | Next action |
 |---|---|---|
 | Security decisions | in progress | Open decision in `docs/security.md` |
-| Deployment | not started | Same environment as the VMCI application; its details still to be written into `docs/deployment.md` |
+| Deployment to `scanner.vmci.be` (Plesk) | in progress | Publish profile, `deploy.ps1`, `web.config` and docs are ready; create the site, certificate and database in Plesk (`docs/deployment.md` §0), then the first deploy |

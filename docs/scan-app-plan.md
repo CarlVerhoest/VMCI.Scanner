@@ -26,7 +26,7 @@ original reasoning stays readable.
 | Recipients (section 8) | List in the accounts file | Table `Recipient`. A user can add an address from the result screen; **only the administrator removes one** (open question 4) |
 | Mail limits (section 8) | 50 mails per account per day, 20 recipients | **No limits** |
 | Mail service (open question 2) | Azure Communication Services or SMTP | **Postponed.** Until it is chosen, the email endpoint answers 503 and the client hides *Email to...* |
-| Hosting (open question 1) | Azure App Service, to decide | **The same environment as the VMCI application** |
+| Hosting (open question 1) | Azure App Service, to decide | **The same Plesk hosting as VMCI, LevelUp and eLogger**: IIS site `scanner.vmci.be`, Web Deploy; see `docs/deployment.md` |
 | Name and icon (open question 5) | Open | Decided: Scanner, with the VMCI scan-line logo |
 
 ### Endpoints, as changed

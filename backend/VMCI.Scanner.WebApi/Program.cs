@@ -49,11 +49,18 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             .Enrich.WithProperty("Application", "scanner"))
         .ConfigureAppConfiguration((context, builder) =>
         {
-            // Keys that must stay out of git live in backend/secrets/ (gitignored). Loaded after the
-            // appsettings files, before user secrets and environment variables.
-            var secretsLoaded = builder.AddSecretsFile(context.HostingEnvironment.ContentRootPath);
-            Log.Information("Secrets file ../secrets/{File} {Result}.", SecretsFile.FileName,
-                secretsLoaded ? "loaded" : "not present");
+            // Keys that must stay out of git live in the secrets folder (gitignored; on the server inside
+            // the site root). Loaded after the appsettings files, before user secrets and environment variables.
+            var env = context.HostingEnvironment;
+            var secretsLoaded = builder.AddSecretsFile(env.ContentRootPath, env.EnvironmentName);
+            if (secretsLoaded.Count > 0)
+            {
+                Log.Information("Secrets files loaded: {Files}", string.Join(", ", secretsLoaded));
+            }
+            else
+            {
+                Log.Information("No secrets files found (looked in ../secrets and ./secrets)");
+            }
         })
         .ConfigureWebHostDefaults(webBuilder =>
         {
@@ -115,7 +122,11 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                     var keysPath = config["DataProtection:KeysPath"];
                     if (string.IsNullOrWhiteSpace(keysPath))
                     {
-                        keysPath = Path.Combine(env.ContentRootPath, "..", "secrets", "data-protection-keys");
+                        // Inside the secrets folder: backend/secrets/ on a development machine, <site root>/secrets
+                        // on the Plesk host (the application pool cannot write above the site root).
+                        keysPath = Path.Combine(
+                            SecretsFile.ResolveDirectory(env.ContentRootPath, env.IsDevelopment()),
+                            "data-protection-keys");
                     }
                     var keysDirectory = new DirectoryInfo(Path.GetFullPath(keysPath));
                     dataProtection.PersistKeysToFileSystem(keysDirectory);

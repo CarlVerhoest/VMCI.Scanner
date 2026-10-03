@@ -5,7 +5,8 @@ namespace VMCI.Scanner.DevTools;
 
 /// <summary>
 /// Builds configuration the way the API does: its appsettings.json, appsettings.{Environment}.json,
-/// backend/secrets/appsettings.secrets.json, then environment variables. The files are read from the
+/// backend/secrets/appsettings.secrets.json and appsettings.secrets.{Environment}.json, then environment
+/// variables. The files are read from the
 /// VMCI.Scanner.WebApi project directory, so there is one copy of every setting.
 /// </summary>
 public static class AppConfiguration
@@ -42,7 +43,9 @@ public static class AppConfiguration
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false);
 
-        builder.AddSecretsFile(webApiDirectory);
+        // With --environment Production this also reads appsettings.secrets.Production.json, which holds the
+        // server's connection string: that is how create-account reaches the production database.
+        builder.AddSecretsFile(webApiDirectory, environment);
         builder.AddEnvironmentVariables();
 
         return builder.Build();

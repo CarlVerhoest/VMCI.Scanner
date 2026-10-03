@@ -17,6 +17,9 @@
 
    - File name: YYYY-MM-DD-short-description.sql; this header explains WHY, not only what.
    - Re-runnable: every CREATE/ALTER is guarded, so running a script twice is harmless.
+   - No USE statement in later scripts: they run connected to the target database, whose
+     name differs on the Plesk host. On that host, run THIS script from the AccountRole part
+     onward (skip the CREATE DATABASE / USE block); docs/deployment.md.
    - Primary key: Id uniqueidentifier NOT NULL DEFAULT (newid()), named PK_<Table>.
    - Foreign keys: FK_<Table>_<ReferencedTable>, ON DELETE NO ACTION unless the script
      says otherwise and why.

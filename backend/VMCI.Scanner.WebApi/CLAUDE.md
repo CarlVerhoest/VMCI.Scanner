@@ -138,14 +138,14 @@ Do not use:
 
 ### Keys that must not reach GitHub: `backend/secrets/appsettings.secrets.json`
 
-GitHub's secret scanning recognises several key formats (Anthropic `sk-ant-…`, Azure, OpenAI, …) and can have them revoked or the push blocked. Such keys live in `backend/secrets/appsettings.secrets.json` — gitignored, found at `../secrets/` relative to the WebApi content root, in the same shape as `appsettings.json`. Certificates (`*.pfx`) live in the same folder.
+GitHub's secret scanning recognises several key formats (Anthropic `sk-ant-…`, Azure, OpenAI, …) and can have them revoked or the push blocked. Such keys live in `backend/secrets/appsettings.secrets.json` (and `appsettings.secrets.{Environment}.json`) — gitignored, found at `../secrets/` relative to the WebApi content root, or at `./secrets/` inside it on the Plesk host whose application pool cannot read above the site root (see `docs/deployment.md`), in the same shape as `appsettings.json`. Certificates (`*.pfx`) live in the same folder.
 
 - Loaded by `SecretsFile.AddSecretsFile` directly after the `appsettings*.json` files: it beats their values; user secrets and environment variables still beat it.
 - The file itself is optional to the loader, and startup logs
-  `Secrets file ../secrets/appsettings.secrets.json loaded` or `not present`.
+  `Secrets files loaded: <paths>` or `No secrets files found`.
 - 🚨 **`DocumentIntelligence:Key` lives here and nowhere else**; the committed `appsettings.json`
   leaves it empty. Without it the API starts and makes image-only PDFs.
-- 🚨 **The Data Protection keys live next to it**, in `backend/secrets/data-protection-keys/` (or
+- 🚨 **The Data Protection keys live next to it**, in `data-protection-keys/` inside the secrets folder (or
   `DataProtection:KeysPath`). They encrypt the login cookie: lose them and every device is signed
   out. See `docs/security.md`.
 - 🚨 **Not in git, so it does not travel.** Every other development machine and every server needs its own copy (see `docs/claude-multi-machine.md`).

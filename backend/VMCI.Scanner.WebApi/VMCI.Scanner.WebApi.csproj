@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Lets Plesk's Let's Encrypt renewal reach /.well-known (docs/deployment.md). -->
+    <Content Include=".well-known\web.config" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Never" />
+    <!-- A secrets\ folder here is only ever a server layout (SecretsFile.cs); never publish one by accident. -->
+    <Content Remove="secrets\**" />
+    <None Remove="secrets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VMCI.Scanner.DB\VMCI.Scanner.DB.csproj" />
     <ProjectReference Include="..\VMCI.Scanner.Shared\VMCI.Scanner.Shared.csproj" />
     <ProjectReference Include="..\VMCI.Scanner.Pdf\VMCI.Scanner.Pdf.csproj" />

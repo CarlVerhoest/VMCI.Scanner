@@ -52,10 +52,10 @@ once per device, and then stay signed in.
   `Origin` header is neither the site itself nor an allowed origin (the Vite dev server in
   Development, `Frontend:BaseUrl` otherwise) is refused with 403.
 - **Data Protection keys must survive restarts and deployments**, or every restart signs out every
-  device. They are kept in `DataProtection:KeysPath`, by default
-  `<content root>/../secrets/data-protection-keys` — inside the gitignored secrets folder, outside
-  the published folder. Whoever can read them can forge a login cookie: protect the folder like
-  the secrets file.
+  device. They are kept in `DataProtection:KeysPath`, by default `data-protection-keys` inside the
+  secrets folder: `backend/secrets/` on a development machine, `<site root>/secrets/` on the Plesk
+  host (hidden from HTTP by `web.config`, skipped by the publish profile; see `docs/deployment.md`).
+  Whoever can read them can forge a login cookie: protect the folder like the secrets file.
 
 ## Documents
 
@@ -72,15 +72,19 @@ once per device, and then stay signed in.
 
 | Secret | Where | In git |
 |---|---|---|
-| Data Protection keys (sign and encrypt the login cookie) | `backend/secrets/data-protection-keys/`, or `DataProtection:KeysPath` | no |
-| `DocumentIntelligence:Key` (Azure OCR) | `backend/secrets/appsettings.secrets.json` | no |
+| Data Protection keys (sign and encrypt the login cookie) | `data-protection-keys/` in the secrets folder, or `DataProtection:KeysPath` | no |
+| `DocumentIntelligence:Key` (Azure OCR) | `backend/secrets/appsettings.secrets.json` (development), `appsettings.secrets.Production.json` (server) | no |
 | Certificates (`*.pfx`, `*.pem`) | `backend/secrets/`, or next to `vite.config.ts` for the mkcert dev certificates | no |
 | Development connection string | `appsettings.Development.json` — Windows authentication on `localhost`, no password | yes (not a secret) |
-| Production connection string | not decided yet — see the open decision below | no |
+| Production connection string | `backend/secrets/appsettings.secrets.Production.json`, uploaded by hand to `<site root>/secrets/` on the Plesk host | no |
 
-`backend/secrets/` is gitignored as a whole. The secrets file in it is loaded after the
-`appsettings*.json` files and before user secrets and environment variables, so a value there beats
-the committed files, and an environment variable (for example `DocumentIntelligence__Key`) beats it.
+`backend/secrets/` is gitignored as a whole. The API loads `appsettings.secrets.json` and then
+`appsettings.secrets.{Environment}.json` from the first secrets folder that exists — `../secrets`
+above the content root (development), else `./secrets` inside it (the Plesk host, whose application
+pool cannot read above the site root). They come after the `appsettings*.json` files and before
+user secrets and environment variables, so a value there beats the committed files, and an
+environment variable (for example `DocumentIntelligence__Key`) beats it. A development machine runs
+as Development, so it can hold the Production file without ever reading it.
 
 The folder does not travel with git: every development machine and every server needs its own copy,
 transferred by hand — never through git and never through a chat. The Data Protection keys need not
