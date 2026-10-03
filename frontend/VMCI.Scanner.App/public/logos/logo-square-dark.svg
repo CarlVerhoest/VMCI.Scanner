@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="VMCI Scanner">
+  <path d="M19 9 C14 9 12 11 12 16 L12 25 C12 29 9.5 32 5 32 C9.5 32 12 35 12 39 L12 48 C12 53 14 55 19 55" fill="none" stroke="#AEAEAE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M45 9 C50 9 52 11 52 16 L52 25 C52 29 54.5 32 59 32 C54.5 32 52 35 52 39 L52 48 C52 53 50 55 45 55" fill="none" stroke="#AEAEAE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 12 L36 12 L42 18 L42 52 L22 52 Z" fill="none" stroke="#84A410" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26.5 21 L34 21" fill="none" stroke="#84A410" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26.5 26 L37.5 26" fill="none" stroke="#84A410" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26.5 39 L37.5 39" fill="none" stroke="#AEAEAE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+  <path d="M26.5 44 L37.5 44" fill="none" stroke="#AEAEAE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+  <path d="M23.5 32 L40.5 32 L40.5 36 L23.5 36 Z" fill="#A9CF1F" opacity="0.22"/>
+  <path d="M17 32 L47 32" fill="none" stroke="#A9CF1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

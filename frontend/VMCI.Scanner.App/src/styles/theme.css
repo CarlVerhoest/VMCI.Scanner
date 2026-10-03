@@ -7,95 +7,165 @@
  * plain Bootstrap components, so the light/dark toggle has a real, visible
  * CSS implementation behind it rather than relying solely on Bootstrap.
  *
- * Provisional palette, carried over from the reference application until the VMCI Scanner
- * brand (colours, typeface, logo) is designed. Retune the tokens below when it is:
- *   - primary accent:  #238eb9 (medium blue/teal)
- *   - navy accent:     #134560 (deep navy, used as the base for dark mode)
- *   - mid-tone blue:   #2c7096 (hover/active state)
- *   - light body bg:   #fdfdfd
- *   - light body text: #000000
- *   - typeface:        Montserrat
+ * Palette is the VMCI house style, taken from the VMCI logo (`{…vmci}`) that the Scanner logo
+ * is derived from (see scripts/make-logos.ps1 and src/components/ScannerLogo.tsx):
+ *   - logo green, light: #4b5c09 (accent on a light background)
+ *   - logo green, dark:  #84a410 (accent on a dark background; the scan line in light mode)
+ *   - brace grey:        #888888 (light) / #aeaeae (dark)
+ *   - dark background:   #1a1a1a, surface #2a2a2a (neutral, as in the VMCI app)
+ *   - typeface:          the VMCI app's system stack - no web font is downloaded
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
 :root {
-  --scanner-font-family: 'Montserrat', 'Helvetica Neue', Helvetica, sans-serif;
+  --scanner-font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  --scanner-bg: #fdfdfd;
+  --scanner-bg: #fbfbf9;
+  --scanner-bg-rgb: 251, 251, 249;
   --scanner-surface: #ffffff;
-  --scanner-surface-border: rgba(19, 69, 96, 0.12);
-  --scanner-text: #000000;
-  --scanner-text-muted: #4a4a4a;
-  --scanner-accent: #238eb9;
-  --scanner-accent-hover: #2c7096;
-  --scanner-accent-soft: rgba(35, 142, 185, 0.12);
+  --scanner-surface-rgb: 255, 255, 255;
+  --scanner-surface-border: rgba(75, 92, 9, 0.16);
+  --scanner-text: #1a1a1a;
+  /* Darker than the logo's brace grey (#888888), which is too light to read as body text on
+     white. */
+  --scanner-text-muted: #5c5c5c;
+  --scanner-accent: #4b5c09;
+  --scanner-accent-hover: #3a4807;
+  --scanner-accent-rgb: 75, 92, 9;
+  /* Text/icon colour on top of an accent fill (solid buttons, active menu items). */
+  --scanner-on-accent: #ffffff;
+  --scanner-accent-soft: rgba(132, 164, 16, 0.12);
   /* Selected-row highlight (VMCITable) - deliberately a stronger tint than
      --scanner-accent-soft above (the alternating-row stripe), so a selected row still reads
      as distinct from an ordinary striped one. */
-  --scanner-selection-bg: rgba(35, 142, 185, 0.3);
-  --scanner-shadow: 0 0.5rem 1.5rem rgba(19, 69, 96, 0.08);
+  --scanner-selection-bg: rgba(132, 164, 16, 0.3);
+  --scanner-shadow: 0 0.5rem 1.5rem rgba(26, 26, 26, 0.08);
 
+  /* The logo's own colours (ScannerLogo.tsx). Kept apart from the accent tokens so the logo
+     stays the logo when the UI accent is retuned. */
+  --scanner-logo-grey: #888888;
+  --scanner-logo-green: #4b5c09;
+  --scanner-logo-scan: #84a410;
 }
 
 [data-bs-theme='dark'] {
-  /* Dark navy derived from the brand's #134560, darkened rather than
-     inverted to pure black, so dark mode still reads as "Scanner". */
-  --scanner-bg: #0b2635;
-  --scanner-surface: #123047;
-  --scanner-surface-border: rgba(255, 255, 255, 0.08);
-  --scanner-text: #f5f7fa;
-  --scanner-text-muted: #a9c2d1;
-  /* Brand accent lightened slightly so it keeps WCAG-reasonable contrast
-     against the dark navy background instead of reading muted. */
-  --scanner-accent: #4fa5c7;
-  --scanner-accent-hover: #6dbadd;
-  --scanner-accent-rgb: 79, 165, 199;
-  --scanner-accent-soft: rgba(79, 165, 199, 0.18);
-  --scanner-selection-bg: rgba(79, 165, 199, 0.38);
+  /* Neutral near-black, as in the VMCI app, so the logo green carries the brand. */
+  --scanner-bg: #1a1a1a;
+  --scanner-bg-rgb: 26, 26, 26;
+  --scanner-surface: #2a2a2a;
+  --scanner-surface-rgb: 42, 42, 42;
+  --scanner-surface-border: rgba(255, 255, 255, 0.1);
+  --scanner-text: #f5f5f5;
+  --scanner-text-muted: #aeaeae;
+  /* The logo's lighter green: the light-mode accent (#4b5c09) is nearly invisible on a dark
+     background. */
+  --scanner-accent: #84a410;
+  --scanner-accent-hover: #9bbf1c;
+  --scanner-accent-rgb: 132, 164, 16;
+  --scanner-on-accent: #1a1a1a;
+  --scanner-accent-soft: rgba(132, 164, 16, 0.16);
+  --scanner-selection-bg: rgba(132, 164, 16, 0.34);
   --scanner-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
   /* Same reasoning as --scanner-accent above, for destructive (.btn-danger) actions: Bootstrap's
      stock #dc3545 reads fine as a solid fill but too muted as an outline border/text color
-     against this dark navy, so it's lightened here too. */
+     against this dark background, so it's lightened here too. */
   --scanner-danger: #ff6b6b;
   --scanner-danger-hover: #ff8787;
   --scanner-danger-rgb: 255, 107, 107;
 
+  --scanner-logo-grey: #aeaeae;
+  --scanner-logo-green: #84a410;
+  --scanner-logo-scan: #a9cf1f;
 }
 
 /*
- * Bootstrap's own dark-mode button colors are tuned for its default dark body
- * background (#212529), which is much lighter than Scanner's custom navy
- * (--scanner-bg above) - against that darker navy, stock `--bs-primary`
- * buttons (especially outline ones, which have no fill to lean on) end up
- * low-contrast to the point of being nearly invisible.
- *
- * Single source of truth: every `.btn-*` variant below reads from the same
- * handful of theme tokens (--scanner-accent for fills, --scanner-text for
- * outline foregrounds) via Bootstrap 5.3's per-component `--bs-btn-*` custom
- * properties (its supported theming hook) - retune contrast by editing those
- * tokens in the `[data-bs-theme='dark']` block above, not by hand-picking
- * colors per button here. Add any new `.btn-*` variant to whichever group
- * (solid/outline) it belongs to below rather than writing a new block.
+ * Bridge to Bootstrap: its own variables default to Bootstrap blue (#0d6efd) and a blue-grey
+ * dark mode (#212529), in both themes. Pointing them at the tokens above makes every stock
+ * Bootstrap component (navbar, dropdown, modal, form control, link, focus ring) follow the
+ * VMCI palette without per-component colours. They resolve on <html>, where `data-bs-theme`
+ * is set, so this one block serves light and dark.
  */
-[data-bs-theme='dark'] .btn-primary,
+:root {
+  --bs-body-font-family: var(--scanner-font-family);
+  --bs-body-bg: var(--scanner-bg);
+  --bs-body-bg-rgb: var(--scanner-bg-rgb);
+  --bs-body-color: var(--scanner-text);
+  --bs-secondary-color: var(--scanner-text-muted);
+  --bs-tertiary-bg: var(--scanner-surface);
+  --bs-tertiary-bg-rgb: var(--scanner-surface-rgb);
+  --bs-primary: var(--scanner-accent);
+  --bs-primary-rgb: var(--scanner-accent-rgb);
+  --bs-link-color: var(--scanner-accent);
+  --bs-link-color-rgb: var(--scanner-accent-rgb);
+  --bs-link-hover-color: var(--scanner-accent-hover);
+  --bs-focus-ring-color: rgba(var(--scanner-accent-rgb), 0.25);
+}
+
+.dropdown-menu {
+  --bs-dropdown-bg: var(--scanner-surface);
+  --bs-dropdown-link-active-bg: var(--scanner-accent);
+  --bs-dropdown-link-active-color: var(--scanner-on-accent);
+}
+
+.modal {
+  --bs-modal-bg: var(--scanner-surface);
+}
+
+.card {
+  --bs-card-bg: var(--scanner-surface);
+}
+
+/* Bootstrap hardcodes its blue focus border and glow on form controls instead of reading a
+   variable, so these need a real rule. */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--scanner-accent);
+  box-shadow: 0 0 0 0.25rem rgba(var(--scanner-accent-rgb), 0.25);
+}
+
+/*
+ * Buttons. Single source of truth: every `.btn-*` variant below reads from the same
+ * handful of theme tokens (--scanner-accent for fills, --scanner-on-accent for what sits on
+ * a fill) via Bootstrap 5.3's per-component `--bs-btn-*` custom properties (its supported
+ * theming hook) - retune contrast by editing those tokens at the top of this file, not by
+ * hand-picking colors per button here. Add any new `.btn-*` variant to whichever group
+ * (solid/outline) it belongs to below rather than writing a new block.
+ *
+ * `.btn-secondary` stays Bootstrap's grey in light mode; in dark mode that grey is too close
+ * to the surface colour, so there it takes the accent fill like `.btn-primary`.
+ */
+.btn-primary,
 [data-bs-theme='dark'] .btn-secondary {
-  --bs-btn-color: var(--scanner-bg);
+  --bs-btn-color: var(--scanner-on-accent);
   --bs-btn-bg: var(--scanner-accent);
   --bs-btn-border-color: var(--scanner-accent);
-  --bs-btn-hover-color: var(--scanner-bg);
+  --bs-btn-hover-color: var(--scanner-on-accent);
   --bs-btn-hover-bg: var(--scanner-accent-hover);
   --bs-btn-hover-border-color: var(--scanner-accent-hover);
   --bs-btn-focus-shadow-rgb: var(--scanner-accent-rgb);
-  --bs-btn-active-color: var(--scanner-bg);
+  --bs-btn-active-color: var(--scanner-on-accent);
   --bs-btn-active-bg: var(--scanner-accent-hover);
   --bs-btn-active-border-color: var(--scanner-accent-hover);
-  --bs-btn-disabled-color: var(--scanner-bg);
-  --bs-btn-disabled-bg: var(--scanner-text-muted);
-  --bs-btn-disabled-border-color: var(--scanner-text-muted);
+  --bs-btn-disabled-color: var(--scanner-on-accent);
+  --bs-btn-disabled-bg: var(--scanner-accent);
+  --bs-btn-disabled-border-color: var(--scanner-accent);
 }
 
-/* Outline buttons use --scanner-text (the same near-white already driving
+.btn-outline-primary {
+  --bs-btn-color: var(--scanner-accent);
+  --bs-btn-border-color: var(--scanner-accent);
+  --bs-btn-hover-color: var(--scanner-on-accent);
+  --bs-btn-hover-bg: var(--scanner-accent);
+  --bs-btn-hover-border-color: var(--scanner-accent);
+  --bs-btn-focus-shadow-rgb: var(--scanner-accent-rgb);
+  --bs-btn-active-color: var(--scanner-on-accent);
+  --bs-btn-active-bg: var(--scanner-accent);
+  --bs-btn-active-border-color: var(--scanner-accent);
+  --bs-btn-disabled-color: var(--scanner-accent);
+  --bs-btn-disabled-border-color: var(--scanner-accent);
+}
+
+/* In dark mode outline buttons use --scanner-text (the same near-white already driving
    all dark-mode body text, guaranteed high-contrast against --scanner-bg/
    --scanner-surface) rather than the accent color, which reads fine as a
    solid fill above but too muted as a thin border/text color on its own. */
@@ -103,11 +173,11 @@
 [data-bs-theme='dark'] .btn-outline-secondary {
   --bs-btn-color: var(--scanner-text);
   --bs-btn-border-color: var(--scanner-text);
-  --bs-btn-hover-color: var(--scanner-bg);
+  --bs-btn-hover-color: var(--scanner-on-accent);
   --bs-btn-hover-bg: var(--scanner-accent);
   --bs-btn-hover-border-color: var(--scanner-accent);
   --bs-btn-focus-shadow-rgb: var(--scanner-accent-rgb);
-  --bs-btn-active-color: var(--scanner-bg);
+  --bs-btn-active-color: var(--scanner-on-accent);
   --bs-btn-active-bg: var(--scanner-accent);
   --bs-btn-active-border-color: var(--scanner-accent);
   --bs-btn-disabled-color: var(--scanner-text-muted);
@@ -168,6 +238,52 @@ a:focus {
 .form-check-input:checked {
   background-color: var(--scanner-accent);
   border-color: var(--scanner-accent);
+}
+
+/* The logo (ScannerLogo.tsx): inline SVG icon plus the "vmci scanner" wordmark. The wordmark is
+   set in Arial like the VMCI logo, not in the app's body font, and sized from the icon height
+   the component puts in --scanner-logo-height. */
+.scanner-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--scanner-logo-height) * 0.14);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.scanner-logo svg {
+  height: var(--scanner-logo-height);
+  width: var(--scanner-logo-height);
+  flex-shrink: 0;
+}
+
+.scanner-logo-grey {
+  stroke: var(--scanner-logo-grey);
+}
+
+.scanner-logo-green {
+  stroke: var(--scanner-logo-green);
+}
+
+.scanner-logo-scan {
+  stroke: var(--scanner-logo-scan);
+}
+
+.scanner-logo-scan-fill {
+  fill: var(--scanner-logo-scan);
+}
+
+.scanner-logo-wordmark {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: calc(var(--scanner-logo-height) * 0.47);
+  font-weight: 400;
+  color: var(--scanner-logo-grey);
+  white-space: nowrap;
+}
+
+.scanner-logo-wordmark strong {
+  font-weight: 700;
+  color: var(--scanner-logo-green);
 }
 
 .scanner-panel {

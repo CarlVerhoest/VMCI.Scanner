@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../contexts/AuthContext'
 import { ROUTE_PATHS } from '../config/routes'
-import logo from '../assets/logo.png'
+import ScannerLogo from './ScannerLogo'
 
 interface ResourceLink {
   to: string
@@ -43,7 +43,7 @@ function AppHeader() {
     <Navbar bg="body-tertiary" className="mb-3 border-bottom">
       <Container fluid className="px-4">
         <Navbar.Brand as={Link} to={ROUTE_PATHS.HOME} className="d-flex align-items-center">
-          <img src={logo} alt="Scanner" height={32} className="d-inline-block" />
+          <ScannerLogo height={32} />
         </Navbar.Brand>
         <div className="justify-content-end">
           {isAuthenticated && user ? (

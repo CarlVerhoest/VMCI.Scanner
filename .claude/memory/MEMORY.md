@@ -9,3 +9,4 @@
 - [Data before code](data-before-code.md) — a wrong document field is usually data; count the samples before proposing a fix
 - [Reproducing is not proving](reproducing-is-not-proving.md) — a green golden test proves transcription, not correctness
 - [Measure before optimizing](measure-before-optimizing.md) — count remote round-trips first
+- [Scanner logo choice](scanner-logo-choice.md) — proposal C (scan line), VMCI green/grey; decided, do not redesign
