@@ -54,6 +54,10 @@ In this order:
    dotnet run --project backend\VMCI.Scanner.DevTools -- create-account --email <e> --first-name <f> --surname <s> --role ADMIN
    ```
 
+   Run it while the API is **not** running, or add `--no-build` after `dotnet run`. DevTools
+   references the API project, so a normal `dotnet run` rebuilds the API too, and that fails with
+   `MSB3027 … file is locked by VMCI.Scanner.WebApi` when the running API holds its own files.
+
 8. **Start both servers:**
 
    ```powershell
