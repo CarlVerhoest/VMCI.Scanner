@@ -11,7 +11,7 @@ database, no HTTP endpoints.
   Claude returns facts (`DocumentFacts`), not a finished name.
 - `DocumentTitle.Compose` — turns the facts into the name, so the format is code and tested:
   - an invoice (also a credit note, receipt or till ticket): `company-nature-yyyyMMdd`, for example
-    `Garage Peeters BV-Onderhoud-20260914`. Nature is at most two Dutch words. Without a readable
+    `Garage Peeters-Onderhoud-20260914`. Nature is at most two Dutch words. Without a readable
     invoice date: `company-nature`.
   - any other document: a free Dutch title.
   - nothing usable: no suggestion.
@@ -20,10 +20,12 @@ database, no HTTP endpoints.
 
 - **Never a condition for the PDF.** No OCR text, no key, a failure, a refusal or a timeout
   (`TitleTimeoutSeconds`) all mean "no suggestion"; `DocumentsController` sends the PDF regardless.
-- **The company name is never shortened** — not by the prompt, not by `Compose`. It is the
-  company's own name: a branch, shop or station is left out (`TotalEnergies`, not `TotalEnergies
-  Station Gent Ring Oost`; the user's decision, 05/10/2026), and all-capitals becomes the usual
-  spelling.
+- **The company name is the short name it is known by** (the user's decision, 05/10/2026 — an
+  exception to the repository's "never shorten names"): no legal form (`Belcom Telecom`, not
+  `Belcom Telecom NV`), no branch, shop or station (`TotalEnergies`, not `TotalEnergies Station Gent
+  Ring Oost`), a long official name cut to its recognisable core (`Van den Broeck`), all-capitals in
+  the usual spelling. Claude is asked for this; `DocumentTitle.WithoutLegalForm` also drops a
+  trailing legal form in code, so that part is certain.
 - **Document content is never logged**: only whether it was an invoice and the token counts.
 - **Scanner's own API key**, not one shared with another application, so the cost is visible per
   application in the Anthropic Console and the key can be revoked on its own.
@@ -50,7 +52,7 @@ only the proposed name and timings — never the document's text.
 05/10/2026, `claude-opus-5-5`, on five fabricated documents (OCR 3 s, Claude 2–8 s each), all right:
 a telecom invoice with VMCI printed at the top as customer and the supplier only in the footer
 (supplier and invoice date, not due date, were picked), a fuel till ticket, a restaurant bill, an
-invoice from a supplier with a very long name (kept in full), and meeting minutes (free title).
+invoice from a supplier with a very long name (now shortened to `Van den Broeck`), and meeting minutes (free title).
 
 ## Unverified
 

@@ -27,9 +27,11 @@ public sealed class AnthropicDocumentTitleSuggester : IDocumentTitleSuggester
 
         - isInvoice: true for an invoice, credit note, receipt or till ticket - any document that asks
           for or proves a payment. False for anything else.
-        - company: for an invoice, the company that issued it (the supplier): the company's own name, in
-          full as printed - never abbreviated. Leave out a branch, shop, station or location name
-          ("TotalEnergies", not "TotalEnergies Station Gent Ring Oost"). Write a name printed in all
+        - company: for an invoice, the company that issued it (the supplier), by the short name it is
+          commonly known by. Leave out the legal form (NV, BV, BVBA, CV, VOF, VZW, SA, SRL, ...) and a
+          branch, shop, station or location name ("TotalEnergies", not "TotalEnergies Station Gent Ring
+          Oost"). Shorten a long official name to its recognisable core ("Van den Broeck" for "Algemene
+          Onderneming voor Bouwwerken Van den Broeck en Zonen NV"). Write a name printed in all
           capitals in its usual spelling ("TOTALENERGIES" becomes "TotalEnergies"). Not VMCI: VMCI is
           usually the customer. Empty for other documents.
         - nature: for an invoice, what the payment is for, in at most two Dutch words, starting with a

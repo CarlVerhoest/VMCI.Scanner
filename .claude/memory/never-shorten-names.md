@@ -16,3 +16,8 @@ concrete — `nvarchar(50)` columns met real values of 51 characters, and cuttin
 flag it, and widen the **column** (a schema script). Keep the backend limit and the frontend
 `maxLength` in one named constant each, changed together. `maxLength` may stop typing; it must never
 touch a value that arrived by import.
+
+**Exception, decided by the user 05/10/2026:** the company name in Scanner's *suggested document
+name* (`VMCI.Scanner.Claude`) is the short name the company is known by — legal form (NV, BV, ...)
+dropped, branch dropped, long names cut to their core. That name is a proposal the user sees and can
+edit before sharing, not stored data. The rule still holds everywhere else.
