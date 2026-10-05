@@ -35,7 +35,7 @@ Statuses: **done**, **in progress**, **not started**.
 | Searchable PDF (Azure Document Intelligence) | in progress | Code done, never run against Azure: provision the resource (S0, West Europe) and put `DocumentIntelligence:Endpoint`/`Key` in the secrets file |
 | Result screen: Share, Download | done | Verify Web Share with files on each target browser |
 | Recipients: user adds, admin removes | done | — |
-| Email a PDF from the server | in progress | Tenant set up and `VMCI.Scanner.Mail` built; test mails sent from the development PC (`docs/mail-setup.md`). Next: upload `scanner-mail.pfx` and the secrets file to the server, deploy, confirm `Email registered` in the startup log, and mail a scan from a phone |
+| Email a PDF from the server | done | Live on scanner.vmci.be from noreply@vmci.be (05/10/2026). Certificate expires 05/10/2031: renew before then (`docs/mail-setup.md`) |
 | Polish (plan phase 5): document filter, page reordering, live camera preview, draft across reloads | not started | Optional |
 
 ## Operations

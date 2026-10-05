@@ -68,8 +68,8 @@ Filled in as each step is completed.
 | 4 | Shared mailbox `noreply@vmci.be` with automatic reply; block sign-in | done 05/10/2026 |
 | 5 | Exchange: service principal, management scope, two role assignments | done 05/10/2026 |
 | 6 | Verify both directions with `Test-ServicePrincipalAuthorization` | done 05/10/2026 |
-| 7 | Configuration in the secrets file, development and production | done on the development PC 05/10/2026; server upload with the deployment after step 8 |
-| 8 | Code: `VMCI.Scanner.Mail`, DevTools `send-test-mail`, real test mail | done 05/10/2026 — production deployment still to do |
+| 7 | Configuration in the secrets file, development and production | done 05/10/2026 |
+| 8 | Code: `VMCI.Scanner.Mail`, DevTools `send-test-mail`, real test mail | done 05/10/2026, including production |
 
 ### Step 1 — Exchange module, Organization Management, organization customization
 
@@ -253,9 +253,9 @@ dotnet run --project backend/VMCI.Scanner.DevTools -- send-test-mail --to <addre
 | Blank one-page PDF, 2,188 bytes | inline `sendMail` | sent |
 | Fabricated noise PDF, 3,329,910 bytes | draft + upload session | sent |
 
-**Still to do on the server:** upload `scanner-mail.pfx` and the updated
-`appsettings.secrets.Production.json` to `<site root>/secrets/`, deploy, restart, and check the
-startup log for `Email registered` (`docs/deployment.md` §3).
+**Production, 05/10/2026:** `scanner-mail.pfx` and the updated `appsettings.secrets.Production.json` are in
+`<site root>/secrets/`; after the managed certificate loader (step 7) the startup log says `Email
+registered`, and a scan mailed from the app arrived.
 
 ## Certificate renewal
 
