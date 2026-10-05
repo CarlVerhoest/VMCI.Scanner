@@ -44,7 +44,9 @@ deletes mail other than the draft this code created itself.
 the startup log says `Email skipped: …` and the endpoint answers 503. When registered it logs the
 thumbprint and expiry date, and warns 30 days before the certificate expires.
 
-The certificate is loaded with `EphemeralKeySet`: the IIS application pool has no profile to store a key in.
+🚨 **The certificate is decoded in managed code** (`EmailCertificate.Load`, `Pkcs12Info`), never through
+Windows' PFX import: the IIS application pool on the Plesk host has no loaded user profile, and the import
+fails there — "Bad Data." or "The system cannot find the file specified." — even with `EphemeralKeySet`.
 
 ## Trying it
 

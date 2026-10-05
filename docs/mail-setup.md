@@ -35,8 +35,9 @@ applies here:
    `noreply@vmci.be` and `False` for any other mailbox. Only the negative test proves the scope.
 5. **Permissions are cached for 30 minutes to 2 hours.** The test cmdlet bypasses the cache and
    reports success before the application does. Wait; do not change the configuration.
-6. **Load the certificate with `X509KeyStorageFlags.EphemeralKeySet`.** The IIS application pool on
-   Plesk has no user profile to store a private key in.
+6. **Not from Claudine, learned here: do not let Windows import the `.pfx` on the Plesk host.** Its
+   IIS application pool has no loaded user profile, and Windows' PFX import fails there even with
+   `EphemeralKeySet` (step 7). `EmailCertificate.Load` decodes the file in managed code instead.
 
 ## Tenant configuration — the record
 
@@ -91,11 +92,23 @@ to the untrusted-repository prompt: it is Microsoft's own module on PSGallery), 
 Self-signed, created on 05/10/2026 on the development PC, **valid for five years** (owner's choice:
 less maintenance; acceptable because the role it unlocks is narrow).
 
+**Use the command below, not the one first used.** The original command had `-KeySpec Signature`, which
+puts the private key in the legacy CAPI provider *Microsoft Strong Cryptographic Provider*. Since the
+loader decodes the `.pfx` itself (step 7) either kind would now load, but a CNG key with the provider
+named is the modern default and what the current file holds:
+
 ```powershell
-$cert = New-SelfSignedCertificate -Subject "CN=VMCI Scanner Mail" -CertStoreLocation Cert:\CurrentUser\My -KeyExportPolicy Exportable -KeySpec Signature -KeyLength 2048 -HashAlgorithm SHA256 -NotAfter (Get-Date).AddYears(5)
+$cert = New-SelfSignedCertificate -Subject "CN=VMCI Scanner Mail" -CertStoreLocation Cert:\CurrentUser\My -KeyExportPolicy Exportable -Provider "Microsoft Software Key Storage Provider" -KeyAlgorithm RSA -KeyLength 2048 -HashAlgorithm SHA256 -NotAfter (Get-Date).AddYears(5)
 Export-Certificate -Cert $cert -FilePath .\backend\secrets\scanner-mail.cer
-Export-PfxCertificate -Cert $cert -FilePath .\backend\secrets\scanner-mail.pfx -Password (Read-Host -AsSecureString "PFX-wachtwoord")
+Export-PfxCertificate -Cert $cert -FilePath .\backend\secrets\scanner-mail.pfx -Password (Read-Host -AsSecureString "PFX-wachtwoord") -CryptoAlgorithmOption TripleDES_SHA1
 Remove-Item $cert.PSPath
+```
+
+Check a new `.pfx` before uploading it: it must not name the CAPI provider (the provider name is
+stored readable in the file). This prints `Microsoft Software Key Storage Provider` for a good file:
+
+```powershell
+$b = [IO.File]::ReadAllBytes((Resolve-Path .\backend\secrets\scanner-mail.pfx)); [regex]::Matches([Text.Encoding]::Unicode.GetString($b) + [Text.Encoding]::BigEndianUnicode.GetString($b), 'Microsoft[ A-Za-z0-9\.]{5,80}') | ForEach-Object Value | Select-Object -Unique
 ```
 
 | File | What it is | Where it goes |
@@ -205,6 +218,19 @@ Without `CertificatePassword` the mail service is not registered and the API sta
 email endpoint answers 503 and the app hides *Mailen naar...*.
 
 - **A `"` or `\` in the password** is escaped in JSON as `\"` and `\\`.
+- 🚨 **The certificate would not load on the server (05/10/2026)**, while the same file and password
+  worked on the development PC. The log said, in turn:
+  - `could not be loaded (Bad Data.)` — with the original CAPI key;
+  - `could not be loaded (The system cannot find the file specified.)` — after re-packing the **same
+    certificate and key** as a CNG key (same thumbprint; nothing changed in Entra ID or Exchange).
+    The file was there: this is a Windows crypto error, not a missing file.
+
+  Not the password (a wrong one says so), not a damaged upload (same size), not the PFX encryption
+  (TripleDES-SHA1 throughout). Cause: the IIS application pool on the Plesk host runs **without a loaded
+  user profile**, and Windows' PFX import (`X509CertificateLoader`, even with `EphemeralKeySet`) needs
+  one. Fix in code: `EmailCertificate.Load` decodes the PKCS#12 itself (`Pkcs12Info`) and imports the
+  key as an in-memory RSA key, so no Windows key store is involved. The CAPI original is kept locally as
+  `scanner-mail-capi-backup.pfx` and can be deleted once the server works.
 - 05/10/2026: both secrets files on the development PC hold `Email:CertificatePassword`; both parse,
   and the password opens `scanner-mail.pfx` (private key present, thumbprint `E30D24D2…`). The server
   copy is uploaded together with the deployment of step 8.
