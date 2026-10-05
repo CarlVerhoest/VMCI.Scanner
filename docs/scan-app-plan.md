@@ -25,7 +25,7 @@ original reasoning stays readable.
 | One code, several devices (open question 3) | Assumed allowed | Moot: a user signs in with their password on as many devices as they like |
 | Recipients (section 8) | List in the accounts file | Table `Recipient`. A user can add an address from the result screen; **only the administrator removes one** (open question 4) |
 | Mail limits (section 8) | 50 mails per account per day, 20 recipients | **No limits** |
-| Mail service (open question 2) | Azure Communication Services or SMTP | **Postponed.** Until it is chosen, the email endpoint answers 503 and the client hides *Email to...* |
+| Mail service (open question 2) | Azure Communication Services or SMTP | **Microsoft Graph** from the VMCI Microsoft 365 tenant, app-only with a **certificate**, sending as the shared mailbox **`noreply@vmci.be`** ("VMCI Scanner"). No Reply-To; the body names the staff member who sent it and says the address is not read. Permissions are Exchange RBAC roles scoped to that one mailbox. Setup and configuration: `docs/mail-setup.md`. Until it is configured, the email endpoint answers 503 and the client hides *Email to...* |
 | Hosting (open question 1) | Azure App Service, to decide | **The same Plesk hosting as VMCI, LevelUp and eLogger**: IIS site `scanner.vmci.be`, Web Deploy; see `docs/deployment.md` |
 | Name and icon (open question 5) | Open | Decided: Scanner, with the VMCI scan-line logo |
 

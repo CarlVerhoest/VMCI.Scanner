@@ -35,7 +35,7 @@ Statuses: **done**, **in progress**, **not started**.
 | Searchable PDF (Azure Document Intelligence) | in progress | Code done, never run against Azure: provision the resource (S0, West Europe) and put `DocumentIntelligence:Endpoint`/`Key` in the secrets file |
 | Result screen: Share, Download | done | Verify Web Share with files on each target browser |
 | Recipients: user adds, admin removes | done | — |
-| Email a PDF from the server | not started | Mail service postponed; the endpoint answers 503 and the client hides the option until an `IEmailSender` is registered |
+| Email a PDF from the server | in progress | Decided: Graph, certificate, `noreply@vmci.be`. Tenant setup step by step in `docs/mail-setup.md`; then build `VMCI.Scanner.Mail`. Until then the endpoint answers 503 and the client hides the option |
 | Polish (plan phase 5): document filter, page reordering, live camera preview, draft across reloads | not started | Optional |
 
 ## Operations
