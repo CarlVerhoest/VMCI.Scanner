@@ -79,7 +79,8 @@ a phone downloads it the first time the scanner opens and caches it then.
   {
     "ConnectionStrings": { "DefaultConnection": "<the Plesk database's connection string>" },
     "DocumentIntelligence": { "Endpoint": "https://<resource>.cognitiveservices.azure.com/", "Key": "<key>" },
-    "Email": { "CertificatePassword": "<password of scanner-mail.pfx>" }
+    "Email": { "CertificatePassword": "<password of scanner-mail.pfx>" },
+    "Anthropic": { "ApiKey": "<Scanner's own Anthropic API key>" }
   }
   ```
 
@@ -121,7 +122,9 @@ a phone downloads it the first time the scanner opens and caches it then.
   The startup log (`logs\scanner-<date>.log` in the site root) says
   `Secrets files loaded: <path>\secrets\appsettings.secrets.Production.json`, names the Data
   Protection keys folder, and says `Document Intelligence registered` or `skipped`, and `Email
-  registered` (with the certificate thumbprint and expiry date) or `Email skipped: …`. If the API does
+  registered` (with the certificate thumbprint and expiry date) or `Email skipped: …`, and `Title
+  suggestions registered` or `skipped` (Claude names documents from the OCR text; needs
+  `Anthropic:ApiKey`). If the API does
   not start, set `stdoutLogEnabled="true"` in the server's `web.config` and read `logs\stdout_*.log`.
 - **Request size**: a 20-page document is up to about 32 MB. Kestrel and IIS in-process take their
   limit from `Limits` in `appsettings.json`; `web.config` raises IIS's own `maxAllowedContentLength`
