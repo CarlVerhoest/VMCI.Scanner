@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VMCI.Scanner.DB.Data;
 using VMCI.Scanner.DB.UnitOfWork;
+using VMCI.Scanner.Mail;
 using VMCI.Scanner.Pdf;
 using VMCI.Scanner.WebApi.Auth;
 using VMCI.Scanner.WebApi.Configuration;
@@ -226,8 +228,38 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                 }
                 services.AddScoped<SearchablePdfService>();
 
-                // No mail service yet (postponed): IEmailSender is not registered, so mailing answers 503.
-                StartupLog.Information("Email skipped: no mail service chosen yet");
+                // Mail is optional: without it the email endpoint answers 503 and the client hides the option.
+                // Microsoft Graph as noreply@vmci.be with a certificate; tenant setup in docs/mail-setup.md.
+                var email = config.GetSection(EmailOptions.SectionName).Get<EmailOptions>() ?? new EmailOptions();
+                if (email.IsComplete)
+                {
+                    var certificatePath = email.ResolveCertificatePath(
+                        SecretsFile.ResolveDirectory(env.ContentRootPath, env.IsDevelopment()));
+                    try
+                    {
+                        var certificate = EmailCertificate.Load(certificatePath, email.CertificatePassword);
+                        services.AddGraphEmailSender(email, certificate);
+                        StartupLog.Information(
+                            "Email registered: Microsoft Graph as {Sender}, certificate {Thumbprint} valid until {NotAfter:yyyy-MM-dd}",
+                            email.SenderAddress, certificate.Thumbprint, certificate.NotAfter);
+                        if (certificate.NotAfter < DateTime.Now.AddDays(30))
+                        {
+                            StartupLog.Warning(
+                                "Email certificate {Thumbprint} expires on {NotAfter:yyyy-MM-dd}: renew it (docs/mail-setup.md, Certificate renewal)",
+                                certificate.Thumbprint, certificate.NotAfter);
+                        }
+                    }
+                    catch (Exception ex) when (ex is CryptographicException or IOException or UnauthorizedAccessException)
+                    {
+                        // A missing file or a wrong password must not stop the API; mail is simply off.
+                        StartupLog.Warning("Email skipped: certificate {Path} could not be loaded ({Error})",
+                            certificatePath, ex.Message);
+                    }
+                }
+                else
+                {
+                    StartupLog.Information("Email skipped: Email:TenantId/ClientId/SenderAddress/CertificatePath/CertificatePassword not configured");
+                }
 
                 // Configure CORS with specific origins for security
                 services.AddCors(options =>

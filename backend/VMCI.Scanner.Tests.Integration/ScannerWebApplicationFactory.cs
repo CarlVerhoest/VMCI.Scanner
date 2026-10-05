@@ -38,6 +38,9 @@ public class ScannerWebApplicationFactory : WebApplicationFactory<Program>
                 // with a real key would send test documents to Azure. Tests run without OCR.
                 ["DocumentIntelligence:Endpoint"] = "",
                 ["DocumentIntelligence:Key"] = "",
+                // Likewise mail: with the certificate password from the secrets file, tests would send
+                // real mail from noreply@vmci.be.
+                ["Email:CertificatePassword"] = "",
             });
         });
 

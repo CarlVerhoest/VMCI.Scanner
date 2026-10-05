@@ -22,10 +22,10 @@ startup log says `Document Intelligence skipped: not configured` and PDFs are im
 ## Does NOT contain
 
 - Controllers, request validation (page count, sizes) — that is `DocumentsController` in WebApi.
-- Email. When a mail service is chosen it gets its own project.
+- Email. That is `VMCI.Scanner.Mail`.
 
 ## Unverified
 
 - Whether the Azure free tier (F0) processes only the first two pages. Assume tier S0.
 - The searchable PDF's size compared to the image PDF; it is logged on every OCR so it can be
-  checked against the mail size limit once email exists.
+  checked against the mail size limit (`Email:MaxMessageBytes`).

@@ -78,7 +78,8 @@ a phone downloads it the first time the scanner opens and caches it then.
   ```json
   {
     "ConnectionStrings": { "DefaultConnection": "<the Plesk database's connection string>" },
-    "DocumentIntelligence": { "Endpoint": "https://<resource>.cognitiveservices.azure.com/", "Key": "<key>" }
+    "DocumentIntelligence": { "Endpoint": "https://<resource>.cognitiveservices.azure.com/", "Key": "<key>" },
+    "Email": { "CertificatePassword": "<password of scanner-mail.pfx>" }
   }
   ```
 
@@ -94,6 +95,9 @@ a phone downloads it the first time the scanner opens and caches it then.
   - Document Intelligence is the Foundry resource **VMCI-Foundry** (Sweden Central, kind
     AIServices): its endpoint and KEY 1 from *Resource Management → Keys and Endpoint*. The
     `services.ai.azure.com` and `cognitiveservices.azure.com` endpoints both work.
+  - **Mail** needs, besides `Email:CertificatePassword` in that file, the certificate itself:
+    upload `backend/secrets/scanner-mail.pfx` to the same `secrets` folder. The other `Email` values
+    are in the committed `appsettings.json`. Tenant setup and certificate renewal: `docs/mail-setup.md`.
   - Without the connection string the API starts, but every endpoint that touches the database
     answers 500 (including login). Without the Document Intelligence settings the site runs and
     makes image-only PDFs.
@@ -110,12 +114,14 @@ a phone downloads it the first time the scanner opens and caches it then.
   ├── .well-known\       ← web.config so Let's Encrypt renewals work
   └── secrets\
       ├── appsettings.secrets.Production.json   ← uploaded by hand
+      ├── scanner-mail.pfx                      ← uploaded by hand (mail)
       └── data-protection-keys\                 ← written by the API
   ```
 
   The startup log (`logs\scanner-<date>.log` in the site root) says
   `Secrets files loaded: <path>\secrets\appsettings.secrets.Production.json`, names the Data
-  Protection keys folder, and says `Document Intelligence registered` or `skipped`. If the API does
+  Protection keys folder, and says `Document Intelligence registered` or `skipped`, and `Email
+  registered` (with the certificate thumbprint and expiry date) or `Email skipped: …`. If the API does
   not start, set `stdoutLogEnabled="true"` in the server's `web.config` and read `logs\stdout_*.log`.
 - **Request size**: a 20-page document is up to about 32 MB. Kestrel and IIS in-process take their
   limit from `Limits` in `appsettings.json`; `web.config` raises IIS's own `maxAllowedContentLength`

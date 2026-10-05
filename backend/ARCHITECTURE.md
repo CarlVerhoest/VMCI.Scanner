@@ -10,6 +10,7 @@ backend/
 ├── VMCI.Scanner.WebApi/          ← API Layer (Controllers, Services, DTOs)
 ├── VMCI.Scanner.Shared/          ← Shared Code (Enums, Constants, etc.)
 ├── VMCI.Scanner.Pdf/             ← Image PDF (PDFsharp) and OCR (Azure Document Intelligence)
+├── VMCI.Scanner.Mail/            ← Mail from noreply@vmci.be through Microsoft Graph
 ├── VMCI.Scanner.DevTools/         ← Console app for one-off admin/dev tasks (create-account, ...)
 ├── VMCI.Scanner.Tests.Unit/      ← Unit Tests
 └── VMCI.Scanner.Tests.Integration/ ← Integration Tests
@@ -121,12 +122,31 @@ An integration or engine gets its own project (`VMCI.Scanner.<Capability>`) with
 
 **Does NOT contain:**
 - ❌ Database access, controllers, request validation
-- ❌ Email (a mail service gets its own project when chosen)
+- ❌ Email (`VMCI.Scanner.Mail`)
 
 **Referenced by:** VMCI.Scanner.WebApi. `SearchablePdfService` is always registered; the OCR provider
 only when `DocumentIntelligence:Endpoint` and `Key` are set.
 
 **See:** `backend/VMCI.Scanner.Pdf/CLAUDE.md`
+
+---
+
+### VMCI.Scanner.Mail - Mail from noreply@vmci.be
+
+**Purpose:** send a scanned PDF to a recipient, as the shared mailbox `noreply@vmci.be`
+
+**Contains:**
+- ✅ `IEmailSender` + `GraphEmailSender` (Microsoft Graph over plain HTTP, app-only, certificate)
+- ✅ `ScanMail` (the English subject and body), `EmailOptions`, `EmailCertificate`
+
+**Does NOT contain:**
+- ❌ Database access, controllers, the recipient-list check (that is `DocumentsController`)
+- ❌ Any Graph permission in Entra ID: the rights are Exchange RBAC roles scoped to one mailbox
+
+**Referenced by:** VMCI.Scanner.WebApi (and DevTools through it). Registered only when the `Email`
+section is complete and the certificate loads.
+
+**See:** `backend/VMCI.Scanner.Mail/CLAUDE.md` and `docs/mail-setup.md`
 
 ---
 
@@ -296,7 +316,7 @@ When working on this codebase:
 
 ## Current state
 
-Keep this section current. As of 03/10/2026: `ScannerContext` has `Account`, `AccountRole` and `Recipient`. Login is a persistent cookie validated against `Account.SecurityStamp` on every request (`WebApi/Auth/`); administrators manage accounts in the application; `DocumentsController` builds PDFs through `VMCI.Scanner.Pdf`. Email has an interface (`IEmailSender`) but no implementation yet. See `docs/scan-app-plan.md` section 0.
+Keep this section current. As of 05/10/2026: `ScannerContext` has `Account`, `AccountRole` and `Recipient`. Login is a persistent cookie validated against `Account.SecurityStamp` on every request (`WebApi/Auth/`); administrators manage accounts in the application; `DocumentsController` builds PDFs through `VMCI.Scanner.Pdf`. Email goes through `VMCI.Scanner.Mail` (Microsoft Graph, `noreply@vmci.be`). See `docs/scan-app-plan.md` section 0.
 
 ## Questions?
 

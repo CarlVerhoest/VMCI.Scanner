@@ -65,8 +65,12 @@ once per device, and then stay signed in.
   and size (`Limits:MaxPageBytes`). The request body is capped at all pages plus 1 MB.
 - OCR runs at Azure Document Intelligence; the analysis result is deleted there right after it is
   fetched.
-- Email (not yet active) only ever goes to an address on the account's own recipient list; adding
-  one is an explicit, logged step, removing one is for an administrator only.
+- Email only ever goes to an address on the account's own recipient list; adding one is an explicit,
+  logged step, removing one is for an administrator only. It is sent from `noreply@vmci.be` through
+  Microsoft Graph, app-only with a certificate. The app may send as, and read/write, that one shared
+  mailbox and no other: Exchange RBAC role assignments scoped to it, and **no** Graph permission in
+  Entra ID (which would be tenant-wide). Proven both ways with `Test-ServicePrincipalAuthorization`;
+  see `docs/mail-setup.md`.
 
 ## Where secrets live
 
@@ -74,6 +78,7 @@ once per device, and then stay signed in.
 |---|---|---|
 | Data Protection keys (sign and encrypt the login cookie) | `data-protection-keys/` in the secrets folder, or `DataProtection:KeysPath` | no |
 | `DocumentIntelligence:Key` (Azure OCR) | `backend/secrets/appsettings.secrets.json` (development), `appsettings.secrets.Production.json` (server) | no |
+| `Email:CertificatePassword` and `scanner-mail.pfx` (mail through Graph) | `backend/secrets/` (both secrets files), uploaded by hand to `<site root>/secrets/` on the Plesk host | no |
 | Certificates (`*.pfx`, `*.pem`) | `backend/secrets/`, or next to `vite.config.ts` for the mkcert dev certificates | no |
 | Development connection string | `appsettings.Development.json` — Windows authentication on `localhost`, no password | yes (not a secret) |
 | Production connection string | `backend/secrets/appsettings.secrets.Production.json`, uploaded by hand to `<site root>/secrets/` on the Plesk host | no |

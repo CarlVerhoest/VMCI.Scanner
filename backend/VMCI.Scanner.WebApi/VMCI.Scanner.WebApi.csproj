@@ -18,6 +18,7 @@
     <ProjectReference Include="..\VMCI.Scanner.DB\VMCI.Scanner.DB.csproj" />
     <ProjectReference Include="..\VMCI.Scanner.Shared\VMCI.Scanner.Shared.csproj" />
     <ProjectReference Include="..\VMCI.Scanner.Pdf\VMCI.Scanner.Pdf.csproj" />
+    <ProjectReference Include="..\VMCI.Scanner.Mail\VMCI.Scanner.Mail.csproj" />
   </ItemGroup>
 
   <ItemGroup>

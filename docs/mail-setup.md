@@ -68,7 +68,7 @@ Filled in as each step is completed.
 | 5 | Exchange: service principal, management scope, two role assignments | done 05/10/2026 |
 | 6 | Verify both directions with `Test-ServicePrincipalAuthorization` | done 05/10/2026 |
 | 7 | Configuration in the secrets file, development and production | done on the development PC 05/10/2026; server upload with the deployment after step 8 |
-| 8 | Code: `VMCI.Scanner.Mail`, DevTools `mail test`, real test mail | not started |
+| 8 | Code: `VMCI.Scanner.Mail`, DevTools `send-test-mail`, real test mail | done 05/10/2026 — production deployment still to do |
 
 ### Step 1 — Exchange module, Organization Management, organization customization
 
@@ -208,6 +208,28 @@ email endpoint answers 503 and the app hides *Mailen naar...*.
 - 05/10/2026: both secrets files on the development PC hold `Email:CertificatePassword`; both parse,
   and the password opens `scanner-mail.pfx` (private key present, thumbprint `E30D24D2…`). The server
   copy is uploaded together with the deployment of step 8.
+
+### Step 8 — Code and a real test mail
+
+`backend/VMCI.Scanner.Mail` (see its `CLAUDE.md`): `GraphEmailSender` over plain HTTP, the English
+mail text in `ScanMail`, registration in `Program.cs` only when the `Email` section is complete and
+the certificate loads. The startup log says `Email registered: Microsoft Graph as noreply@vmci.be,
+certificate E30D24D2… valid until 2031-10-05`, or `Email skipped: …` with the reason.
+
+```powershell
+dotnet run --project backend/VMCI.Scanner.DevTools -- send-test-mail --to <address> [--file <pdf>]
+```
+
+05/10/2026, from the development PC to carl.verhoest@vmci.be — both paths work against the real tenant:
+
+| Attachment | Path | Result |
+|---|---|---|
+| Blank one-page PDF, 2,188 bytes | inline `sendMail` | sent |
+| Fabricated noise PDF, 3,329,910 bytes | draft + upload session | sent |
+
+**Still to do on the server:** upload `scanner-mail.pfx` and the updated
+`appsettings.secrets.Production.json` to `<site root>/secrets/`, deploy, restart, and check the
+startup log for `Email registered` (`docs/deployment.md` §3).
 
 ## Certificate renewal
 

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VMCI.Scanner.DB.UnitOfWork;
+using VMCI.Scanner.Mail;
 using VMCI.Scanner.Pdf;
 using VMCI.Scanner.WebApi.DTOs;
 using VMCI.Scanner.WebApi.Extensions;
@@ -101,7 +102,10 @@ public class DocumentsController : ControllerBase
         return File(result.Content, "application/pdf", name);
     }
 
-    /// <summary>Mails a PDF to one of the account's own recipients. 503 until a mail service is configured.</summary>
+    /// <summary>
+    /// Mails a PDF to one of the account's own recipients, from noreply@vmci.be (<see cref="ScanMail"/>).
+    /// 503 while the mail service is not configured.
+    /// </summary>
     [HttpPost("email")]
     public async Task<IActionResult> Email([FromForm] IFormFile? file, [FromForm] string? recipient, [FromForm] string? fileName, CancellationToken cancellationToken)
     {
@@ -142,13 +146,16 @@ public class DocumentsController : ControllerBase
         }
 
         var account = await _unitOfWork.Account.GetByIdAsync(accountId.Value);
-        var name = PdfFileName(fileName);
-        var subject = Path.GetFileNameWithoutExtension(name);
-        var body = $"In bijlage: {subject}.\n\nVerstuurd met VMCI Scanner door {account?.FirstName} {account?.SurName} ({account?.Email}).";
+        if (account == null)
+        {
+            return Unauthorized();
+        }
+
+        var message = ScanMail.Create(listed.Email, $"{account.FirstName} {account.SurName}", account.Email, PdfFileName(fileName), data);
 
         try
         {
-            await sender.SendAsync(new EmailMessage(listed.Email, subject, body, name, data), cancellationToken);
+            await sender.SendAsync(message, cancellationToken);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {

@@ -32,11 +32,15 @@ public static class AppConfiguration
         return string.IsNullOrWhiteSpace(fromVariable) ? DefaultEnvironment : fromVariable.Trim();
     }
 
-    public static IConfiguration Build(string environment)
-    {
-        var webApiDirectory = FindWebApiDirectory()
+    /// <summary>The VMCI.Scanner.WebApi project directory: the API's content root when it runs from source.</summary>
+    public static string WebApiDirectory() =>
+        FindWebApiDirectory()
             ?? throw new InvalidOperationException(
                 $"Could not find the {WebApiProjectName} project directory. Run this tool from inside the repository.");
+
+    public static IConfiguration Build(string environment)
+    {
+        var webApiDirectory = WebApiDirectory();
 
         var builder = new ConfigurationBuilder()
             .SetBasePath(webApiDirectory)
