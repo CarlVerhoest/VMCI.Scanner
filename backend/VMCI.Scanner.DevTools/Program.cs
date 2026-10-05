@@ -21,6 +21,9 @@ public static class Program
             case "send-test-mail":
                 return await SendTestMailCommand.RunAsync(args[1..]);
 
+            case "suggest-title":
+                return await SuggestTitleCommand.RunAsync(args[1..]);
+
             default:
                 Console.Error.WriteLine($"Unknown command '{args[0]}'.");
                 PrintUsage();
@@ -35,5 +38,6 @@ public static class Program
         Console.WriteLine("Commands:");
         Console.WriteLine("  " + CreateAccountCommand.Usage);
         Console.WriteLine("  " + SendTestMailCommand.Usage);
+        Console.WriteLine("  " + SuggestTitleCommand.Usage);
     }
 }

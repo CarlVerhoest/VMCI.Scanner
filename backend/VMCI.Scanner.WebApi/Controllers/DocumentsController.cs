@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using VMCI.Scanner.Claude;
 using VMCI.Scanner.DB.UnitOfWork;
 using VMCI.Scanner.Mail;
 using VMCI.Scanner.Pdf;
@@ -21,6 +22,7 @@ namespace VMCI.Scanner.WebApi.Controllers;
 public class DocumentsController : ControllerBase
 {
     public const string SearchableHeader = "X-Searchable";
+    public const string SuggestedNameHeader = "X-Suggested-Name";
 
     private readonly SearchablePdfService _pdf;
     private readonly IServiceProvider _services;
@@ -58,7 +60,8 @@ public class DocumentsController : ControllerBase
 
     /// <summary>
     /// Pages in (multipart field <c>pages</c>, repeated, in page order), PDF out. The response header
-    /// <c>X-Searchable</c> says whether the text layer was added.
+    /// <c>X-Searchable</c> says whether the text layer was added; <c>X-Suggested-Name</c>, when present,
+    /// is a name Claude proposes from the text (percent-encoded, without .pdf).
     /// </summary>
     [HttpPost("pdf")]
     public async Task<IActionResult> CreatePdf([FromForm] List<IFormFile> pages, [FromForm] string? fileName, CancellationToken cancellationToken)
@@ -99,7 +102,44 @@ public class DocumentsController : ControllerBase
             this.GetCurrentAccountId(), pages.Count, result.Content.Length, result.IsSearchable);
 
         Response.Headers[SearchableHeader] = result.IsSearchable ? "true" : "false";
+        var suggested = await SuggestNameAsync(result.Text, cancellationToken);
+        if (suggested != null)
+        {
+            // Headers are ASCII: percent-encoded UTF-8, decoded by the client.
+            Response.Headers[SuggestedNameHeader] = Uri.EscapeDataString(Path.GetFileNameWithoutExtension(PdfFileName(suggested)));
+        }
+
         return File(result.Content, "application/pdf", name);
+    }
+
+    /// <summary>
+    /// Claude's name for the document, from the OCR text. Like OCR, never a condition: no text, no
+    /// suggester, a failure or a timeout all mean no suggestion, and the PDF goes out regardless.
+    /// </summary>
+    private async Task<string?> SuggestNameAsync(string? text, CancellationToken cancellationToken)
+    {
+        var suggester = _services.GetService<IDocumentTitleSuggester>();
+        if (suggester == null || string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        var timeout = TimeSpan.FromSeconds(_services.GetRequiredService<ClaudeOptions>().TitleTimeoutSeconds);
+        using var limited = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        limited.CancelAfter(timeout);
+        try
+        {
+            return await suggester.SuggestAsync(text, limited.Token);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Title suggestion failed or took longer than {Timeout}; keeping the client's name", timeout);
+            return null;
+        }
     }
 
     /// <summary>

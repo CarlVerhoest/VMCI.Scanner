@@ -145,6 +145,8 @@ GitHub's secret scanning recognises several key formats (Anthropic `sk-ant-…`,
   `Secrets files loaded: <paths>` or `No secrets files found`.
 - 🚨 **`DocumentIntelligence:Key` lives here and nowhere else**; the committed `appsettings.json`
   leaves it empty. Without it the API starts and makes image-only PDFs.
+- 🚨 **`Anthropic:ApiKey` lives here too** (Scanner's own key). Without it the API starts and
+  suggests no document names.
 - 🚨 **The Data Protection keys live next to it**, in `data-protection-keys/` inside the secrets folder (or
   `DataProtection:KeysPath`). They encrypt the login cookie: lose them and every device is signed
   out. See `docs/security.md`.

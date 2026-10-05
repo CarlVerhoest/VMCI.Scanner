@@ -33,6 +33,7 @@ Statuses: **done**, **in progress**, **not started**.
 | Scanner module (`src/scanner/`): capture, detection, corner editor, warp, page list | done | Plan phase 1 "done when": test on a real iPhone and Android phone with photographed A4 pages (needs HTTPS on the dev server, see README) |
 | PDF from pages (PDFsharp) | done | — |
 | Searchable PDF (Azure Document Intelligence) | in progress | Code done, never run against Azure: provision the resource (S0, West Europe) and put `DocumentIntelligence:Endpoint`/`Key` in the secrets file |
+| Document name suggested from the OCR text (Claude): invoice `company-nature-yyyyMMdd`, free title otherwise | in progress | Works locally against Azure OCR and Claude on fabricated documents (05/10/2026). Next: check real scanned invoices (`DevTools suggest-title`), put `Anthropic:ApiKey` in the server's secrets file, deploy |
 | Result screen: Share, Download | done | Verify Web Share with files on each target browser |
 | Recipients: user adds, admin removes | done | — |
 | Email a PDF from the server | done | Live on scanner.vmci.be from noreply@vmci.be (05/10/2026). Certificate expires 05/10/2031: renew before then (`docs/mail-setup.md`) |

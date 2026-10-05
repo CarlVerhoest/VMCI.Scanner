@@ -3,6 +3,10 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using VMCI.Scanner.Claude;
+using VMCI.Scanner.Pdf;
 
 namespace VMCI.Scanner.Tests.Integration;
 
@@ -55,6 +59,61 @@ public class DocumentsTests
         var pdf = await response.Content.ReadAsByteArrayAsync();
         Assert.StartsWith("%PDF-", Encoding.ASCII.GetString(pdf, 0, 5));
         Assert.Equal(2, CountPages(pdf));
+    }
+
+    [Fact]
+    public async Task CreatePdf_WithOcrAndASuggestion_SendsTheSuggestedNamePercentEncoded()
+    {
+        using var factory = _factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+        {
+            services.AddSingleton<IOcrProvider>(new FakeOcr("FACTUUR Garage Peeters"));
+            services.AddSingleton(new ClaudeOptions { ApiKey = "not-used" });
+            services.AddSingleton<IDocumentTitleSuggester>(new FakeSuggester("Café Brouwer: Ré/Kost-20260914"));
+        }));
+        var email = await _factory.SeedAccountAsync(Password);
+        var client = factory.CreateClient(new() { BaseAddress = new Uri("https://localhost"), HandleCookies = true });
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync("/api/auth/login", new { email, password = Password })).StatusCode);
+
+        var response = await client.PostAsync("/api/documents/pdf", Pages(TestImages.Png(60, 80)));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("true", Assert.Single(response.Headers.GetValues("X-Searchable")));
+        // Characters a file system refuses are dropped, accents survive the encoding.
+        var header = Assert.Single(response.Headers.GetValues("X-Suggested-Name"));
+        Assert.Equal("Café Brouwer RéKost-20260914", Uri.UnescapeDataString(header));
+        // The PDF itself still carries the name the client sent.
+        Assert.Equal("Factuur oktober.pdf", response.Content.Headers.ContentDisposition?.FileNameStar);
+    }
+
+    [Fact]
+    public async Task CreatePdf_WhenTheSuggestionFails_StillReturnsThePdf()
+    {
+        using var factory = _factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+        {
+            services.AddSingleton<IOcrProvider>(new FakeOcr("FACTUUR"));
+            services.AddSingleton(new ClaudeOptions { ApiKey = "not-used" });
+            services.AddSingleton<IDocumentTitleSuggester>(new FakeSuggester(null, fail: true));
+        }));
+        var email = await _factory.SeedAccountAsync(Password);
+        var client = factory.CreateClient(new() { BaseAddress = new Uri("https://localhost"), HandleCookies = true });
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync("/api/auth/login", new { email, password = Password })).StatusCode);
+
+        var response = await client.PostAsync("/api/documents/pdf", Pages(TestImages.Png(60, 80)));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.False(response.Headers.Contains("X-Suggested-Name"));
+    }
+
+    private sealed class FakeOcr(string text) : IOcrProvider
+    {
+        public Task<OcrResult> MakeSearchableAsync(byte[] imagePdf, CancellationToken cancellationToken) =>
+            Task.FromResult(new OcrResult(imagePdf, text));
+    }
+
+    private sealed class FakeSuggester(string? name, bool fail = false) : IDocumentTitleSuggester
+    {
+        public Task<string?> SuggestAsync(string documentText, CancellationToken cancellationToken) =>
+            fail ? throw new HttpRequestException("Anthropic unreachable") : Task.FromResult(name);
     }
 
     [Fact]

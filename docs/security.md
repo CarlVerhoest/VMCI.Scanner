@@ -65,6 +65,10 @@ once per device, and then stay signed in.
   and size (`Limits:MaxPageBytes`). The request body is capped at all pages plus 1 MB.
 - OCR runs at Azure Document Intelligence; the analysis result is deleted there right after it is
   fetched.
+- **The OCR text goes to Anthropic** (Claude, through the Anthropic API) to propose a document
+  name, when `Anthropic:ApiKey` is set. Decided by the user on 05/10/2026, on VMCI's paid Anthropic
+  account, with a key of Scanner's own. Only the text is sent, not the images; only the outcome and
+  token counts are logged.
 - Email only ever goes to an address on the account's own recipient list; adding one is an explicit,
   logged step, removing one is for an administrator only. It is sent from `noreply@vmci.be` through
   Microsoft Graph, app-only with a certificate. The app may send as, and read/write, that one shared
@@ -78,6 +82,7 @@ once per device, and then stay signed in.
 |---|---|---|
 | Data Protection keys (sign and encrypt the login cookie) | `data-protection-keys/` in the secrets folder, or `DataProtection:KeysPath` | no |
 | `DocumentIntelligence:Key` (Azure OCR) | `backend/secrets/appsettings.secrets.json` (development), `appsettings.secrets.Production.json` (server) | no |
+| `Anthropic:ApiKey` (document name suggestions; Scanner's own key, not shared with another application) | `backend/secrets/appsettings.secrets.json` (development), `appsettings.secrets.Production.json` (server) | no |
 | `Email:CertificatePassword` and `scanner-mail.pfx` (mail through Graph) | `backend/secrets/` (both secrets files), uploaded by hand to `<site root>/secrets/` on the Plesk host | no |
 | Certificates (`*.pfx`, `*.pem`) | `backend/secrets/`, or next to `vite.config.ts` for the mkcert dev certificates | no |
 | Development connection string | `appsettings.Development.json` — Windows authentication on `localhost`, no password | yes (not a secret) |

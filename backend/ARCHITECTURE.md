@@ -11,6 +11,7 @@ backend/
 ├── VMCI.Scanner.Shared/          ← Shared Code (Enums, Constants, etc.)
 ├── VMCI.Scanner.Pdf/             ← Image PDF (PDFsharp) and OCR (Azure Document Intelligence)
 ├── VMCI.Scanner.Mail/            ← Mail from noreply@vmci.be through Microsoft Graph
+├── VMCI.Scanner.Claude/          ← Document name suggestions from the OCR text (Anthropic API)
 ├── VMCI.Scanner.DevTools/         ← Console app for one-off admin/dev tasks (create-account, ...)
 ├── VMCI.Scanner.Tests.Unit/      ← Unit Tests
 └── VMCI.Scanner.Tests.Integration/ ← Integration Tests
@@ -147,6 +148,25 @@ only when `DocumentIntelligence:Endpoint` and `Key` are set.
 section is complete and the certificate loads.
 
 **See:** `backend/VMCI.Scanner.Mail/CLAUDE.md` and `docs/mail-setup.md`
+
+---
+
+### VMCI.Scanner.Claude - Document name suggestions
+
+**Purpose:** propose a document name from the text OCR read: `company-nature-yyyyMMdd` for an
+invoice, a free title otherwise
+
+**Contains:**
+- ✅ `IDocumentTitleSuggester` + `AnthropicDocumentTitleSuggester` (official Anthropic SDK, structured output)
+- ✅ `DocumentTitle.Compose` (facts to name), `ClaudeOptions`
+
+**Does NOT contain:**
+- ❌ OCR (`VMCI.Scanner.Pdf`), controllers, database access
+
+**Referenced by:** VMCI.Scanner.WebApi. Registered only when `Anthropic:ApiKey` is set; never a
+condition for the PDF.
+
+**See:** `backend/VMCI.Scanner.Claude/CLAUDE.md`
 
 ---
 

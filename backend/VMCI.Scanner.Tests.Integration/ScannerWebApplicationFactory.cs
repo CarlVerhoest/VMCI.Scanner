@@ -41,6 +41,8 @@ public class ScannerWebApplicationFactory : WebApplicationFactory<Program>
                 // Likewise mail: with the certificate password from the secrets file, tests would send
                 // real mail from noreply@vmci.be.
                 ["Email:CertificatePassword"] = "",
+                // And Claude: test documents never go to Anthropic.
+                ["Anthropic:ApiKey"] = "",
             });
         });
 

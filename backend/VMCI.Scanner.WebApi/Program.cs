@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using VMCI.Scanner.Claude;
 using VMCI.Scanner.DB.Data;
 using VMCI.Scanner.DB.UnitOfWork;
 using VMCI.Scanner.Mail;
@@ -227,6 +228,20 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
                     StartupLog.Information("Document Intelligence skipped: DocumentIntelligence:Endpoint/Key not configured");
                 }
                 services.AddScoped<SearchablePdfService>();
+
+                // Title suggestions are optional: without them the document keeps the name the client sent.
+                // Claude reads the OCR text, so this only ever runs when OCR ran too.
+                var claude = config.GetSection(ClaudeOptions.SectionName).Get<ClaudeOptions>() ?? new ClaudeOptions();
+                if (claude.IsConfigured)
+                {
+                    services.AddSingleton(claude);
+                    services.AddSingleton<IDocumentTitleSuggester, AnthropicDocumentTitleSuggester>();
+                    StartupLog.Information("Title suggestions registered: Claude, model {Model}", claude.TitleModel);
+                }
+                else
+                {
+                    StartupLog.Information("Title suggestions skipped: Anthropic:ApiKey not configured");
+                }
 
                 // Mail is optional: without it the email endpoint answers 503 and the client hides the option.
                 // Microsoft Graph as noreply@vmci.be with a certificate; tenant setup in docs/mail-setup.md.

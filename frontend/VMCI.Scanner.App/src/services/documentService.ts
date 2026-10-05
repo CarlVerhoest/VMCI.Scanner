@@ -14,6 +14,17 @@ export interface CreatedPdf {
   fileName: string
   // False when OCR was not configured or failed: the PDF is images only, its text not searchable.
   searchable: boolean
+  // A name Claude proposed from the OCR text (without .pdf); null when there is none.
+  suggestedName: string | null
+}
+
+function decodeHeader(value: unknown): string | null {
+  if (typeof value !== 'string' || value === '') return null
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return null
+  }
 }
 
 // FormData must not go out as JSON: naming the multipart type lets axios and the browser add the
@@ -42,6 +53,7 @@ export const documentService = {
       blob: response.data,
       fileName: fileNameFromContentDisposition(response.headers['content-disposition']) ?? `${fileName}.pdf`,
       searchable: response.headers['x-searchable'] === 'true',
+      suggestedName: decodeHeader(response.headers['x-suggested-name']),
     }
   },
 

@@ -43,6 +43,8 @@ function Scan() {
   const [pages, setPages] = useState<ScannedPage[] | null>(null)
   const [pdf, setPdf] = useState<CreatedPdf | null>(null)
   const [documentName, setDocumentName] = useState(defaultDocumentName)
+  // Once the user has typed a name, a suggested one never overwrites it.
+  const [nameEdited, setNameEdited] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -57,7 +59,11 @@ function Scan() {
     setNotice(null)
     setIsCreating(true)
     try {
-      setPdf(await documentService.createPdf(scanned, documentName))
+      const created = await documentService.createPdf(scanned, documentName)
+      setPdf(created)
+      if (created.suggestedName && !nameEdited) {
+        setDocumentName(created.suggestedName)
+      }
     } catch (err) {
       // The pages stay in memory, so the user can retry once the connection is back.
       setError(getErrorMessage(err, 'De pdf kon niet gemaakt worden.'))
@@ -78,6 +84,7 @@ function Scan() {
     setError(null)
     setNotice(null)
     setDocumentName(defaultDocumentName())
+    setNameEdited(false)
     setScannerKey((k) => k + 1)
   }
 
@@ -161,7 +168,10 @@ function Scan() {
                     type="text"
                     className="form-control"
                     value={documentName}
-                    onChange={(e) => setDocumentName(e.target.value)}
+                    onChange={(e) => {
+                      setDocumentName(e.target.value)
+                      setNameEdited(true)
+                    }}
                   />
                   <span className="input-group-text">.pdf</span>
                 </div>

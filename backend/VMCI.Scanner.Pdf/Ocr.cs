@@ -4,10 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace VMCI.Scanner.Pdf;
 
+/// <summary>The image PDF with a text layer, and the recognised text itself.</summary>
+public sealed record OcrResult(byte[] Pdf, string Text);
+
 /// <summary>Adds an invisible text layer to an image PDF.</summary>
 public interface IOcrProvider
 {
-    Task<byte[]> MakeSearchableAsync(byte[] imagePdf, CancellationToken cancellationToken);
+    Task<OcrResult> MakeSearchableAsync(byte[] imagePdf, CancellationToken cancellationToken);
 }
 
 public class DocumentIntelligenceOptions
@@ -27,8 +30,8 @@ public class DocumentIntelligenceOptions
 
 /// <summary>
 /// Azure Document Intelligence, model <c>prebuilt-read</c> with PDF output: the service returns the
-/// same PDF with a text layer. The analysis result is deleted straight after fetching it, so Azure
-/// does not keep a copy of the document for its default retention period.
+/// same PDF with a text layer, and the text it read. The analysis result is deleted straight after
+/// fetching it, so Azure does not keep a copy of the document for its default retention period.
 /// </summary>
 public class AzureDocumentIntelligenceOcrProvider : IOcrProvider
 {
@@ -45,7 +48,7 @@ public class AzureDocumentIntelligenceOcrProvider : IOcrProvider
         _logger = logger;
     }
 
-    public async Task<byte[]> MakeSearchableAsync(byte[] imagePdf, CancellationToken cancellationToken)
+    public async Task<OcrResult> MakeSearchableAsync(byte[] imagePdf, CancellationToken cancellationToken)
     {
         var analyzeOptions = new AnalyzeDocumentOptions(_modelId, BinaryData.FromBytes(imagePdf));
         analyzeOptions.Output.Add(AnalyzeOutputOption.Pdf);
@@ -56,7 +59,7 @@ public class AzureDocumentIntelligenceOcrProvider : IOcrProvider
         try
         {
             var pdf = await _client.GetAnalyzeResultPdfAsync(_modelId, resultId, cancellationToken);
-            return pdf.Value.ToArray();
+            return new OcrResult(pdf.Value.ToArray(), operation.Value.Content ?? string.Empty);
         }
         finally
         {

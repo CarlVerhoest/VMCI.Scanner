@@ -106,6 +106,7 @@ touching that project:
 - [backend/VMCI.Scanner.DB/CLAUDE.md](backend/VMCI.Scanner.DB/CLAUDE.md) — database-first scaffolding, repository & unit-of-work pattern
 - [backend/VMCI.Scanner.WebApi/CLAUDE.md](backend/VMCI.Scanner.WebApi/CLAUDE.md) — controllers, DTOs, configuration & secrets, cookie authentication
 - [backend/VMCI.Scanner.Pdf/CLAUDE.md](backend/VMCI.Scanner.Pdf/CLAUDE.md) — image PDF and OCR
+- [backend/VMCI.Scanner.Claude/CLAUDE.md](backend/VMCI.Scanner.Claude/CLAUDE.md) — document name suggestions from the OCR text through the Anthropic API
 - [backend/VMCI.Scanner.Mail/CLAUDE.md](backend/VMCI.Scanner.Mail/CLAUDE.md) — mail from noreply@vmci.be through Microsoft Graph (tenant setup: `docs/mail-setup.md`)
 - [frontend/VMCI.Scanner.App/CLAUDE.md](frontend/VMCI.Scanner.App/CLAUDE.md) — VMCI components, forms, Dutch copy
 - [frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md](frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md)

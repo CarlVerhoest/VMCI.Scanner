@@ -2,7 +2,8 @@ using Microsoft.Extensions.Logging;
 
 namespace VMCI.Scanner.Pdf;
 
-public sealed record PdfResult(byte[] Content, bool IsSearchable);
+/// <summary><c>Text</c> is what OCR read; null when there was no OCR.</summary>
+public sealed record PdfResult(byte[] Content, bool IsSearchable, string? Text = null);
 
 /// <summary>
 /// Pages in, PDF out. The image PDF is built first; OCR is an improvement on top of it, never a
@@ -32,11 +33,11 @@ public class SearchablePdfService
 
         try
         {
-            var searchable = await _ocr.MakeSearchableAsync(imagePdf, cancellationToken);
+            var ocr = await _ocr.MakeSearchableAsync(imagePdf, cancellationToken);
             _logger.LogInformation(
                 "OCR done: {Pages} pages, image PDF {ImageBytes} bytes, searchable PDF {SearchableBytes} bytes",
-                pages.Count, imagePdf.Length, searchable.Length);
-            return new PdfResult(searchable, IsSearchable: true);
+                pages.Count, imagePdf.Length, ocr.Pdf.Length);
+            return new PdfResult(ocr.Pdf, IsSearchable: true, ocr.Text);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

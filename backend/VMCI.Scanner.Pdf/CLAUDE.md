@@ -8,7 +8,9 @@ Turns page images into a PDF, searchable when OCR is configured. No database, no
   A4). PDFsharp 6; JPEG is embedded without re-encoding. `DetectFormat` checks the magic bytes —
   never trust a file name or content type from the client.
 - `IOcrProvider` and `AzureDocumentIntelligenceOcrProvider` — model `prebuilt-read` with PDF output.
-  The analysis result is deleted in Azure right after it is fetched.
+  Returns the searchable PDF and the recognised text (`OcrResult`); the text feeds the name
+  suggestion in `VMCI.Scanner.Claude`. The analysis result is deleted in Azure right after it is
+  fetched.
 - `SearchablePdfService` — image PDF first, OCR on top. **OCR failing or missing is never an
   error**: the image PDF comes back with `IsSearchable = false` and the client shows a warning.
 
