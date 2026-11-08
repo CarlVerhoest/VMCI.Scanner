@@ -1,0 +1,57 @@
+.vmci-app-header__container {
+  gap: 0.5rem;
+  padding-inline: 1rem;
+}
+
+.vmci-app-header__brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-inline-end: auto;
+}
+
+/* Always one row: the links collapse into the hamburger menu, they never wrap. */
+.vmci-app-header__nav {
+  flex-direction: row;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+.vmci-app-header__link,
+.vmci-app-header__toggle {
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.vmci-app-header__toggle {
+  display: inline-flex;
+  min-width: 2.75rem;
+  justify-content: center;
+}
+
+.vmci-app-header__icon {
+  margin-inline-end: 0.5rem;
+  color: var(--bs-secondary-color);
+}
+
+.vmci-app-header__item {
+  display: flex;
+  align-items: center;
+}
+
+.vmci-app-header__signed-out {
+  display: flex;
+  align-items: center;
+}
+
+@media (pointer: coarse) {
+  .vmci-app-header__item {
+    min-height: 2.75rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .vmci-app-header__container {
+    padding-inline: 1.5rem;
+  }
+}

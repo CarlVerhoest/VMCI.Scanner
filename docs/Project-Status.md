@@ -15,7 +15,7 @@ Statuses: **done**, **in progress**, **not started**.
 | Backend skeleton (API, DevTools, tests) | done | — |
 | Frontend skeleton (account, settings) | done | — |
 | Brand: colours, typeface, logo | done | — |
-| UI on the shared VMCI component library (`@vmci/ui`, copied by `vmci` into `src/vmci/`) | in progress | Migrated 08/11/2026; typecheck, lint, tests, build and the login page (light/dark, mobile) checked. Check the signed-in pages visually. Send back the `mergeRefs` fix (`vmci contribute utils`) and, once the owner approves the library branch, replace `AppHeader` and the Share/Download buttons with the new library components |
+| UI on the shared VMCI component library (`@vmci/ui`, copied by `vmci` into `src/vmci/`) | in progress | Migrated 08/11/2026; typecheck, lint, tests, build and the login page (light/dark, mobile) checked. The `mergeRefs` fix is in the library (utils 1.0.1); `AppHeader` and the Share/Download buttons now come from the library (`AppHeader`, `ShareActions`) and `Table` columns wrap with `wrap: true`. Check the signed-in pages visually, and Delen on a phone |
 
 ## Login and account
 

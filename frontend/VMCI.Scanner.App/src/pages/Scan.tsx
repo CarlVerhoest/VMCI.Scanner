@@ -2,20 +2,17 @@ import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
-  faDownload,
   faEnvelope,
   faFilePdf,
   faPlus,
   faRotateRight,
-  faShareNodes,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import { DocumentScanner, type ScannedPage } from '../scanner'
 import { documentService, type CreatedPdf, type DocumentCapabilities } from '../services/documentService'
 import { recipientDisplayName, recipientService, type Recipient } from '../services/recipientService'
-import { downloadBlob } from '../services/download'
 import { getErrorMessage } from '../services/apiError'
-import { PageHeader, SectionHeader, Selector } from '@vmci/ui'
+import { PageHeader, SectionHeader, Selector, ShareActions } from '@vmci/ui'
 
 const scannerLabels = { done: 'Pdf maken' }
 
@@ -89,21 +86,6 @@ function Scan() {
   }
 
   const fileName = pdfFileName(documentName)
-  const pdfFile = pdf ? new File([pdf.blob], fileName, { type: 'application/pdf' }) : null
-  // Sharing files needs the Web Share API level 2; Firefox on the desktop, for one, lacks it.
-  const canShare = Boolean(pdfFile && navigator.canShare?.({ files: [pdfFile] }))
-
-  const share = async () => {
-    if (!pdfFile) return
-    try {
-      // Must run straight from the tap: browsers refuse share() without a user gesture.
-      await navigator.share({ files: [pdfFile], title: fileName })
-    } catch (err) {
-      if ((err as DOMException).name !== 'AbortError') {
-        setError('Delen is mislukt. Gebruik Downloaden.')
-      }
-    }
-  }
 
   return (
     <div className="container py-2" style={{ maxWidth: '60rem' }}>
@@ -177,22 +159,14 @@ function Scan() {
                 </div>
               </div>
 
-              <div className="d-flex flex-wrap gap-2 mb-4">
-                {canShare && (
-                  <button type="button" className="btn btn-primary btn-lg" onClick={() => void share()}>
-                    <FontAwesomeIcon icon={faShareNodes} className="me-2" />
-                    Delen
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className={canShare ? 'btn btn-outline-primary btn-lg' : 'btn btn-primary btn-lg'}
-                  onClick={() => downloadBlob(pdf.blob, fileName)}
-                >
-                  <FontAwesomeIcon icon={faDownload} className="me-2" />
-                  Downloaden
-                </button>
-              </div>
+              {/* Delen only where the browser can share files (not desktop Firefox, for one). */}
+              <ShareActions
+                className="mb-4"
+                size="lg"
+                file={pdf.blob}
+                fileName={fileName}
+                onError={() => setError('Delen is mislukt. Gebruik Downloaden.')}
+              />
 
               {capabilities?.email && (
                 <EmailSection

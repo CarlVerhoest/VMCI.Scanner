@@ -262,14 +262,13 @@
       }
     },
     "utils": {
-      "version": "1.0.0",
-      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "version": "1.0.1",
+      "commit": "c277ad36073a49d210af442f8d5fd9ee635fb7c6",
       "files": {
-        "CHANGELOG.md": "xqOsZbIvodpQ7wfG",
-        "component.json": "rWzEjBMYGxQdEr26",
-        "mergeRefs.ts": "HKivQn9gsYW1EMik"
-      },
-      "contributed": "contrib/scanner-app/utils"
+        "CHANGELOG.md": "bHW2JteoDRx9n3/m",
+        "component.json": "QyW8qf5gNfTlJJv9",
+        "mergeRefs.ts": "4zeriC1pa8Twqinz"
+      }
     },
     "validation-checklist": {
       "version": "1.0.0",
@@ -294,6 +293,33 @@
         "index.ts": "cnrZOL4c2EcBGaOC",
         "labels.ts": "+/fZy8IrppCFwAqZ",
         "vmciContext.ts": "q7O3kzHziK5YNbnb"
+      }
+    },
+    "app-header": {
+      "version": "1.0.0",
+      "commit": "c277ad36073a49d210af442f8d5fd9ee635fb7c6",
+      "files": {
+        "AppHeader.css": "kUjefgjqPHEJoeVj",
+        "AppHeader.labels.ts": "86ZoxWWWER6KLBJs",
+        "AppHeader.tsx": "h5o7UeDcWDb49qvn",
+        "CHANGELOG.md": "vf46eyiPo1g0HDaU",
+        "MIGRATION.md": "n5p06+cJt53Y7EVu",
+        "component.json": "IgD/BV32XHkJngXS",
+        "index.ts": "+cPfCilJAcvaEaPZ"
+      }
+    },
+    "share-actions": {
+      "version": "1.0.0",
+      "commit": "c277ad36073a49d210af442f8d5fd9ee635fb7c6",
+      "files": {
+        "CHANGELOG.md": "24z1cRbTVnS7SH0b",
+        "MIGRATION.md": "VR4XlBmNTjL/UnsP",
+        "ShareActions.css": "zhAh7PwH5ojeWqBG",
+        "ShareActions.labels.ts": "1YuxDU9lfFnDWhWn",
+        "ShareActions.tsx": "aLs96HYcaUFmcEeM",
+        "component.json": "oqwsdQzAaDpapGLH",
+        "index.ts": "fyPtExLrOs0FV2Go",
+        "shareUtils.ts": "43YQ/hdyySSK9ZIy"
       }
     }
   }

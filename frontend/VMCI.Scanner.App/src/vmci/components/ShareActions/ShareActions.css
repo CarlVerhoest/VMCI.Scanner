@@ -1,0 +1,19 @@
+.vmci-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.vmci-share-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Touch screens: at least 44 px high, whatever the size. */
+@media (pointer: coarse) {
+  .vmci-share-actions .btn {
+    min-height: 2.75rem;
+  }
+}

@@ -1,5 +1,5 @@
 import axiosInstance from './axiosConfig'
-import { fileNameFromContentDisposition } from './download'
+import { fileNameFromContentDisposition } from '@vmci/ui'
 import type { ScannedPage } from '../scanner'
 
 // Matches VMCI.Scanner.WebApi's DocumentCapabilitiesDto.
