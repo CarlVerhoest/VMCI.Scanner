@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons'
+import { FormField, PageHeader } from '@vmci/ui'
 import { useAuth } from '../contexts/AuthContext'
 import { ROUTE_PATHS } from '../config/routes'
 import { getErrorMessage } from '../services/apiError'
@@ -39,10 +40,11 @@ function Login() {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-          <h1 className="mb-2">Aanmelden</h1>
-          <p className="text-body-secondary mb-4">
-            U meldt zich één keer aan op dit toestel; daarna blijft u aangemeld.
-          </p>
+          <PageHeader
+            title="Aanmelden"
+            subtitle="U meldt zich één keer aan op dit toestel; daarna blijft u aangemeld."
+            className="mb-4"
+          />
 
           {error && (
             <div className="alert alert-danger" role="alert">
@@ -51,37 +53,27 @@ function Login() {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                E-mailadres
-              </label>
+            <FormField label="E-mailadres" controlId="email" disabled={isLoading} className="mb-3">
               <input
                 type="email"
                 className="form-control"
-                id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={isLoading}
                 autoComplete="email"
               />
-            </div>
+            </FormField>
 
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Wachtwoord
-              </label>
+            <FormField label="Wachtwoord" controlId="password" disabled={isLoading} className="mb-3">
               <input
                 type="password"
                 className="form-control"
-                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={isLoading}
                 autoComplete="current-password"
               />
-            </div>
+            </FormField>
 
             <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>
               <FontAwesomeIcon icon={faRightToBracket} className="me-2" />

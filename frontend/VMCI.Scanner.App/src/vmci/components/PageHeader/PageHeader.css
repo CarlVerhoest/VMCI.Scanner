@@ -1,0 +1,94 @@
+.vmci-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.vmci-header__text {
+  min-width: 0;
+}
+
+.vmci-header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.vmci-header__icon {
+  color: var(--vmci-accent);
+  flex-shrink: 0;
+}
+
+.vmci-header__subtitle {
+  margin-top: 0.125rem;
+  color: var(--vmci-text-muted);
+}
+
+.vmci-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Sizes do not depend on the heading level, which follows the page outline instead. */
+.vmci-header--page {
+  margin-bottom: 1rem;
+}
+
+.vmci-header--page .vmci-header__title {
+  font-size: calc(1.3rem + 0.6vw);
+}
+
+@media (min-width: 1200px) {
+  .vmci-header--page .vmci-header__title {
+    font-size: 1.75rem;
+  }
+}
+
+.vmci-header--section {
+  margin-bottom: 0.75rem;
+}
+
+.vmci-header--section .vmci-header__title {
+  font-size: 1.125rem;
+}
+
+/* Band: a coloured bar, e.g. as a card header. */
+.vmci-header--band {
+  padding: 0.75rem 1rem;
+  background-color: var(--vmci-accent);
+  color: var(--vmci-on-accent);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.vmci-header--band .vmci-header__icon,
+.vmci-header--band .vmci-header__subtitle {
+  color: inherit;
+}
+
+.vmci-header--band .vmci-header__subtitle {
+  opacity: 0.85;
+}
+
+/* Inside a card header the card already draws the shape. */
+.card-header .vmci-header--band,
+.card > .vmci-header--band:first-child {
+  border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) 0 0;
+  margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+  .vmci-header__actions {
+    width: 100%;
+  }
+
+  .vmci-header__actions > .btn {
+    flex: 1 1 auto;
+    min-height: 2.75rem;
+  }
+}

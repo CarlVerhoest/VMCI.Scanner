@@ -1,0 +1,59 @@
+/* The input + label pairs are wrapped so the group can be a grid of equal parts. Bootstrap's
+   joined-border rules target direct .btn children, so restore them on the labels. */
+.vmci-segmented-control {
+  flex-wrap: nowrap;
+}
+
+.vmci-segmented-control__segment {
+  display: flex;
+}
+
+.vmci-segmented-control__segment > .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-width: 2.75rem;
+  border-radius: 0;
+  font-weight: 500;
+}
+
+.vmci-segmented-control__segment + .vmci-segmented-control__segment > .btn {
+  margin-inline-start: calc(-1 * var(--bs-border-width));
+}
+
+.vmci-segmented-control__segment:first-child > .btn {
+  border-start-start-radius: var(--bs-btn-border-radius);
+  border-end-start-radius: var(--bs-btn-border-radius);
+}
+
+.vmci-segmented-control__segment:last-child > .btn {
+  border-start-end-radius: var(--bs-btn-border-radius);
+  border-end-end-radius: var(--bs-btn-border-radius);
+}
+
+/* Keep the focused/checked segment's border on top of its neighbours. */
+.vmci-segmented-control .btn-check:checked + .btn,
+.vmci-segmented-control .btn-check:focus-visible + .btn {
+  position: relative;
+  z-index: 1;
+}
+
+.vmci-segmented-control--full {
+  display: flex;
+  width: 100%;
+}
+
+.vmci-segmented-control--full > .vmci-segmented-control__segment {
+  flex: 1 1 0;
+}
+
+.vmci-segmented-control--full > .vmci-segmented-control__segment > .btn {
+  flex: 1 1 auto;
+}
+
+@media (pointer: coarse) {
+  .vmci-segmented-control__segment > .btn {
+    min-height: 2.75rem;
+  }
+}

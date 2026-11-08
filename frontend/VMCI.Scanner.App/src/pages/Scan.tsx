@@ -15,7 +15,7 @@ import { documentService, type CreatedPdf, type DocumentCapabilities } from '../
 import { recipientDisplayName, recipientService, type Recipient } from '../services/recipientService'
 import { downloadBlob } from '../services/download'
 import { getErrorMessage } from '../services/apiError'
-import { VMCISelector } from '../components/VMCIUIComponents'
+import { PageHeader, SectionHeader, Selector } from '@vmci/ui'
 
 const scannerLabels = { done: 'Pdf maken' }
 
@@ -108,7 +108,7 @@ function Scan() {
   return (
     <div className="container py-2" style={{ maxWidth: '60rem' }}>
       <div hidden={pages !== null}>
-        <h1 className="h3 mb-3">Document scannen</h1>
+        <PageHeader title="Document scannen" className="mb-3" />
         <DocumentScanner
           key={scannerKey}
           maxPages={capabilities?.maxPages ?? 20}
@@ -119,11 +119,8 @@ function Scan() {
       </div>
 
       {pages !== null && (
-        <div className="scanner-panel p-3 p-md-4">
-          <h1 className="h3 mb-3">
-            <FontAwesomeIcon icon={faFilePdf} className="me-2 text-body-secondary" />
-            Uw pdf
-          </h1>
+        <div className="vmci-panel p-3 p-md-4">
+          <PageHeader title="Uw pdf" icon={faFilePdf} className="mb-3" />
 
           {error && (
             <div className="alert alert-danger d-flex flex-wrap align-items-center gap-2" role="alert">
@@ -282,20 +279,19 @@ function EmailSection({ pdf, fileName, onSent, onError }: EmailSectionProps) {
 
   return (
     <div className="mb-4">
-      <h2 className="h5">
-        <FontAwesomeIcon icon={faEnvelope} className="me-2 text-body-secondary" />
-        Mailen naar…
-      </h2>
+      <SectionHeader title="Mailen naar…" icon={faEnvelope} className="mb-2" />
 
       {recipients.length > 0 && (
         <div className="d-flex flex-wrap gap-2 align-items-start mb-2">
           <div className="flex-grow-1" style={{ minWidth: '14rem' }}>
-            <VMCISelector
+            <Selector<Recipient>
+              aria-label="Ontvanger"
               options={recipients}
-              selectedValue={selected}
+              value={selected}
               valueLabel={recipientDisplayName}
+              optionKey="id"
               placeholder="Kies een ontvanger"
-              onValueChanged={(value) => setSelected(value as Recipient | null)}
+              onValueChanged={setSelected}
             />
           </div>
           <button

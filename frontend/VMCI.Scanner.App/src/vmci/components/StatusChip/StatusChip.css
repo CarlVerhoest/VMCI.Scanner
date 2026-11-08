@@ -1,0 +1,57 @@
+.vmci-status-chip {
+  --vmci-chip-bg: var(--bs-secondary-bg);
+  --vmci-chip-color: var(--bs-secondary-color);
+  --vmci-chip-solid-bg: var(--bs-secondary);
+  --vmci-chip-solid-color: var(--bs-white);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--bs-border-radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  background-color: var(--vmci-chip-bg);
+  color: var(--vmci-chip-color);
+}
+
+.vmci-status-chip--success {
+  --vmci-chip-bg: var(--bs-success-bg-subtle);
+  --vmci-chip-color: var(--bs-success-text-emphasis);
+  --vmci-chip-solid-bg: var(--bs-success);
+}
+
+.vmci-status-chip--warning {
+  --vmci-chip-bg: var(--bs-warning-bg-subtle);
+  --vmci-chip-color: var(--bs-warning-text-emphasis);
+  --vmci-chip-solid-bg: var(--bs-warning);
+  --vmci-chip-solid-color: var(--bs-black);
+}
+
+.vmci-status-chip--danger {
+  --vmci-chip-bg: var(--bs-danger-bg-subtle);
+  --vmci-chip-color: var(--bs-danger-text-emphasis);
+  --vmci-chip-solid-bg: var(--vmci-danger);
+  --vmci-chip-solid-color: var(--vmci-on-danger);
+}
+
+.vmci-status-chip--info {
+  --vmci-chip-bg: var(--bs-info-bg-subtle);
+  --vmci-chip-color: var(--bs-info-text-emphasis);
+  --vmci-chip-solid-bg: var(--bs-info);
+  --vmci-chip-solid-color: var(--bs-black);
+}
+
+.vmci-status-chip--primary {
+  --vmci-chip-bg: var(--vmci-accent-soft);
+  --vmci-chip-color: var(--vmci-accent);
+  --vmci-chip-solid-bg: var(--vmci-accent);
+  --vmci-chip-solid-color: var(--vmci-on-accent);
+}
+
+.vmci-status-chip--solid {
+  background-color: var(--vmci-chip-solid-bg);
+  color: var(--vmci-chip-solid-color);
+}

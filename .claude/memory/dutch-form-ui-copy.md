@@ -5,8 +5,9 @@ metadata:
   type: project
 ---
 
-Every create/edit form uses `src/components/FormControls.tsx`: `<RequiredMark invalid={...} />` after
-a required field's label (the `*` turns red on a validation failure), nothing at all on optional
-fields, and `<FormActions>` for the bottom-right **Opslaan** (submit) / **Annuleren** buttons.
+Every create/edit form uses the VMCI library's form components (`@vmci/ui`, since 2026-11-08; before
+that `src/components/FormControls.tsx`): `<FormField label required error>` shows the `*` that turns
+red on a validation failure, optional fields show nothing at all, and `<FormActions isBusy>` gives the
+**Opslaan** (submit) / **Annuleren** buttons.
 Required fields mirror the backend DTO's `[Required]` attributes. Details in the frontend
 `CLAUDE.md` ("Form Patterns"). Related: [[docs-language-english]].

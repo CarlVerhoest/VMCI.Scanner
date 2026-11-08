@@ -1,0 +1,14 @@
+{
+  "name": "status-chip",
+  "version": "1.0.0",
+  "description": "Status-pil met een tone.",
+  "dependencies": {
+    "styles": "^1.0.0"
+  },
+  "npmDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.0",
+    "clsx": "^2.1.1",
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

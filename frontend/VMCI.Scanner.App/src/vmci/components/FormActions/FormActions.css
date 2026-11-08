@@ -1,0 +1,40 @@
+/* Phones: stacked full-width buttons, primary first. From sm: one row, aligned right. */
+.vmci-form-actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.vmci-form-actions__main,
+.vmci-form-actions__extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vmci-form-actions .btn {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 576px) {
+  .vmci-form-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .vmci-form-actions__main,
+  .vmci-form-actions__extra {
+    flex-direction: row;
+  }
+
+  /* Extra actions (e.g. Delete) sit on the far left, away from Save. */
+  .vmci-form-actions__extra {
+    margin-inline-end: auto;
+  }
+
+  .vmci-form-actions .btn {
+    min-height: auto;
+  }
+}

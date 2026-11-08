@@ -1,0 +1,300 @@
+{
+  "repo": "../../../vmci.uicomponents",
+  "target": "src/vmci",
+  "components": {
+    "action-menu": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "ActionMenu.css": "WLB+J9TcUzFusRFF",
+        "ActionMenu.labels.ts": "m/nkivdpfwRXahsO",
+        "ActionMenu.tsx": "zlJZD4Kls5la7DfT",
+        "CHANGELOG.md": "C9+MXP2Kf81Kt1Eg",
+        "MIGRATION.md": "RM7+TRdqVgUT9a7q",
+        "component.json": "eWFSzW+xs8KrTF47",
+        "index.ts": "6fiOjC/ApLaiICd6"
+      }
+    },
+    "dialogs": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "L2QRsoSNpw2Ry90O",
+        "ConfirmDialog.tsx": "jfWoDrgEN3O41HF5",
+        "DialogProvider.tsx": "gohSwTTxT3J/fgEq",
+        "Dialogs.css": "1d0dCzzxBxqE2udk",
+        "Dialogs.labels.ts": "0WtslQEZgyKY2Yzp",
+        "FormModal.tsx": "h2UdPsJ4TUewAlO6",
+        "MIGRATION.md": "x/xHEISqTbnSFQjP",
+        "MessageDialog.tsx": "QrjpO35MZlHhyFbc",
+        "component.json": "MdTfHZq9/Hq4+E4h",
+        "dialogContext.ts": "gOZBsmf8FZW+R0y+",
+        "index.ts": "Istmoenkgu0JjkSE"
+      }
+    },
+    "empty-state": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "1c7EOQP7cyrR/0CA",
+        "EmptyState.css": "5gDpZXO23rpE6Voe",
+        "EmptyState.labels.ts": "q3XMULAoL11j7gvJ",
+        "EmptyState.tsx": "Bo43N5H9ltw7Wbwo",
+        "MIGRATION.md": "W0SmW3S6ZzRnw+Ov",
+        "component.json": "ps3Uj64PVF74wYDl",
+        "index.ts": "nADDPYpNCj/Cgf2E"
+      }
+    },
+    "form-actions": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "JETM4pV3Gqpi9V1K",
+        "FormActions.css": "O5EjkH+S6wCItuhQ",
+        "FormActions.labels.ts": "IAglR1DXWIjgIRia",
+        "FormActions.tsx": "LeN/dHmzf80b9Fuu",
+        "MIGRATION.md": "fkS8ghoSN8IcZ0+I",
+        "component.json": "mBSujBdsrrq8kzDh",
+        "index.ts": "YRlK6SlGR0PfQPXd"
+      }
+    },
+    "form-field": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "c7LjA5NnfGtE2CO2",
+        "FormField.css": "+OgGRjyTv8+DuoCc",
+        "FormField.tsx": "sUK/+Xo6T1YrHeYe",
+        "MIGRATION.md": "AAnoeBBc/7n/6Zhx",
+        "RequiredMark.tsx": "jJNgaDVp+ih/w7Kg",
+        "component.json": "dRsOIsGapmYGu+yU",
+        "formFieldContext.ts": "RwiswQ+S4JzAti1X",
+        "index.ts": "ionST8OWpfwt20Kg"
+      }
+    },
+    "hooks": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "VcGMJRMH8SjeraDM",
+        "component.json": "3uaVHwe4R+ShEtbW",
+        "httpActivity.ts": "SCr5lHWhEgPMWyXu",
+        "useMediaQuery.ts": "aiXI1SjpGWmqEvV+"
+      }
+    },
+    "info-tip": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "g3eJPZb2N2vb7zaU",
+        "InfoTip.css": "RR0PS9j2mxML9dqm",
+        "InfoTip.labels.ts": "ciwSsRph5axjrkGG",
+        "InfoTip.tsx": "f9ucVXlrVCFEipvS",
+        "MIGRATION.md": "ow0SLdnLuRQyZDDN",
+        "component.json": "jFqxCz8tQ5+QlQ72",
+        "index.ts": "aRWTUptoZUNoFX8F"
+      }
+    },
+    "labeled-value": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "YG43G/2w2yI2QtOQ",
+        "LabeledValue.css": "FHpXPQ+wjl5pkuA9",
+        "LabeledValue.labels.ts": "T8M8rxdtfBQCACzh",
+        "LabeledValue.tsx": "2tphuHvOhFpiob8I",
+        "MIGRATION.md": "P+1bzSyfWI/RZK3t",
+        "component.json": "oSuQtivnsw1ljmCw",
+        "index.ts": "45A4y26ZGNgYDybW"
+      }
+    },
+    "list": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "q43fPCd3Gopa7rf4",
+        "List.labels.ts": "D/pqlyxmEgIjY0LY",
+        "List.tsx": "y+n3XhkSphdS9JL9",
+        "MIGRATION.md": "JEM6QcPG6OJT+GPk",
+        "component.json": "hRBT2oYOzOYDM/on",
+        "dataLayout.css": "mivMDuBqL1XCJs8a",
+        "dataUtils.ts": "EBT0o/THU7wN3dyV",
+        "index.ts": "udupIzcM3jSQXQzX"
+      }
+    },
+    "loading-state": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "en2n6thpArhTKuHP",
+        "LoadingState.css": "ytgKbCwIK9s2nXDv",
+        "LoadingState.labels.ts": "p66isHFbRo8wHmAC",
+        "LoadingState.tsx": "nQBZUXAsOxaJQEiX",
+        "MIGRATION.md": "J6bMb7hBc7gcmmUR",
+        "component.json": "buLVxHeW9LGYNCfd",
+        "index.ts": "N43PZnz9d38h5vsH"
+      }
+    },
+    "page-header": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "S8GuK4AmudgnC+93",
+        "MIGRATION.md": "rCNOEW+IYc0sqCGl",
+        "PageHeader.css": "vnrTv2/sT1D+VsAe",
+        "PageHeader.tsx": "HQKfy0RlQMIGC8Jt",
+        "component.json": "LSYvo64l6xiLDGQn",
+        "index.ts": "G/K4Z1dVkSpR76zN"
+      }
+    },
+    "search-input": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "Wcrd5laM49SJ/cNi",
+        "MIGRATION.md": "tmn3WA0RCbjpn4fV",
+        "SearchInput.css": "wzY5q4h3oK54k4SB",
+        "SearchInput.labels.ts": "W2u8LeHVTRd/O2Ws",
+        "SearchInput.tsx": "CtebAEfJKeO3N6eG",
+        "component.json": "64zc581mJe5UbZhs",
+        "index.ts": "QqUh+L2kjPAaTKJm"
+      }
+    },
+    "segmented-control": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "cREM7PmPdbFQJrHO",
+        "MIGRATION.md": "+iNkOBWpR+dQEdT7",
+        "SegmentedControl.css": "gaAFxLuVEeb45ZAa",
+        "SegmentedControl.tsx": "8JZ1roEPRCKaoiSF",
+        "component.json": "PmXYdaMkLV2b/GAy",
+        "index.ts": "+l/UraIM07ziNAZv"
+      }
+    },
+    "selector": {
+      "version": "1.1.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "BooleanSelect.tsx": "Elt/fproIi2NFLtS",
+        "CHANGELOG.md": "9XVMabMzS30fKbcL",
+        "MIGRATION.md": "n+O4A5dayWSUSYG5",
+        "Selector.labels.ts": "orzneBT4ILBRIeFr",
+        "Selector.tsx": "jchIDz5X3eva4NO9",
+        "component.json": "atB3HVMzxGlHxIBV",
+        "index.ts": "EQxZjcFADrbbFtLR"
+      }
+    },
+    "spinner": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "n0O25tHfFvaygadR",
+        "MIGRATION.md": "TF7elJvNyaA3HnvA",
+        "Spinner.css": "9dRJ+Pad8YUspelV",
+        "Spinner.labels.ts": "f+qIGy9iAGDpG1OZ",
+        "Spinner.tsx": "zqBz4oKCPOhr6EV9",
+        "component.json": "6W/IagTnVjmlNVjL",
+        "index.ts": "X8Sx9i5Qk6XAkcgk"
+      }
+    },
+    "status-chip": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "jcCVmzFka3JChQ06",
+        "MIGRATION.md": "OWEqOBqID2snSCcx",
+        "StatusChip.css": "4I4U6DYOem/mZxSX",
+        "StatusChip.tsx": "oseKSUp3JWBgQWAQ",
+        "component.json": "UYll0fkyoBof2DCt",
+        "index.ts": "LLrPlzt+T8RKsfqD"
+      }
+    },
+    "styles": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "/K8jsGft2Z4kmtSw",
+        "MIGRATION.md": "S2d4TFm7aQS3XaeU",
+        "component.json": "/EhrNBV3SZWHRyvo",
+        "vmci-tokens.css": "zUOxOYacXmGPm9CN",
+        "vmci.css": "gJvo/x3sgcQL7m1K"
+      }
+    },
+    "table": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "i9WR6V18AUstPkb3",
+        "MIGRATION.md": "iF0OA8x2qUx0Rii6",
+        "Table.css": "rMtwFbBgtgVGwSHR",
+        "Table.labels.ts": "q1OOzw91jL06r0Rw",
+        "Table.tsx": "F+++q9BLML8wGZOp",
+        "TablePagination.tsx": "HnfhFBPY7PHF3Vd0",
+        "columnWidths.ts": "FA1BuZDwTC0eCnt1",
+        "component.json": "F3Dzui0pqqxiKJM0",
+        "index.ts": "sFX/D8Z5hYyzetyU",
+        "pagination.ts": "SxbEv8rdFwVlQNlt"
+      }
+    },
+    "theme-provider": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "PmNkU2OABJvQ58Pn",
+        "MIGRATION.md": "ZcbBs30gIJ/s8HA5",
+        "ThemeProvider.tsx": "9NJYm60QYyCNc2/W",
+        "component.json": "uN0uPIDVNwGs7ktB",
+        "index.ts": "x9MTHebSq04+LmVo",
+        "themeContext.ts": "JyMnIaOQpfDIOrM8"
+      }
+    },
+    "theme-switch": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "aIa3wl5qr3JXKGPo",
+        "ThemeSwitch.css": "g7AJzyPRCBu6PtEm",
+        "ThemeSwitch.labels.ts": "7ubiO5TZeEshMLld",
+        "ThemeSwitch.tsx": "J6XqoO8ESTQGwF5E",
+        "component.json": "9bwSLj0cdBcHbPXw",
+        "index.ts": "6Sji6sbWWxZj36jc"
+      }
+    },
+    "utils": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "xqOsZbIvodpQ7wfG",
+        "component.json": "rWzEjBMYGxQdEr26",
+        "mergeRefs.ts": "HKivQn9gsYW1EMik"
+      },
+      "contributed": "contrib/scanner-app/utils"
+    },
+    "validation-checklist": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "luUadAM0iCXVKbPM",
+        "MIGRATION.md": "XZFXiyHWAPfS6wEw",
+        "ValidationChecklist.css": "Urd7v8SG1hsxONTm",
+        "ValidationChecklist.labels.ts": "0CuaTDrR/8b9GUge",
+        "ValidationChecklist.tsx": "5JYAOmp5j4EeOFLT",
+        "component.json": "QqCBfW40znlwC5Ur",
+        "index.ts": "E2EcnRS1jRIYY+uT"
+      }
+    },
+    "vmci-provider": {
+      "version": "1.0.0",
+      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "files": {
+        "CHANGELOG.md": "cSszjw1XOwcxcdSP",
+        "VMCIProvider.tsx": "tcHKdRo2HjewOQOX",
+        "component.json": "zMo+jfL/KFzDzUwV",
+        "index.ts": "cnrZOL4c2EcBGaOC",
+        "labels.ts": "+/fZy8IrppCFwAqZ",
+        "vmciContext.ts": "q7O3kzHziK5YNbnb"
+      }
+    }
+  }
+}

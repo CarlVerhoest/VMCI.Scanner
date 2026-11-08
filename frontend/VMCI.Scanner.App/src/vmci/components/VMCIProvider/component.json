@@ -1,0 +1,9 @@
+{
+  "name": "vmci-provider",
+  "version": "1.0.0",
+  "description": "Kern: VMCIProvider, useLabels, useLocale en het register van teksten.",
+  "dependencies": {},
+  "npmDependencies": {
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

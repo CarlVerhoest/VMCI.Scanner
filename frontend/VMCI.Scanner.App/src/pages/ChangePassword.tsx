@@ -1,11 +1,11 @@
 import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FormActions, FormField, PageHeader, ValidationChecklist } from '@vmci/ui'
 import { useAuth } from '../contexts/AuthContext'
 import { ROUTE_PATHS } from '../config/routes'
 import { accountService } from '../services/accountService'
 import { getErrorMessage } from '../services/apiError'
-import { FormActions, RequiredMark } from '../components/FormControls'
-import { PASSWORD_RULE_TEXT, passwordRuleError } from '../services/passwordRules'
+import { passwordRuleError, passwordRules } from '../services/passwordRules'
 
 interface FieldErrors {
   currentPassword?: string
@@ -64,41 +64,21 @@ function ChangePassword() {
     navigate(ROUTE_PATHS.LOGIN, { replace: true })
   }
 
-  const field = (
-    id: keyof FieldErrors,
-    label: string,
-    value: string,
-    onChange: (value: string) => void,
-    autoComplete: string
-  ) => (
-    <div className="mb-3">
-      <label htmlFor={id} className="form-label">
-        {label}
-        <RequiredMark invalid={Boolean(fieldErrors[id])} />
-      </label>
-      <input
-        type="password"
-        className={`form-control${fieldErrors[id] ? ' is-invalid' : ''}`}
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={isSaving}
-        autoComplete={autoComplete}
-      />
-      {fieldErrors[id] && <div className="invalid-feedback">{fieldErrors[id]}</div>}
-    </div>
-  )
-
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-12 col-sm-10 col-md-8 col-lg-5">
-          <h1 className="mb-2">Kies uw wachtwoord</h1>
-          <p className="text-body-secondary mb-4">
-            {user?.firstName ? `Welkom, ${user.firstName}. ` : ''}U bent aangemeld met een tijdelijk
-            wachtwoord. Kies een eigen wachtwoord om verder te gaan; daarna blijft u op dit toestel
-            aangemeld.
-          </p>
+          <PageHeader
+            title="Kies uw wachtwoord"
+            subtitle={
+              <>
+                {user?.firstName ? `Welkom, ${user.firstName}. ` : ''}U bent aangemeld met een tijdelijk
+                wachtwoord. Kies een eigen wachtwoord om verder te gaan; daarna blijft u op dit toestel
+                aangemeld.
+              </>
+            }
+            className="mb-4"
+          />
 
           {error && (
             <div className="alert alert-danger" role="alert">
@@ -107,11 +87,53 @@ function ChangePassword() {
           )}
 
           <form onSubmit={handleSubmit} noValidate>
-            {field('currentPassword', 'Tijdelijk wachtwoord', currentPassword, setCurrentPassword, 'current-password')}
-            {field('newPassword', 'Nieuw wachtwoord', newPassword, setNewPassword, 'new-password')}
-            {field('confirmPassword', 'Nieuw wachtwoord bevestigen', confirmPassword, setConfirmPassword, 'new-password')}
-            <div className="form-text">{PASSWORD_RULE_TEXT}</div>
-            <FormActions isSaving={isSaving} onCancel={() => void handleCancel()} />
+            <FormField
+              label="Tijdelijk wachtwoord"
+              required
+              error={fieldErrors.currentPassword}
+              disabled={isSaving}
+              className="mb-3"
+            >
+              <input
+                type="password"
+                className="form-control"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+            </FormField>
+            <FormField
+              label="Nieuw wachtwoord"
+              required
+              error={fieldErrors.newPassword}
+              hint={<ValidationChecklist rules={passwordRules(newPassword)} />}
+              disabled={isSaving}
+              className="mb-3"
+            >
+              <input
+                type="password"
+                className="form-control"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
+              />
+            </FormField>
+            <FormField
+              label="Nieuw wachtwoord bevestigen"
+              required
+              error={fieldErrors.confirmPassword}
+              disabled={isSaving}
+              className="mb-3"
+            >
+              <input
+                type="password"
+                className="form-control"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete="new-password"
+              />
+            </FormField>
+            <FormActions isBusy={isSaving} onCancel={() => void handleCancel()} />
           </form>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { beginHttpRequest, endHttpRequest } from '../hooks/useHttpActivity'
+import { beginHttpRequest, endHttpRequest } from '@vmci/ui'
 
 // Same origin as the API (served by it in production, proxied by Vite in development), so the
 // browser sends the HttpOnly login cookie on every call by itself.
@@ -19,7 +19,7 @@ export function setSessionHandlers(next: Handlers): void {
   handlers = next
 }
 
-// Marks every request as in flight for the app-wide loading spinner (see useHttpActivity.ts).
+// Marks every request as in flight for the app-wide loading spinner (useHttpActivity from @vmci/ui).
 axiosInstance.interceptors.request.use(
   (config) => {
     beginHttpRequest()

@@ -1,0 +1,33 @@
+.vmci-labeled-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.vmci-labeled-value__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--vmci-text-muted);
+}
+
+.vmci-labeled-value__value {
+  overflow-wrap: anywhere;
+}
+
+.vmci-labeled-value__value--empty {
+  color: var(--vmci-text-muted);
+  font-style: italic;
+}
+
+@media (min-width: 576px) {
+  .vmci-labeled-value--inline {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .vmci-labeled-value--inline .vmci-labeled-value__label {
+    flex: 0 0 var(--vmci-labeled-value-label-width, 12rem);
+  }
+}

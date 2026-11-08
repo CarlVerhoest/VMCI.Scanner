@@ -24,7 +24,9 @@
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@vmci/ui": ["./src/vmci/index.ts"],
+      "@vmci/ui/*": ["./src/vmci/*"]
     }
   },
   "include": ["src"],

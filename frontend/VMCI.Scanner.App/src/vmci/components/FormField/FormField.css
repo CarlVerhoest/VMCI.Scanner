@@ -1,0 +1,55 @@
+.vmci-form-field {
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+
+/* A fieldset used as a field looks like a normal field. */
+fieldset.vmci-form-field {
+  border: 0;
+  padding: 0;
+}
+
+.vmci-form-field__label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.vmci-form-field__label {
+  margin-bottom: 0.375rem;
+}
+
+legend.vmci-form-field__label {
+  float: none;
+  width: auto;
+  font-size: 1rem;
+  padding: 0;
+}
+
+/* In horizontal layout the legend is a grid cell like the label row. */
+fieldset.vmci-form-field--horizontal > legend {
+  margin-bottom: 0.375rem;
+}
+
+.vmci-required-mark {
+  margin-inline-start: 0.2em;
+  font-weight: 600;
+  color: var(--vmci-text-muted);
+}
+
+.vmci-required-mark--invalid {
+  color: var(--vmci-danger);
+}
+
+@media (min-width: 768px) {
+  .vmci-form-field--horizontal {
+    display: grid;
+    grid-template-columns: var(--vmci-form-field-label-width, 12rem) minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: start;
+  }
+
+  .vmci-form-field--horizontal > .vmci-form-field__label-row {
+    padding-top: calc(0.375rem + var(--bs-border-width));
+  }
+}

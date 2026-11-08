@@ -7,6 +7,9 @@ outside it** except `react` and `@techstark/opencv-js` (ESLint enforces this), n
 UI framework (plain React and `scanner.css`), no hard-coded text (everything through `labels`). The
 app uses it only through `src/scanner/index.ts`. Read `src/scanner/README.md` before changing it.
 
+It does **not** use the VMCI component library either. Its colours come from the `--scanner-*`
+tokens it reads; `src/styles/app-tokens.css` points those at the `--vmci-*` tokens.
+
 ## Login
 
 The login is an HttpOnly cookie; the frontend never holds a token. `AuthContext` asks
@@ -15,73 +18,82 @@ bouncing to the login page). A user with a temporary password is routed to `/cha
 nowhere else; the API enforces the same with a 403 `PASSWORD_CHANGE_REQUIRED`, which the axios
 interceptor turns into that redirect.
 
-## 🚨 CRITICAL: Use VMCIUIComponents for Lists, Tables, Selects, and Date Pickers
+## 🚨 CRITICAL: UI components come from the VMCI component library (`@vmci/ui`)
 
-**All list/table, dropdown-select, and date-picker UI in this app MUST be built with the
-components in `src/components/VMCIUIComponents/`** (`VMCIList`, `VMCITable`, `VMCISelector`,
-`VMCIDatePicker`) rather than raw `react-bootstrap` (`Table`, `Form.Select`) or ad-hoc
-`<input type="date">`/`<select>` markup.
+Scanner uses the shared VMCI component library (repository `VMCI.UIComponents`, cloned next to this
+repository as `../vmci.uicomponents`) **as source code**, copied per component into `src/vmci/` by
+the library's CLI. `vmci.json` records which component is installed at which version and commit.
 
-These were ported from the sibling VMCI/KAZM.eSoar project's `UIComponents` library (its
-`MyList`/`MyTable`/`MySelector`/`MyDatePicker`) so the two codebases share one interaction
-pattern and visual language, and were made typesafe + updated against current dependency
-versions in the process (see `VMCIUIComponents/CLAUDE.md` for what changed and why).
+The library's own instructions are imported below. They are **Dutch**: `src/vmci/VMCI.md` is a
+generated file that the CLI copies from the library, the one accepted exception to this repository's
+"documentation in English" rule. Do not translate or edit it.
 
-**FORBIDDEN:**
+@src/vmci/VMCI.md
 
-- ❌ **NEVER** use `react-bootstrap`'s `<Table>` directly for a data grid — use `VMCITable`
-- ❌ **NEVER** hand-roll a filter/sort/pagination-driven list — use `VMCITable`
-- ❌ **NEVER** use `<select>` / `Form.Select` for an object-backed dropdown — use `VMCISelector`
-- ❌ **NEVER** use `<input type="date">` or pull in a different date-picker library — use
-  `VMCIDatePicker`
-- ❌ **NEVER** add a second date/table/select library (e.g. a different table package) without
-  first checking whether `VMCIUIComponents` already covers the need
+What that means here, in short:
 
-**CORRECT:**
+- **Import from `@vmci/ui`** (`@vmci/ui/styles/...` for CSS), never from `src/vmci/...` paths.
+- **Never edit, add or remove files in `src/vmci/` by hand.** Use `npm run vmci -- <command>`
+  (`list`, `status`, `add`, `update`, `diff`, `contribute`, `remove`) from this folder. Pull the
+  library first (`git -C ../../../vmci.uicomponents pull`).
+- **Use what the library has before writing UI of your own**: `Table`/`List` for data, `Selector`
+  for object-backed dropdowns, `DatePicker`, `FormField`/`RequiredMark`/`FormActions` for forms,
+  `ConfirmDialog`, `PageHeader`/`SectionHeader`, `StatusChip`, `LabeledValue`, `LoadingState`,
+  `Spinner`, `ThemeProvider`/`ThemeSwitch`, `SegmentedControl`, ... A component that is not
+  installed yet comes in with `npm run vmci -- add <name>` (e.g. `date-picker`, or `be` for the
+  Belgian national-register and company numbers).
+- ❌ Never use `react-bootstrap`'s `<Table>` or a hand-rolled list for a data grid, `<select>` for an
+  object-backed dropdown, or `<input type="date">`. Don't add a second table/select/date library.
+- **A missing feature or a bug in a library component** is fixed in the copy and sent back with
+  `npm run vmci -- contribute` after the user agreed, following the library's gate (branch, green
+  `npm run check`, the owner's OK, fast-forward merge). Something only Scanner needs belongs in an
+  app component that wraps the library one, not in `src/vmci/`.
+- `src/vmci/` is excluded from this app's ESLint run: the library lints it with its own rules.
 
 ```tsx
-import { VMCITable, VMCITableColumn } from '@/components/VMCIUIComponents'
+import { Table, type TableColumn } from '@vmci/ui'
 
-const columns: VMCITableColumn<Widget>[] = [
-  { id: 'companyName', accessorKey: 'companyName', header: 'Company' },
+const columns: TableColumn<Account>[] = [
+  { id: 'email', header: 'E-mailadres', accessorKey: 'email' },
   // ...
 ]
 
-<VMCITable data={widgets} columns={columns} />
+<Table aria-label="Accounts" data={accounts} columns={columns} rowKey="id" />
 ```
 
-The first entity list page built in this app is the worked example to follow (search, sort,
-responsive column priority, and row styling all driven through `VMCITable`).
+`pages/admin/AdminAccounts.tsx` is the worked example for a list page (search, sort, status chips,
+row actions through `ActionMenu`, a "new" button in `toolbarStart`).
 
-**Simple static rows/columns without sorting or filtering** (e.g. a details panel laid out as
-label/value pairs) can use `VMCIList` instead of `VMCITable`.
+**Names are never shortened.** `Table` truncates text cells with an ellipsis by default; columns
+holding a name or an address pass `className: 'text-wrap text-break'` so they wrap instead.
 
-**If a genuinely new UI need doesn't fit these four components** (e.g. a chart, a calendar
-month-view, a rich text editor), that's fine — pick an appropriate library as normal. This rule
-is about the specific list/table/select/date-picker surface, not everything in the app.
+## Loading Data for Table
 
-## Loading Data for VMCITable
-
-`VMCITable` filters, sorts, and paginates **client-side** once the data is loaded. Prefer a
-single unpaged API call (`GET /api/{resource}`) that returns the full collection, rather than building server-side search/paging/sorting query
-parameters — that complexity is redundant once `VMCITable` is doing it in the browser. Only
-fall back to server-side paging if a dataset is large enough that shipping it all to the
-browser in one call is genuinely a problem (thousands of rows) — that hasn't come up yet in
-this app.
+`Table` filters, sorts, and paginates **client-side** once the data is loaded. Prefer a single
+unpaged API call (`GET /api/{resource}`) that returns the full collection, rather than building
+server-side search/paging/sorting query parameters — that complexity is redundant once `Table` is
+doing it in the browser. Only fall back to server-side paging if a dataset is large enough that
+shipping it all to the browser in one call is genuinely a problem (thousands of rows) — that hasn't
+come up yet in this app.
 
 ## Styling
 
-Component styling (colors, spacing, icons) follows the shared `--scanner-*` CSS custom
-properties defined in `src/styles/theme.css`, so `VMCIUIComponents` automatically follow the
-app's light/dark mode (`data-bs-theme` on `<html>`, see `src/contexts/ThemeContext.tsx`) — do
-not hardcode colors when extending these components.
+Colours and fonts are **tokens**: the library's `--vmci-*` variables. `main.tsx` loads, in this
+order, Bootstrap, `@vmci/ui/styles/vmci-tokens.css` (neutral defaults), `@vmci/ui/styles/vmci.css`
+(the Bootstrap bridge and helper classes such as `vmci-panel`, `vmci-muted`, `vmci-accent-dot`), then
+Scanner's own `src/styles/app-tokens.css`, which sets every token for light **and** dark. To change a
+colour, change the token there — never hardcode a colour in a component or a `style` prop.
 
-The palette is the VMCI house style (logo green and brace grey). `theme.css` also points
-Bootstrap's own variables (`--bs-primary`, `--bs-body-bg`, link and focus colors) at the
-`--scanner-*` tokens, so stock Bootstrap components follow the palette in both themes.
+The theme is `data-bs-theme` on `<html>`, set by the library's `ThemeProvider` (`App.tsx`, storage
+key `scanner-theme`). Components react to it through CSS only; read it with `useTheme()`.
 
-The logo is rendered by `src/components/ScannerLogo.tsx` (inline SVG, theme-aware through
-`--scanner-logo-*`). The static files under `public/` (`logos/`, `favicon.svg`, PWA icons) are
+The palette is the VMCI house style (logo green and brace grey). `app-tokens.css` also keeps
+Scanner's deliberate differences from the library (dark-mode outline and secondary buttons, the
+navbar surface) and maps the `--scanner-*` inputs of the portable scanner module.
+
+`src/styles/theme.css` holds only what is specific to Scanner: the logo styles. The logo is rendered
+by `src/components/ScannerLogo.tsx` (inline SVG, theme-aware through `--scanner-logo-*` in
+`app-tokens.css`). The static files under `public/` (`logos/`, `favicon.svg`, PWA icons) are
 generated by `scripts/make-logos.ps1` — never edit them by hand, and change the geometry in the
 script and the component together.
 
@@ -90,49 +102,42 @@ script and the component together.
 **Every server call already shows a spinner automatically — don't build a per-page loading
 spinner just to cover "a request is in flight".**
 
-`src/services/axiosConfig.ts`'s interceptors mark every `axiosInstance` request as in-flight
-(via `src/hooks/useHttpActivity.ts`'s counter), and `App.tsx` wraps the routed content in one
-`VMCISpinner` driven by that hook. Every `src/services/*Service.ts` call already goes through
-the shared `axiosInstance`, so this covers any new service method for free — no per-page
-`isLoading` state, manual `<VMCISpinner>`, or local `"Loading..."` text needed on account of a
-request being in flight.
+`src/services/axiosConfig.ts`'s interceptors call the library's `beginHttpRequest`/`endHttpRequest`
+for every `axiosInstance` request, and `App.tsx` wraps the routed content in one `Spinner` driven by
+`useHttpActivity()` (both from `@vmci/ui`). Every `src/services/*Service.ts` call already goes
+through the shared `axiosInstance`, so this covers any new service method for free — no per-page
+`isLoading` state, manual `<Spinner>`, or local "Laden..." text needed on account of a request being
+in flight.
 
 Local `isLoading` state is still the right tool when it drives something other than _whether to
-show a spinner_ — e.g. a list page's `isLoading` picks _what_ to render (toolbar-only vs. the
-full table) while data is missing, and disabling a submit button while its own request is
-in flight is a legitimate local concern too. The rule is specifically about not re-showing a
-spinner the app is already showing.
+show a spinner_ — e.g. a list page's `isLoading` picks _what_ to render while data is missing (use
+`LoadingState` there), and disabling a submit button while its own request is in flight is a
+legitimate local concern too. The rule is specifically about not re-showing a spinner the app is
+already showing.
 
-**To change the spinner style for the whole app, there is exactly one place to edit:**
-`VMCIUIComponents/VMCISpinner.tsx`'s `Blocks` import — every spinner in the app renders through
-that one component and nowhere else, so swapping the `react-loader-spinner` variant (or
-library) there changes every screen at once.
+The spinner's look is the library's (`Spinner` `variant`, colour from `--vmci-accent`); change it
+there through `vmci contribute`, not with a second spinner in the app.
 
 ## 🚨 Form Patterns (all create/edit forms)
 
-**Every form in this app follows the same conventions. New forms must match these, and the
-first entity form built in this app is the
-reference implementation for the next one.** Two shared helpers in `src/components/FormControls.tsx` exist
-specifically to keep these consistent — use them, don't hand-roll the markup:
+**Every form in this app follows the same conventions. New forms must match these;
+`pages/admin/AdminAccountForm.tsx` is the reference implementation.** Use the library's form
+components, don't hand-roll the markup:
 
 ### 1. Required vs. optional fields
 
-- **Required fields** render a `<RequiredMark />` immediately after the label text. The marker
-  is a muted `*` that **turns red the moment that field fails validation** — pass the field's
-  own error state: `<RequiredMark invalid={Boolean(fieldErrors.city)} />`. Its color comes from
-  the `.scanner-required-mark` / `.scanner-required-mark--invalid` classes in
-  `src/styles/theme.css` (theme-aware, so don't hardcode a color).
+- Wrap each control in `<FormField label="..." required error={fieldErrors.city}>`. It renders the
+  label, the muted `*` that **turns red the moment that field fails validation**, the error message,
+  `is-invalid` and the `aria-*` links. A `hint` goes under the control.
 
   ```tsx
-  <label htmlFor="city" className="form-label">
-    Gemeente
-    <RequiredMark invalid={Boolean(fieldErrors.city)} />
-  </label>
+  <FormField label="Gemeente" required error={fieldErrors.city} disabled={isSaving}>
+    <input type="text" className="form-control" value={city} onChange={...} />
+  </FormField>
   ```
 
-- **Optional fields** render **nothing** — no `*`, and specifically **no "Optional." helper
-  text** under the input. Absence of the marker _is_ the "optional" signal. (Do not add a
-  `<div className="form-text">Optional.</div>`; that pattern was removed.)
+- **Optional fields** render **no** marker, and specifically **no "Optional." helper text** under
+  the input. Absence of the marker _is_ the "optional" signal.
 
 - Which fields are required must mirror the backend DTO's `[Required]` attributes (e.g. the
   `<Entity>RequestBase` in `backend/VMCI.Scanner.WebApi/DTOs/`), so the client-side `validate()` and
@@ -140,28 +145,23 @@ specifically to keep these consistent — use them, don't hand-roll the markup:
 
 ### 2. Save / Cancel placement
 
-- The action buttons live in `<FormActions isSaving={isSaving} onCancel={handleCancel} />`,
-  rendered **inside** the `<form>` (its `Opslaan` button is a `type="submit"` that relies on the
-  form's `onSubmit`; the secondary cancel button is always labelled **`Annuleren`** app-wide).
-  `FormActions` right-aligns the buttons at the bottom of the form (`d-flex justify-content-end`)
-  and disables both while a save is in flight. Don't lay out form buttons manually.
+- The action buttons live in `<FormActions isBusy={isSaving} onCancel={handleCancel} />`, rendered
+  **inside** the `<form>` (its `Opslaan` button is a `type="submit"` that relies on the form's
+  `onSubmit`; the cancel button is always **`Annuleren`**). It right-aligns the buttons on wide
+  screens, stacks them on phones, and disables both while `isBusy`. `disabled` greys out Opslaan only.
 
 ### 3. All user-facing form copy is in Dutch
 
 - **Everything the user reads on a form is Dutch**: field labels, the page heading and
-  description, button captions (`Opslaan` / `Annuleren`), the loading text (`Laden...`), the
-  per-field validation messages returned by `validate()` (e.g. `'Gemeente is verplicht.'`), the
-  submit summary banner (`'Corrigeer de gemarkeerde velden.'`), and the `getErrorMessage(...)`
-  fallbacks for a failed load/save (e.g. `'Opslaan van gegevens mislukt'`).
+  description, button captions (`Opslaan` / `Annuleren`), the per-field validation messages
+  returned by `validate()` (e.g. `'Gemeente is verplicht.'`), the submit summary banner
+  (`'Corrigeer de gemarkeerde velden.'`), and the `getErrorMessage(...)` fallbacks for a failed
+  load/save (e.g. `'Opslaan van gegevens mislukt'`). The library's default texts are Dutch too.
 - `id`/`htmlFor`/state-key identifiers stay in English (they're not user-visible) — only the
   displayed strings are translated.
 
-## Rijksregisternummer (RRN) input
+### 4. Password rules
 
-**`VMCIRRNInput` (from `src/components/VMCIUIComponents`) is the default, required control for
-capturing a person's Rijksregisternummer / national register number** — never a plain
-`Form.Control` for that field. It live-masks as `______-___-__` while typing and always
-reports the raw 11-digit string (or `null`) via `onValueChanged`, so store/send that raw value,
-not the masked text. Use `isValidRrn`/`parseRrn` from the same barrel (also in
-`VMCIUIComponents/rrn.ts`) for validation and for reading back the birthdate/gender it encodes,
-rather than re-implementing the modulo-97 check elsewhere.
+The rules of the user's own password are in `src/services/passwordRules.ts` (they must match the
+API's `PasswordService`). Show them live under the new-password field with
+`<ValidationChecklist rules={passwordRules(newPassword)} />`.

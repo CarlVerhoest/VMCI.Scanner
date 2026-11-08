@@ -9,7 +9,7 @@ interface ScannerLogoProps {
 
 // The VMCI Scanner logo: the VMCI braces as a scan frame around a page, with a scan line
 // through it. Inline rather than an <img> so it follows the app's light/dark theme through the
-// --scanner-logo-* tokens in src/styles/theme.css.
+// --scanner-logo-* tokens in src/styles/app-tokens.css.
 //
 // The geometry is the same as in scripts/make-logos.ps1, which generates the static files under
 // public/ (logos/, favicon.svg, PWA icons) - change both together.

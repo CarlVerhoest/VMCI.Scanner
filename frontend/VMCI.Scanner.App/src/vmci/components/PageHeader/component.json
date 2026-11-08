@@ -1,0 +1,14 @@
+{
+  "name": "page-header",
+  "version": "1.0.0",
+  "description": "PageHeader en SectionHeader: titel met icoon, ondertitel en acties.",
+  "dependencies": {
+    "styles": "^1.0.0"
+  },
+  "npmDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.0",
+    "clsx": "^2.1.1",
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

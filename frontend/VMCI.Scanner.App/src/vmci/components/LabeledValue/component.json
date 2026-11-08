@@ -1,0 +1,13 @@
+{
+  "name": "labeled-value",
+  "version": "1.0.0",
+  "description": "Label en waarde (alleen-lezen), met de fallback \"Niet ingevuld\".",
+  "dependencies": {
+    "styles": "^1.0.0",
+    "vmci-provider": "^1.0.0"
+  },
+  "npmDependencies": {
+    "clsx": "^2.1.1",
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

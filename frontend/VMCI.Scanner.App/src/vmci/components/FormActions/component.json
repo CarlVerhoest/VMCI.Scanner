@@ -1,0 +1,13 @@
+{
+  "name": "form-actions",
+  "version": "1.0.0",
+  "description": "Knoppen Opslaan/Annuleren onderaan een formulier.",
+  "dependencies": {
+    "styles": "^1.0.0",
+    "vmci-provider": "^1.0.0"
+  },
+  "npmDependencies": {
+    "clsx": "^2.1.1",
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

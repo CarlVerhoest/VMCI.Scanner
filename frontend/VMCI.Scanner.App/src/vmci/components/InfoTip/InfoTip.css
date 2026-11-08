@@ -1,0 +1,33 @@
+.vmci-info-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--vmci-text-muted);
+  line-height: 1;
+  vertical-align: middle;
+  cursor: help;
+}
+
+.vmci-info-tip:hover,
+.vmci-info-tip[aria-expanded='true'] {
+  color: var(--vmci-accent);
+}
+
+/* Keep the focus ring: the old InfoOverlay removed it. */
+.vmci-info-tip:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+}
+
+@media (pointer: coarse) {
+  .vmci-info-tip {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}

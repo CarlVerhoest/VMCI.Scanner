@@ -1,0 +1,196 @@
+/*
+ * VMCI shared styles: the Bootstrap bridge and helper classes.
+ * Load order in an app:  bootstrap.css → vmci-tokens.css → vmci.css → the app's own tokens.
+ *
+ * Bootstrap's own components only follow a handful of --bs-* variables; buttons ignore
+ * --bs-primary entirely because their colours are compiled in. This file points those
+ * variables, and the per-component --bs-btn-* hooks, at the --vmci-* tokens, so an app
+ * restyles everything by changing tokens only.
+ */
+
+/* ---------- Bridge: --bs-* follow --vmci-* (both themes; values come from the tokens) ---------- */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vmci-font-family);
+  --bs-body-bg: var(--vmci-bg);
+  --bs-body-color: var(--vmci-text);
+  --bs-secondary-color: var(--vmci-text-muted);
+  --bs-border-color: var(--vmci-surface-border);
+  --bs-primary: var(--vmci-accent);
+  --bs-primary-rgb: var(--vmci-accent-rgb);
+  --bs-link-color: var(--vmci-accent);
+  --bs-link-color-rgb: var(--vmci-accent-rgb);
+  --bs-link-hover-color: var(--vmci-accent-hover);
+  --bs-focus-ring-color: rgba(var(--vmci-accent-rgb), 0.25);
+  --bs-danger: var(--vmci-danger);
+  --bs-danger-rgb: var(--vmci-danger-rgb);
+  --bs-form-invalid-color: var(--vmci-danger);
+  --bs-form-invalid-border-color: var(--vmci-danger);
+}
+
+/* Raised surfaces Bootstrap draws itself. */
+.dropdown-menu {
+  --bs-dropdown-bg: var(--vmci-surface);
+  --bs-dropdown-border-color: var(--vmci-surface-border);
+  --bs-dropdown-link-active-bg: var(--vmci-accent);
+  --bs-dropdown-link-active-color: var(--vmci-on-accent);
+}
+
+.modal {
+  --bs-modal-bg: var(--vmci-surface);
+  --bs-modal-border-color: var(--vmci-surface-border);
+}
+
+.card {
+  --bs-card-bg: var(--vmci-surface);
+  --bs-card-border-color: var(--vmci-surface-border);
+}
+
+.offcanvas {
+  --bs-offcanvas-bg: var(--vmci-surface);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary {
+  --bs-btn-color: var(--vmci-on-accent);
+  --bs-btn-bg: var(--vmci-accent);
+  --bs-btn-border-color: var(--vmci-accent);
+  --bs-btn-hover-color: var(--vmci-on-accent);
+  --bs-btn-hover-bg: var(--vmci-accent-hover);
+  --bs-btn-hover-border-color: var(--vmci-accent-hover);
+  --bs-btn-focus-shadow-rgb: var(--vmci-accent-rgb);
+  --bs-btn-active-color: var(--vmci-on-accent);
+  --bs-btn-active-bg: var(--vmci-accent-hover);
+  --bs-btn-active-border-color: var(--vmci-accent-hover);
+  --bs-btn-disabled-color: var(--vmci-on-accent);
+  --bs-btn-disabled-bg: var(--vmci-accent);
+  --bs-btn-disabled-border-color: var(--vmci-accent);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--vmci-accent);
+  --bs-btn-border-color: var(--vmci-accent);
+  --bs-btn-hover-color: var(--vmci-on-accent);
+  --bs-btn-hover-bg: var(--vmci-accent);
+  --bs-btn-hover-border-color: var(--vmci-accent);
+  --bs-btn-focus-shadow-rgb: var(--vmci-accent-rgb);
+  --bs-btn-active-color: var(--vmci-on-accent);
+  --bs-btn-active-bg: var(--vmci-accent);
+  --bs-btn-active-border-color: var(--vmci-accent);
+  --bs-btn-disabled-color: var(--vmci-accent);
+  --bs-btn-disabled-border-color: var(--vmci-accent);
+}
+
+.btn-danger {
+  --bs-btn-color: var(--vmci-on-danger);
+  --bs-btn-bg: var(--vmci-danger);
+  --bs-btn-border-color: var(--vmci-danger);
+  --bs-btn-hover-color: var(--vmci-on-danger);
+  --bs-btn-hover-bg: var(--vmci-danger-hover);
+  --bs-btn-hover-border-color: var(--vmci-danger-hover);
+  --bs-btn-focus-shadow-rgb: var(--vmci-danger-rgb);
+  --bs-btn-active-color: var(--vmci-on-danger);
+  --bs-btn-active-bg: var(--vmci-danger-hover);
+  --bs-btn-active-border-color: var(--vmci-danger-hover);
+  --bs-btn-disabled-color: var(--vmci-on-danger);
+  --bs-btn-disabled-bg: var(--vmci-danger);
+  --bs-btn-disabled-border-color: var(--vmci-danger);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--vmci-danger);
+  --bs-btn-border-color: var(--vmci-danger);
+  --bs-btn-hover-color: var(--vmci-on-danger);
+  --bs-btn-hover-bg: var(--vmci-danger);
+  --bs-btn-hover-border-color: var(--vmci-danger);
+  --bs-btn-focus-shadow-rgb: var(--vmci-danger-rgb);
+  --bs-btn-active-color: var(--vmci-on-danger);
+  --bs-btn-active-bg: var(--vmci-danger);
+  --bs-btn-active-border-color: var(--vmci-danger);
+  --bs-btn-disabled-color: var(--vmci-danger);
+  --bs-btn-disabled-border-color: var(--vmci-danger);
+}
+
+/* ---------- Form fields ---------- */
+
+/* Fields sit on the raised surface with their own border token, so an empty field stays
+   visible on a dark page; focus uses the accent instead of stock blue. */
+.form-control,
+.form-select {
+  background-color: var(--vmci-surface);
+  border-color: var(--vmci-field-border);
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--vmci-accent);
+  box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+}
+
+.form-check-input:checked {
+  background-color: var(--vmci-accent);
+  border-color: var(--vmci-accent);
+}
+
+/* ---------- Helper classes ---------- */
+
+/* Card-like surface for grouping content. */
+.vmci-panel {
+  background-color: var(--vmci-surface);
+  color: var(--vmci-text);
+  border: var(--bs-border-width) solid var(--vmci-surface-border);
+  border-radius: var(--bs-border-radius-xl);
+  box-shadow: var(--vmci-shadow);
+}
+
+/* Muted text. Global on purpose: the per-app versions only worked inside a panel. */
+.vmci-muted {
+  color: var(--vmci-text-muted);
+}
+
+/* Titled group box: the legend sits in the top border. */
+.vmci-fieldset {
+  border: var(--bs-border-width) solid var(--vmci-surface-border);
+  border-radius: var(--bs-border-radius-lg);
+  padding: 1rem 1rem 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.vmci-fieldset > legend {
+  float: none;
+  width: auto;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--vmci-text-muted);
+}
+
+.vmci-accent-dot {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background-color: var(--vmci-accent);
+}
+
+/* A scrollable modal whose content is wrapped in a <form>: re-establish the flex chain so
+   the body scrolls instead of the dialog overflowing the viewport. */
+.modal-dialog-scrollable .modal-content > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+}

@@ -1,0 +1,22 @@
+/* Bootstrap's switch is 2em wide; give the whole row a touch-friendly height. */
+.vmci-theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-bottom: 0;
+}
+
+.vmci-theme-switch .form-check-input {
+  margin-top: 0;
+}
+
+.vmci-theme-switch .form-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.vmci-theme-switch__icon {
+  color: var(--vmci-text-muted);
+}

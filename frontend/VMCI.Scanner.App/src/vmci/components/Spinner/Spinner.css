@@ -1,0 +1,66 @@
+.vmci-spinner {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* Above modals (1055) so a save inside a dialog is covered too, below toasts (1090). */
+.vmci-spinner__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: var(--vmci-zindex-busy, 1080);
+  background-color: var(--vmci-backdrop);
+  pointer-events: all;
+}
+
+/* Centred in the viewport, not in the (possibly very tall) content. */
+.vmci-spinner__indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: calc(var(--vmci-zindex-busy, 1080) + 1);
+}
+
+.vmci-spinner__blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1.25rem);
+  grid-template-rows: repeat(3, 1.25rem);
+  gap: 0.25rem;
+}
+
+.vmci-spinner__block {
+  background-color: rgba(var(--vmci-accent-rgb), 0.35);
+  animation: vmci-spinner-block 1s steps(1, end) infinite;
+}
+
+@keyframes vmci-spinner-block {
+  0% {
+    background-color: var(--vmci-accent);
+  }
+  12.5%,
+  100% {
+    background-color: rgba(var(--vmci-accent-rgb), 0.35);
+  }
+}
+
+/* No flashing for people who asked for less motion: a slow, gentle pulse instead. */
+@media (prefers-reduced-motion: reduce) {
+  .vmci-spinner__block {
+    animation: vmci-spinner-pulse 2s ease-in-out infinite;
+    animation-delay: 0s !important;
+  }
+
+  @keyframes vmci-spinner-pulse {
+    50% {
+      background-color: var(--vmci-accent);
+    }
+  }
+}
+
+.vmci-spinner__border {
+  width: 4rem;
+  height: 4rem;
+  border-width: 0.4rem;
+  color: var(--vmci-accent);
+}

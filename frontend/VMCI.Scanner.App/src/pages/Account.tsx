@@ -1,10 +1,17 @@
 import { useEffect, useState, FormEvent } from 'react'
 import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
+import {
+  FormField,
+  LabeledValue,
+  LoadingState,
+  PageHeader,
+  SectionHeader,
+  ValidationChecklist,
+} from '@vmci/ui'
 import { useAuth } from '../contexts/AuthContext'
 import { accountService } from '../services/accountService'
-import { passwordRuleError } from '../services/passwordRules'
+import { passwordRuleError, passwordRules } from '../services/passwordRules'
 
 // Extracts a human-readable message from a failed API call. Handles the plain
 // `{ message: "..." }` bodies returned by AccountController's BadRequest/Unauthorized
@@ -132,17 +139,13 @@ function Account() {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-          <h1>Account</h1>
-          <p className="text-body-secondary mb-4">Beheer uw profiel en wachtwoord.</p>
+          <PageHeader title="Account" subtitle="Beheer uw profiel en wachtwoord." className="mb-4" />
 
-          <div className="scanner-panel p-3 p-md-4 mb-4">
-            <h2 className="h5 mb-3">
-              <FontAwesomeIcon icon={faUser} className="me-2 text-body-secondary" />
-              Profiel
-            </h2>
+          <div className="vmci-panel p-3 p-md-4 mb-4">
+            <SectionHeader title="Profiel" icon={faUser} className="mb-3" />
 
             {isLoadingProfile ? (
-              <p className="scanner-muted small mb-0">Profiel laden...</p>
+              <LoadingState size="sm" labels={{ loading: 'Profiel laden...' }} />
             ) : (
               <form onSubmit={handleProfileSubmit}>
                 {profileError && (
@@ -156,69 +159,37 @@ function Account() {
                   </div>
                 )}
 
-                <div className="mb-3">
-                  <label htmlFor="firstName" className="form-label">
-                    Voornaam
-                  </label>
+                <FormField label="Voornaam" className="mb-3" disabled={isSavingProfile}>
                   <input
                     type="text"
                     className="form-control"
-                    id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
-                    disabled={isSavingProfile}
                     autoComplete="given-name"
                   />
-                </div>
+                </FormField>
 
-                <div className="mb-3">
-                  <label htmlFor="surName" className="form-label">
-                    Naam
-                  </label>
+                <FormField label="Naam" className="mb-3" disabled={isSavingProfile}>
                   <input
                     type="text"
                     className="form-control"
-                    id="surName"
                     value={surName}
                     onChange={(e) => setSurName(e.target.value)}
                     required
-                    disabled={isSavingProfile}
                     autoComplete="family-name"
                   />
-                </div>
+                </FormField>
 
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    E-mailadres
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    value={email}
-                    disabled
-                    readOnly
-                  />
-                </div>
+                {/* Read-only: there is no way to change the e-mail address or the role here. */}
+                <LabeledValue label="E-mailadres" className="mb-3">
+                  {email}
+                </LabeledValue>
 
-                <div className="mb-3">
-                  <label htmlFor="role" className="form-label">
-                    Rol
-                  </label>
-                  {/* Read-only display of the role. This is intentionally not an editable
-                      form control - there is no way to submit a role change from this page. */}
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="role"
-                    value={roleName}
-                    disabled
-                    readOnly
-                    aria-readonly="true"
-                  />
-                  <div className="form-text">Uw rol wordt beheerd door een beheerder.</div>
-                </div>
+                <LabeledValue label="Rol" className="mb-1">
+                  {roleName}
+                </LabeledValue>
+                <div className="form-text mb-3">Uw rol wordt beheerd door een beheerder.</div>
 
                 <button type="submit" className="btn btn-primary" disabled={isSavingProfile}>
                   {isSavingProfile ? 'Bezig met opslaan...' : 'Profiel opslaan'}
@@ -227,11 +198,8 @@ function Account() {
             )}
           </div>
 
-          <div className="scanner-panel p-3 p-md-4">
-            <h2 className="h5 mb-3">
-              <FontAwesomeIcon icon={faLock} className="me-2 text-body-secondary" />
-              Wachtwoord wijzigen
-            </h2>
+          <div className="vmci-panel p-3 p-md-4">
+            <SectionHeader title="Wachtwoord wijzigen" icon={faLock} className="mb-3" />
 
             <form onSubmit={handlePasswordSubmit}>
               {passwordError && (
@@ -245,53 +213,43 @@ function Account() {
                 </div>
               )}
 
-              <div className="mb-3">
-                <label htmlFor="currentPassword" className="form-label">
-                  Huidig wachtwoord
-                </label>
+              <FormField label="Huidig wachtwoord" className="mb-3" disabled={isSavingPassword}>
                 <input
                   type="password"
                   className="form-control"
-                  id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   required
-                  disabled={isSavingPassword}
                   autoComplete="current-password"
                 />
-              </div>
+              </FormField>
 
-              <div className="mb-3">
-                <label htmlFor="newPassword" className="form-label">
-                  Nieuw wachtwoord
-                </label>
+              <FormField
+                label="Nieuw wachtwoord"
+                className="mb-3"
+                disabled={isSavingPassword}
+                hint={<ValidationChecklist rules={passwordRules(newPassword)} />}
+              >
                 <input
                   type="password"
                   className="form-control"
-                  id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
-                  disabled={isSavingPassword}
                   autoComplete="new-password"
                 />
-              </div>
+              </FormField>
 
-              <div className="mb-3">
-                <label htmlFor="confirmNewPassword" className="form-label">
-                  Nieuw wachtwoord bevestigen
-                </label>
+              <FormField label="Nieuw wachtwoord bevestigen" className="mb-3" disabled={isSavingPassword}>
                 <input
                   type="password"
                   className="form-control"
-                  id="confirmNewPassword"
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
                   required
-                  disabled={isSavingPassword}
                   autoComplete="new-password"
                 />
-              </div>
+              </FormField>
 
               <button type="submit" className="btn btn-primary" disabled={isSavingPassword}>
                 {isSavingPassword ? 'Bezig met opslaan...' : 'Wachtwoord opslaan'}

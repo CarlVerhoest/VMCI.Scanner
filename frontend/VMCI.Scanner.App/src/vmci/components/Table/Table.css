@@ -1,0 +1,119 @@
+.vmci-table {
+  border-radius: var(--bs-border-radius);
+}
+
+.vmci-table:focus-visible {
+  outline: 2px solid var(--bs-focus-ring-color);
+  outline-offset: 2px;
+}
+
+.vmci-table__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.5rem;
+}
+
+.vmci-table__toolbar-start {
+  margin-inline-end: auto;
+}
+
+.vmci-table__search {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .vmci-table__search {
+    width: 18rem;
+  }
+}
+
+/* The whole header is the sort button: keyboard-reachable, with the arrow after the text. */
+.vmci-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+.vmci-table__sort:focus-visible {
+  outline: 2px solid var(--bs-focus-ring-color);
+  outline-offset: 2px;
+  border-radius: var(--bs-border-radius-sm);
+}
+
+.vmci-table__sort-icon {
+  font-size: 0.75em;
+  flex-shrink: 0;
+}
+
+.vmci-table__sort-icon--idle {
+  opacity: 0.3;
+}
+
+.vmci-table__sort:hover .vmci-table__sort-icon--idle {
+  opacity: 0.7;
+}
+
+.vmci-table__resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 7px;
+  cursor: col-resize;
+  z-index: 1;
+  border-right: 2px solid transparent;
+}
+
+.vmci-table__resizer:hover,
+.vmci-table__resizer--active {
+  border-right-color: var(--vmci-accent);
+}
+
+/* Once columns are resized the grid may be wider than the screen: scroll sideways. The padding
+   gives the rows' negative gutter margins room, so there is no permanent scrollbar. */
+.vmci-table__scroller {
+  overflow-x: auto;
+  margin-inline: calc(var(--bs-gutter-x, 1.5rem) * -0.5);
+  padding-inline: calc(var(--bs-gutter-x, 1.5rem) * 0.5);
+}
+
+.vmci-table__pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.vmci-table__pagination .pagination {
+  --bs-pagination-color: var(--vmci-text);
+  --bs-pagination-bg: var(--vmci-surface);
+  --bs-pagination-border-color: var(--vmci-surface-border);
+  --bs-pagination-hover-color: var(--vmci-text);
+  --bs-pagination-hover-bg: var(--vmci-accent-soft);
+  --bs-pagination-active-color: var(--vmci-on-accent);
+  --bs-pagination-active-bg: var(--vmci-accent);
+  --bs-pagination-active-border-color: var(--vmci-accent);
+  --bs-pagination-disabled-bg: var(--vmci-surface);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+}
+
+@media (pointer: coarse) {
+  .vmci-table__pagination .page-link {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

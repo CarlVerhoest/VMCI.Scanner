@@ -1,0 +1,118 @@
+/* Shared by List and Table: grid rows on wide screens, cards below the card breakpoint. */
+
+.vmci-data {
+  min-width: 0;
+}
+
+.vmci-data__divider {
+  margin: 0.25rem 0;
+  border-color: var(--vmci-surface-border);
+  opacity: 1;
+}
+
+.vmci-data__header {
+  font-weight: 600;
+}
+
+.vmci-data__row {
+  padding-block: 0.35rem;
+}
+
+.vmci-data__row--alt {
+  background-color: var(--vmci-stripe-bg);
+}
+
+.vmci-data__row--selected {
+  background-color: var(--vmci-selection-bg);
+}
+
+.vmci-data__row--interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.vmci-data__row--interactive:hover:not(.vmci-data__row--selected) {
+  background-color: var(--vmci-accent-soft);
+}
+
+.vmci-data__cell {
+  min-width: 0;
+  margin-block: auto;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Control columns (action menu): no clipping, so a dropdown is not cut off. */
+.vmci-data__cell--fit {
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+}
+
+/* ---- Cards ---- */
+
+.vmci-data__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vmci-data__card {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--vmci-surface);
+  border: var(--bs-border-width) solid var(--vmci-surface-border);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.vmci-data__card.vmci-data__row--selected {
+  background-color: var(--vmci-selection-bg);
+  border-color: var(--vmci-accent);
+}
+
+.vmci-data__card-field {
+  display: flex;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.vmci-data__card-label {
+  flex: 0 0 40%;
+  color: var(--vmci-text-muted);
+  font-size: 0.875rem;
+}
+
+.vmci-data__card-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The first field is the card's title. */
+.vmci-data__card-field--title .vmci-data__card-label {
+  display: none;
+}
+
+.vmci-data__card-field--title .vmci-data__card-value {
+  font-weight: 600;
+  padding-inline-end: 2.75rem;
+}
+
+/* Control columns sit in the card's top-right corner. */
+.vmci-data__card-actions {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Column alignment classes (text-end, text-center) are for the grid; in a card label and value
+   always read left to right. Beats Bootstrap's !important utilities by specificity. */
+.vmci-data__card .vmci-data__card-field {
+  text-align: start !important;
+}

@@ -17,4 +17,5 @@ frame around a green outlined page, a bright green scan line through it, wordmar
 
 **How to apply:** treat the logo and the green/grey palette as decided — do not redesign or "retune to a
 brand" again. Implementation lives in `scripts/make-logos.ps1`, `src/components/ScannerLogo.tsx` and
-`src/styles/theme.css` of `frontend/VMCI.Scanner.App`; read those for the actual values.
+`src/styles/app-tokens.css` (colour values, `--vmci-*` and `--scanner-logo-*`) plus `src/styles/theme.css`
+(logo styles) of `frontend/VMCI.Scanner.App`; read those for the actual values.

@@ -63,9 +63,13 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    // The VMCI component library is copied into src/vmci by `npm run vmci` (see vmci.json).
+    // The exact '@vmci/ui' key must come before the '@vmci/ui/' prefix.
+    alias: [
+      { find: /^@vmci\/ui$/, replacement: path.resolve(__dirname, 'src/vmci/index.ts') },
+      { find: /^@vmci\/ui\//, replacement: path.resolve(__dirname, 'src/vmci') + '/' },
+      { find: /^@\//, replacement: path.resolve(__dirname, 'src') + '/' },
+    ],
   },
   server: {
     https: httpsConfig,

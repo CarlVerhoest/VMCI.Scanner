@@ -1,0 +1,30 @@
+.vmci-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+  color: var(--vmci-text-muted);
+  text-align: center;
+}
+
+.vmci-loading-state .spinner-border {
+  color: var(--vmci-accent);
+}
+
+.vmci-loading-state--sm {
+  flex-direction: row;
+  padding: 0.75rem;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.vmci-loading-state--lg {
+  min-height: 40vh;
+}
+
+.vmci-loading-state--lg .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

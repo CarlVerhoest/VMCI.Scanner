@@ -2,8 +2,15 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKey, faLock, faLockOpen, faPen, faPlus, faUsers } from '@fortawesome/free-solid-svg-icons'
-import { VMCIActionMenu, VMCITable, type VMCITableColumn } from '../../components/VMCIUIComponents'
-import { ConfirmDialog } from '../../components/ConfirmDialog'
+import {
+  ActionMenu,
+  ConfirmDialog,
+  PageHeader,
+  StatusChip,
+  Table,
+  type StatusTone,
+  type TableColumn,
+} from '@vmci/ui'
 import { adminService, type AdminAccount } from '../../services/adminService'
 import { getErrorMessage } from '../../services/apiError'
 import { useAuth } from '../../contexts/AuthContext'
@@ -16,14 +23,14 @@ function statusText(account: AdminAccount): string {
   return 'Actief'
 }
 
-function statusClass(account: AdminAccount): string {
-  if (account.isLocked) return 'badge text-bg-danger'
-  if (account.mustChangePassword) return 'badge text-bg-warning'
-  return 'badge text-bg-success'
+function statusTone(account: AdminAccount): StatusTone {
+  if (account.isLocked) return 'danger'
+  if (account.mustChangePassword) return 'warning'
+  return 'success'
 }
 
-// VMCITable truncates text cells by default; a name or address is never shown shortened, so these
-// columns wrap instead.
+// Table truncates text cells with an ellipsis by default; a name or address is never shown
+// shortened, so these columns wrap instead.
 const WRAP = 'text-wrap text-break'
 
 function AdminAccounts() {
@@ -59,7 +66,7 @@ function AdminAccounts() {
     }
   }
 
-  const columns: VMCITableColumn<AdminAccount>[] = [
+  const columns: TableColumn<AdminAccount>[] = [
     {
       id: 'name',
       header: 'Naam',
@@ -74,7 +81,7 @@ function AdminAccounts() {
       id: 'status',
       header: 'Status',
       accessorFn: statusText,
-      cell: (a) => <span className={statusClass(a)}>{statusText(a)}</span>,
+      cell: (a) => <StatusChip tone={statusTone(a)}>{statusText(a)}</StatusChip>,
       fitContent: true,
     },
     {
@@ -85,30 +92,28 @@ function AdminAccounts() {
       enableFiltering: false,
       fitContent: true,
       cell: (a) => (
-        <VMCIActionMenu dataObject={a}>
-          <VMCIActionMenu.Item label="Bewerken" icon={faPen} onClick={(x: AdminAccount) => navigate(adminAccountEditPath(x.id))} />
-          <VMCIActionMenu.Item label="Nieuw tijdelijk wachtwoord" icon={faKey} onClick={setResetting} />
-          <VMCIActionMenu.Item
+        <ActionMenu dataObject={a}>
+          <ActionMenu.Item label="Bewerken" icon={faPen} onClick={(x: AdminAccount) => navigate(adminAccountEditPath(x.id))} />
+          <ActionMenu.Item label="Nieuw tijdelijk wachtwoord" icon={faKey} onClick={setResetting} />
+          <ActionMenu.Item
             label={a.isLocked ? 'Deblokkeren' : 'Blokkeren'}
             icon={a.isLocked ? faLockOpen : faLock}
             hidden={a.id === user?.id}
             onClick={setLocking}
           />
-        </VMCIActionMenu>
+        </ActionMenu>
       ),
     },
   ]
 
   return (
     <div className="container mt-4">
-      <h1>
-        <FontAwesomeIcon icon={faUsers} className="me-2 text-body-secondary" />
-        Accounts
-      </h1>
-      <p className="text-body-secondary">
-        Maak een account aan met een tijdelijk wachtwoord en geef dat persoonlijk door. Bij de eerste
-        aanmelding kiest de gebruiker een eigen wachtwoord.
-      </p>
+      <PageHeader
+        title="Accounts"
+        icon={faUsers}
+        subtitle="Maak een account aan met een tijdelijk wachtwoord en geef dat persoonlijk door. Bij de eerste aanmelding kiest de gebruiker een eigen wachtwoord."
+        className="mb-3"
+      />
 
       {error && (
         <div className="alert alert-danger" role="alert">
@@ -117,10 +122,12 @@ function AdminAccounts() {
       )}
 
       {accounts && (
-        <VMCITable
+        <Table
+          aria-label="Accounts"
           data={accounts}
           columns={columns}
-          emptyStateText="Er zijn nog geen accounts."
+          rowKey="id"
+          labels={{ empty: 'Er zijn nog geen accounts.' }}
           initialSorting={[{ id: 'name', desc: false }]}
           onRowDoubleClick={(a) => navigate(adminAccountEditPath(a.id))}
           toolbarStart={
@@ -146,10 +153,10 @@ function AdminAccounts() {
         title={locking?.isLocked ? 'Account deblokkeren' : 'Account blokkeren'}
         variant={locking?.isLocked ? 'primary' : 'danger'}
         confirmLabel={locking?.isLocked ? 'Deblokkeren' : 'Blokkeren'}
-        isConfirming={isLocking}
+        isBusy={isLocking}
         error={lockError}
         onConfirm={() => void toggleLock()}
-        onCancel={() => {
+        onHide={() => {
           setLocking(null)
           setLockError(null)
         }}

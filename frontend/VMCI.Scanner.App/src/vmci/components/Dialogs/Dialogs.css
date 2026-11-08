@@ -1,0 +1,41 @@
+.vmci-dialog__details {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--vmci-stripe-bg);
+  border: var(--bs-border-width) solid var(--vmci-surface-border);
+  border-radius: var(--bs-border-radius);
+}
+
+.vmci-dialog__message > :last-child,
+.vmci-dialog__details > :last-child {
+  margin-bottom: 0;
+}
+
+.vmci-dialog__icon--info {
+  color: var(--bs-info);
+}
+
+.vmci-dialog__icon--success {
+  color: var(--bs-success);
+}
+
+.vmci-dialog__icon--warning {
+  color: var(--bs-warning);
+}
+
+.vmci-dialog__icon--danger {
+  color: var(--vmci-danger);
+}
+
+/* Phones: buttons full width, stacked, primary on top. */
+@media (max-width: 575.98px) {
+  .vmci-dialog__footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .vmci-dialog__footer > .btn {
+    margin: 0.25rem 0;
+    min-height: 2.75rem;
+  }
+}

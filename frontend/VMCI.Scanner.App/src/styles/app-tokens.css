@@ -1,0 +1,164 @@
+/*
+ * Scanner's values for the VMCI design tokens. Loaded AFTER @vmci/ui/styles/vmci-tokens.css and
+ * vmci.css (see main.tsx): the library supplies neutral defaults and the Bootstrap bridge, this
+ * file supplies the VMCI house style. Every --vmci-* token is set for light AND dark.
+ *
+ * Palette, taken from the VMCI logo that the Scanner logo is derived from (see
+ * scripts/make-logos.ps1 and src/components/ScannerLogo.tsx):
+ *   - logo green, light: #4b5c09 (accent on a light background)
+ *   - logo green, dark:  #84a410 (accent on a dark background; the scan line in light mode)
+ *   - brace grey:        #888888 (light) / #aeaeae (dark)
+ *   - dark background:   #1a1a1a, surface #2a2a2a (neutral, as in the VMCI app)
+ *   - typeface:          the VMCI app's system stack - no web font is downloaded
+ *
+ * Tokens the library does not know keep the scanner- prefix (the logo colours).
+ */
+
+:root,
+[data-bs-theme='light'] {
+  --vmci-font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --vmci-bg: #fbfbf9;
+  --vmci-surface: #ffffff;
+  --vmci-surface-border: rgba(75, 92, 9, 0.16);
+  --vmci-field-border: rgba(75, 92, 9, 0.16);
+  --vmci-text: #1a1a1a;
+  /* Darker than the logo's brace grey (#888888), which is too light to read as body text on
+     white. */
+  --vmci-text-muted: #5c5c5c;
+  --vmci-accent: #4b5c09;
+  --vmci-accent-hover: #3a4807;
+  --vmci-accent-rgb: 75, 92, 9;
+  --vmci-on-accent: #ffffff;
+  --vmci-accent-soft: rgba(132, 164, 16, 0.12);
+  --vmci-stripe-bg: rgba(132, 164, 16, 0.12);
+  /* Deliberately a stronger tint than the stripe, so a selected row still stands out. */
+  --vmci-selection-bg: rgba(132, 164, 16, 0.3);
+  --vmci-shadow: 0 0.5rem 1.5rem rgba(26, 26, 26, 0.08);
+  --vmci-backdrop: rgba(0, 0, 0, 0.5);
+  --vmci-viewer-bg: rgba(0, 0, 0, 0.92);
+  --vmci-viewer-text: #f8f9fa;
+  /* Bootstrap's own red in light mode. */
+  --vmci-danger: #dc3545;
+  --vmci-danger-hover: #bb2d3b;
+  --vmci-danger-rgb: 220, 53, 69;
+  --vmci-on-danger: #ffffff;
+
+  /* The logo's own colours (ScannerLogo.tsx). Kept apart from the accent tokens so the logo
+     stays the logo when the UI accent is retuned. */
+  --scanner-logo-grey: #888888;
+  --scanner-logo-green: #4b5c09;
+  --scanner-logo-scan: #84a410;
+}
+
+[data-bs-theme='dark'] {
+  /* Neutral near-black, as in the VMCI app, so the logo green carries the brand. */
+  --vmci-bg: #1a1a1a;
+  --vmci-surface: #2a2a2a;
+  --vmci-surface-border: rgba(255, 255, 255, 0.1);
+  --vmci-field-border: rgba(255, 255, 255, 0.1);
+  --vmci-text: #f5f5f5;
+  --vmci-text-muted: #aeaeae;
+  /* The logo's lighter green: the light-mode accent (#4b5c09) is nearly invisible on a dark
+     background. */
+  --vmci-accent: #84a410;
+  --vmci-accent-hover: #9bbf1c;
+  --vmci-accent-rgb: 132, 164, 16;
+  --vmci-on-accent: #1a1a1a;
+  --vmci-accent-soft: rgba(132, 164, 16, 0.16);
+  --vmci-stripe-bg: rgba(132, 164, 16, 0.16);
+  --vmci-selection-bg: rgba(132, 164, 16, 0.34);
+  --vmci-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+  --vmci-backdrop: rgba(0, 0, 0, 0.5);
+  --vmci-viewer-bg: rgba(0, 0, 0, 0.92);
+  --vmci-viewer-text: #f8f9fa;
+  /* Bootstrap's stock red reads too muted as an outline on this background: lightened. */
+  --vmci-danger: #ff6b6b;
+  --vmci-danger-hover: #ff8787;
+  --vmci-danger-rgb: 255, 107, 107;
+  --vmci-on-danger: #1a1a1a;
+
+  --scanner-logo-grey: #aeaeae;
+  --scanner-logo-green: #84a410;
+  --scanner-logo-scan: #a9cf1f;
+}
+
+/* ---------- Inputs of the portable scanner module (src/scanner/scanner.css) ---------- */
+
+/* The module cannot import anything, so it reads its own --scanner-* tokens (see
+   src/scanner/README.md). They follow the VMCI tokens; only the -rgb surface needs literals. */
+:root,
+[data-bs-theme] {
+  --scanner-bg: var(--vmci-bg);
+  --scanner-surface: var(--vmci-surface);
+  --scanner-surface-border: var(--vmci-surface-border);
+  --scanner-text: var(--vmci-text);
+  --scanner-text-muted: var(--vmci-text-muted);
+  --scanner-accent: var(--vmci-accent);
+  --scanner-accent-hover: var(--vmci-accent-hover);
+  --scanner-accent-soft: var(--vmci-accent-soft);
+  --scanner-on-accent: var(--vmci-on-accent);
+  --scanner-danger: var(--vmci-danger);
+}
+
+:root,
+[data-bs-theme='light'] {
+  --scanner-surface-rgb: 255, 255, 255;
+}
+
+[data-bs-theme='dark'] {
+  --scanner-surface-rgb: 42, 42, 42;
+}
+
+/* ---------- Deliberate differences from the library's bridge (kept from Scanner) ---------- */
+
+/* The header navbar uses bg-body-tertiary: it sits on the raised surface colour. */
+:root,
+[data-bs-theme] {
+  --bs-tertiary-bg: var(--vmci-surface);
+}
+
+/* In dark mode Bootstrap's grey .btn-secondary is too close to the surface: accent fill. */
+[data-bs-theme='dark'] .btn-secondary {
+  --bs-btn-color: var(--vmci-on-accent);
+  --bs-btn-bg: var(--vmci-accent);
+  --bs-btn-border-color: var(--vmci-accent);
+  --bs-btn-hover-color: var(--vmci-on-accent);
+  --bs-btn-hover-bg: var(--vmci-accent-hover);
+  --bs-btn-hover-border-color: var(--vmci-accent-hover);
+  --bs-btn-focus-shadow-rgb: var(--vmci-accent-rgb);
+  --bs-btn-active-color: var(--vmci-on-accent);
+  --bs-btn-active-bg: var(--vmci-accent-hover);
+  --bs-btn-active-border-color: var(--vmci-accent-hover);
+  --bs-btn-disabled-color: var(--vmci-on-accent);
+  --bs-btn-disabled-bg: var(--vmci-accent);
+  --bs-btn-disabled-border-color: var(--vmci-accent);
+}
+
+/* In dark mode outline buttons use the near-white text colour rather than the accent, which
+   reads fine as a solid fill but too muted as a thin border on its own. */
+[data-bs-theme='dark'] .btn-outline-primary,
+[data-bs-theme='dark'] .btn-outline-secondary {
+  --bs-btn-color: var(--vmci-text);
+  --bs-btn-border-color: var(--vmci-text);
+  --bs-btn-hover-color: var(--vmci-on-accent);
+  --bs-btn-hover-bg: var(--vmci-accent);
+  --bs-btn-hover-border-color: var(--vmci-accent);
+  --bs-btn-focus-shadow-rgb: var(--vmci-accent-rgb);
+  --bs-btn-active-color: var(--vmci-on-accent);
+  --bs-btn-active-bg: var(--vmci-accent);
+  --bs-btn-active-border-color: var(--vmci-accent);
+  --bs-btn-disabled-color: var(--vmci-text-muted);
+  --bs-btn-disabled-border-color: var(--vmci-text-muted);
+}
+
+/* A disabled solid danger button greys out in dark mode instead of staying bright red. */
+[data-bs-theme='dark'] .btn-danger {
+  --bs-btn-disabled-bg: var(--vmci-text-muted);
+  --bs-btn-disabled-border-color: var(--vmci-text-muted);
+}
+
+[data-bs-theme='dark'] .btn-outline-danger {
+  --bs-btn-disabled-color: var(--vmci-text-muted);
+  --bs-btn-disabled-border-color: var(--vmci-text-muted);
+}

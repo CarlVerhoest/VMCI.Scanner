@@ -11,9 +11,10 @@ The project is **VMCI.Scanner**; the application users see is **Scanner**.
 
 - Solution, projects, folders and namespaces: `VMCI.Scanner.*` (`VMCI.Scanner.DB`, `VMCI.Scanner.WebApi`, …).
 - The DbContext is `ScannerContext`.
-- Everything lower-case uses `scanner`: the `--scanner-*` CSS variables and `scanner-*` classes, the
-  log file, the storage keys, the npm package (`scanner.app`) and the dev servers (`scanner-api`,
-  `scanner-dev`).
+- Everything lower-case uses `scanner`: the app's own `--scanner-*` CSS variables and `scanner-*`
+  classes, the log file, the storage keys, the npm package (`scanner.app`) and the dev servers
+  (`scanner-api`, `scanner-dev`). Shared colours and helper classes come from the VMCI component
+  library and use its `--vmci-*` / `vmci-*` names.
 
 ## Domain knowledge: read `docs/Domain.md` first
 
@@ -109,7 +110,7 @@ touching that project:
 - [backend/VMCI.Scanner.Claude/CLAUDE.md](backend/VMCI.Scanner.Claude/CLAUDE.md) — document name suggestions from the OCR text through the Anthropic API
 - [backend/VMCI.Scanner.Mail/CLAUDE.md](backend/VMCI.Scanner.Mail/CLAUDE.md) — mail from noreply@vmci.be through Microsoft Graph (tenant setup: `docs/mail-setup.md`)
 - [frontend/VMCI.Scanner.App/CLAUDE.md](frontend/VMCI.Scanner.App/CLAUDE.md) — VMCI components, forms, Dutch copy
-- [frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md](frontend/VMCI.Scanner.App/src/components/VMCIUIComponents/CLAUDE.md)
+- [frontend/VMCI.Scanner.App/src/vmci/VMCI.md](frontend/VMCI.Scanner.App/src/vmci/VMCI.md) — the VMCI component library (`@vmci/ui`), copied in from `../vmci.uicomponents` by its `vmci` CLI; generated and Dutch, imported by the frontend `CLAUDE.md`
 - [frontend/VMCI.Scanner.App/src/scanner/README.md](frontend/VMCI.Scanner.App/src/scanner/README.md) — the reusable scanner module and its isolation rules
 
 The build plan is [docs/scan-app-plan.md](docs/scan-app-plan.md). Its **section 0** records where the

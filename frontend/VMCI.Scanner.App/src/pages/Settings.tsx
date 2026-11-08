@@ -1,6 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons'
-import { useTheme } from '../contexts/ThemeContext'
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
+import { PageHeader, SectionHeader, SegmentedControl, ThemeSwitch, useTheme, type Theme } from '@vmci/ui'
 
 function Settings() {
   const { theme, setTheme } = useTheme()
@@ -10,57 +9,35 @@ function Settings() {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-          <h1>Instellingen</h1>
-          <p className="text-body-secondary mb-4">Bepaal hoe Scanner er op dit toestel uitziet.</p>
+          <PageHeader
+            title="Instellingen"
+            subtitle="Bepaal hoe Scanner er op dit toestel uitziet."
+            className="mb-4"
+          />
 
-          <div className="scanner-panel p-3 p-md-4">
+          <div className="vmci-panel p-3 p-md-4">
             <div className="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h2 className="h5 mb-1">Weergave</h2>
-                <p className="scanner-muted mb-0 small">
-                  Kies een licht of donker thema. Uw voorkeur wordt in deze browser bewaard.
-                </p>
-              </div>
-              <span className="scanner-accent-dot flex-shrink-0 ms-3" aria-hidden="true"></span>
-            </div>
-
-            <div className="form-check form-switch fs-5 mb-4">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="darkModeSwitch"
-                checked={isDark}
-                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+              <SectionHeader
+                title="Weergave"
+                subtitle="Kies een licht of donker thema. Uw voorkeur wordt in deze browser bewaard."
               />
-              <label className="form-check-label" htmlFor="darkModeSwitch">
-                <FontAwesomeIcon icon={isDark ? faMoon : faSun} className="me-2" />
-                Donkere modus {isDark ? 'aan' : 'uit'}
-              </label>
+              <span className="vmci-accent-dot flex-shrink-0 ms-3" aria-hidden="true"></span>
             </div>
 
-            <div className="btn-group w-100" role="group" aria-label="Themakeuze">
-              <button
-                type="button"
-                className={`btn scanner-mode-option ${!isDark ? 'active' : ''}`}
-                onClick={() => setTheme('light')}
-                aria-pressed={!isDark}
-              >
-                <FontAwesomeIcon icon={faSun} className="me-2" />
-                Licht
-              </button>
-              <button
-                type="button"
-                className={`btn scanner-mode-option ${isDark ? 'active' : ''}`}
-                onClick={() => setTheme('dark')}
-                aria-pressed={isDark}
-              >
-                <FontAwesomeIcon icon={faMoon} className="me-2" />
-                Donker
-              </button>
-            </div>
+            <ThemeSwitch wrapperClassName="fs-5 mb-4" />
 
-            <p className="scanner-muted small mt-3 mb-0">
+            <SegmentedControl<Theme>
+              aria-label="Themakeuze"
+              fullWidth
+              value={theme}
+              onValueChanged={setTheme}
+              options={[
+                { value: 'light', label: 'Licht', icon: faSun },
+                { value: 'dark', label: 'Donker', icon: faMoon },
+              ]}
+            />
+
+            <p className="vmci-muted small mt-3 mb-0">
               Momenteel is de <strong>{isDark ? 'donkere' : 'lichte'}</strong> modus actief.
             </p>
           </div>

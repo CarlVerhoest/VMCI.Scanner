@@ -5,7 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  // src/vmci is the VMCI component library, copied in by `npm run vmci`: it is linted by the
+  // library's own rules and CI, not by this app's.
+  { ignores: ['dist', 'src/vmci'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],

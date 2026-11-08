@@ -2,9 +2,16 @@ import { useEffect, useState, FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faKey, faTrash, faUser } from '@fortawesome/free-solid-svg-icons'
-import { VMCISelector, VMCITable, type VMCITableColumn } from '../../components/VMCIUIComponents'
-import { FormActions, RequiredMark } from '../../components/FormControls'
-import { ConfirmDialog } from '../../components/ConfirmDialog'
+import {
+  ConfirmDialog,
+  FormActions,
+  FormField,
+  PageHeader,
+  SectionHeader,
+  Selector,
+  Table,
+  type TableColumn,
+} from '@vmci/ui'
 import {
   adminService,
   MIN_TEMPORARY_PASSWORD_LENGTH,
@@ -117,22 +124,16 @@ function AdminAccountForm() {
     onChange: (v: string) => void,
     type = 'text'
   ) => (
-    <div className="mb-3">
-      <label htmlFor={key} className="form-label">
-        {label}
-        <RequiredMark invalid={Boolean(fieldErrors[key])} />
-      </label>
-      <input
-        id={key}
-        type={type}
-        className={`form-control${fieldErrors[key] ? ' is-invalid' : ''}`}
-        value={value}
-        disabled={isSaving}
-        autoComplete="off"
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {fieldErrors[key] && <div className="invalid-feedback">{fieldErrors[key]}</div>}
-    </div>
+    <FormField
+      label={label}
+      required
+      error={fieldErrors[key]}
+      disabled={isSaving}
+      controlId={key}
+      className="mb-3"
+    >
+      <input type={type} className="form-control" value={value} autoComplete="off" onChange={(e) => onChange(e.target.value)} />
+    </FormField>
   )
 
   if (isLoading) {
@@ -143,12 +144,15 @@ function AdminAccountForm() {
     <div className="container mt-4">
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8">
-          <h1>{isNew ? 'Nieuw account' : `${account?.firstName ?? ''} ${account?.surName ?? ''}`}</h1>
-          <p className="text-body-secondary">
-            {isNew
-              ? 'Geef het tijdelijke wachtwoord persoonlijk door. Bij de eerste aanmelding kiest de gebruiker een eigen wachtwoord.'
-              : 'Pas de gegevens van dit account aan.'}
-          </p>
+          <PageHeader
+            title={isNew ? 'Nieuw account' : `${account?.firstName ?? ''} ${account?.surName ?? ''}`}
+            subtitle={
+              isNew
+                ? 'Geef het tijdelijke wachtwoord persoonlijk door. Bij de eerste aanmelding kiest de gebruiker een eigen wachtwoord.'
+                : 'Pas de gegevens van dit account aan.'
+            }
+            className="mb-3"
+          />
 
           {error && (
             <div className="alert alert-danger" role="alert">
@@ -156,63 +160,49 @@ function AdminAccountForm() {
             </div>
           )}
 
-          <div className="scanner-panel p-3 p-md-4 mb-4">
-            <h2 className="h5 mb-3">
-              <FontAwesomeIcon icon={faUser} className="me-2 text-body-secondary" />
-              Gegevens
-            </h2>
+          <div className="vmci-panel p-3 p-md-4 mb-4">
+            <SectionHeader title="Gegevens" icon={faUser} className="mb-3" />
             <form onSubmit={handleSubmit} noValidate>
               {textField('firstName', 'Voornaam', firstName, setFirstName)}
               {textField('surName', 'Naam', surName, setSurName)}
               {textField('email', 'E-mailadres', email, setEmail, 'email')}
 
-              <div className="mb-3">
-                <label className="form-label">
-                  Rol
-                  <RequiredMark invalid={Boolean(fieldErrors.role)} />
-                </label>
-                <VMCISelector
+              <FormField label="Rol" required error={fieldErrors.role} disabled={isSaving} className="mb-3">
+                <Selector<Role>
                   options={roles}
-                  selectedValue={role}
+                  value={role}
                   valueLabel="name"
-                  isInvalid={Boolean(fieldErrors.role)}
-                  disabled={isSaving}
-                  onValueChanged={(value) => setRole(value as Role | null)}
+                  optionKey="code"
+                  onValueChanged={setRole}
                 />
-              </div>
+              </FormField>
 
               {isNew && (
-                <div className="mb-3">
-                  <label htmlFor="temporaryPassword" className="form-label">
-                    Tijdelijk wachtwoord
-                    <RequiredMark invalid={Boolean(fieldErrors.temporaryPassword)} />
-                  </label>
+                <FormField
+                  label="Tijdelijk wachtwoord"
+                  required
+                  error={fieldErrors.temporaryPassword}
+                  disabled={isSaving}
+                  className="mb-3"
+                >
                   <input
-                    id="temporaryPassword"
                     type="text"
-                    className={`form-control${fieldErrors.temporaryPassword ? ' is-invalid' : ''}`}
+                    className="form-control"
                     value={temporaryPassword}
-                    disabled={isSaving}
                     autoComplete="off"
                     onChange={(e) => setTemporaryPassword(e.target.value)}
                   />
-                  {fieldErrors.temporaryPassword && (
-                    <div className="invalid-feedback">{fieldErrors.temporaryPassword}</div>
-                  )}
-                </div>
+                </FormField>
               )}
 
-              <FormActions isSaving={isSaving} onCancel={() => navigate(ROUTE_PATHS.ADMIN_ACCOUNTS)} />
+              <FormActions isBusy={isSaving} onCancel={() => navigate(ROUTE_PATHS.ADMIN_ACCOUNTS)} />
             </form>
           </div>
 
           {account && (
             <>
-              <div className="scanner-panel p-3 p-md-4 mb-4">
-                <h2 className="h5 mb-3">
-                  <FontAwesomeIcon icon={faKey} className="me-2 text-body-secondary" />
-                  Wachtwoord
-                </h2>
+              <div className="vmci-panel p-3 p-md-4 mb-4">
+                <SectionHeader title="Wachtwoord" icon={faKey} className="mb-3" />
                 <p className="mb-3">
                   {account.mustChangePassword
                     ? 'Dit account heeft nog een tijdelijk wachtwoord.'
@@ -283,7 +273,7 @@ function RecipientsPanel({ accountId }: { accountId: string }) {
     }
   }
 
-  const columns: VMCITableColumn<Recipient>[] = [
+  const columns: TableColumn<Recipient>[] = [
     // Wrapped, not truncated: an address is never shown shortened.
     { id: 'label', header: 'Omschrijving', accessorFn: (r) => r.label ?? '', className: 'text-wrap text-break' },
     { id: 'email', header: 'E-mailadres', accessorKey: 'email', className: 'text-wrap text-break' },
@@ -308,11 +298,8 @@ function RecipientsPanel({ accountId }: { accountId: string }) {
   ]
 
   return (
-    <div className="scanner-panel p-3 p-md-4 mb-4">
-      <h2 className="h5 mb-3">
-        <FontAwesomeIcon icon={faEnvelope} className="me-2 text-body-secondary" />
-        Ontvangers
-      </h2>
+    <div className="vmci-panel p-3 p-md-4 mb-4">
+      <SectionHeader title="Ontvangers" icon={faEnvelope} className="mb-3" />
       <p className="text-body-secondary small">
         De adressen waarnaar deze gebruiker een pdf kan mailen. De gebruiker kan zelf adressen
         toevoegen; alleen een beheerder kan ze verwijderen.
@@ -324,11 +311,13 @@ function RecipientsPanel({ accountId }: { accountId: string }) {
         </div>
       )}
 
-      <VMCITable
+      <Table
+        aria-label="Ontvangers"
         data={recipients}
         columns={columns}
+        rowKey="id"
         enableFiltering={false}
-        emptyStateText="Nog geen ontvangers."
+        labels={{ empty: 'Nog geen ontvangers.' }}
       />
 
       <div className="row g-2 align-items-end mt-2">
@@ -367,9 +356,9 @@ function RecipientsPanel({ accountId }: { accountId: string }) {
         show={removing !== null}
         title="Ontvanger verwijderen"
         confirmLabel="Verwijderen"
-        isConfirming={isRemoving}
+        isBusy={isRemoving}
         onConfirm={() => void remove()}
-        onCancel={() => setRemoving(null)}
+        onHide={() => setRemoving(null)}
         message={`${removing?.email ?? ''} verdwijnt uit de lijst van deze gebruiker.`}
       />
     </div>

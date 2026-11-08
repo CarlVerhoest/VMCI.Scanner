@@ -1,0 +1,82 @@
+/*
+ * VMCI design tokens: NEUTRAL defaults (decision D6).
+ *
+ * These are literal Bootstrap 5.3 values, so an app that loads nothing else looks like stock
+ * Bootstrap. Every app - VMCI included - overrides them in its own tokens file, loaded AFTER
+ * this one and vmci.css. Define every token for both themes.
+ *
+ * Do not write `var(--bs-*)` here: vmci.css points the --bs-* variables at these tokens,
+ * so a reference back would be a cycle and both would become invalid.
+ */
+
+:root,
+[data-bs-theme='light'] {
+  --vmci-font-family:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans',
+    Arial, sans-serif;
+
+  /* Page and raised surfaces (panels, fields, dropdowns). */
+  --vmci-bg: #ffffff;
+  --vmci-surface: #ffffff;
+  --vmci-surface-border: #dee2e6;
+  --vmci-field-border: #dee2e6;
+
+  /* Text. */
+  --vmci-text: #212529;
+  --vmci-text-muted: rgba(33, 37, 41, 0.75);
+
+  /* Brand accent: primary buttons, links, focus ring, selection. Keep -rgb in sync. */
+  --vmci-accent: #0d6efd;
+  --vmci-accent-hover: #0b5ed7;
+  --vmci-accent-rgb: 13, 110, 253;
+  --vmci-on-accent: #ffffff;
+  --vmci-accent-soft: rgba(13, 110, 253, 0.06);
+
+  /* Rows: alternating stripe and selected row (must stay distinguishable). */
+  --vmci-stripe-bg: rgba(0, 0, 0, 0.03);
+  --vmci-selection-bg: rgba(13, 110, 253, 0.18);
+
+  --vmci-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+  /* Dimming layer behind overlays (busy spinner). */
+  --vmci-backdrop: rgba(0, 0, 0, 0.45);
+  /* Image viewer: the stage behind a photo and the text on its floating buttons. */
+  --vmci-viewer-bg: rgba(0, 0, 0, 0.92);
+  --vmci-viewer-text: #f8f9fa;
+
+  /* Destructive actions and errors. Keep -rgb in sync. */
+  --vmci-danger: #dc3545;
+  --vmci-danger-hover: #bb2d3b;
+  --vmci-danger-rgb: 220, 53, 69;
+  --vmci-on-danger: #ffffff;
+}
+
+[data-bs-theme='dark'] {
+  --vmci-bg: #212529;
+  --vmci-surface: #2b3035;
+  --vmci-surface-border: #495057;
+  --vmci-field-border: #495057;
+
+  --vmci-text: #dee2e6;
+  --vmci-text-muted: rgba(222, 226, 230, 0.75);
+
+  /* Bootstrap's dark-mode link blue: readable as text on the dark page, with dark text on
+     a solid fill. Stock #0d6efd is too dim as text there. */
+  --vmci-accent: #6ea8fe;
+  --vmci-accent-hover: #8bb9fe;
+  --vmci-accent-rgb: 110, 168, 254;
+  --vmci-on-accent: #052c65;
+  --vmci-accent-soft: rgba(110, 168, 254, 0.08);
+
+  --vmci-stripe-bg: rgba(255, 255, 255, 0.03);
+  --vmci-selection-bg: rgba(110, 168, 254, 0.22);
+
+  --vmci-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  --vmci-backdrop: rgba(0, 0, 0, 0.6);
+  --vmci-viewer-bg: rgba(0, 0, 0, 0.92);
+  --vmci-viewer-text: #f8f9fa;
+
+  --vmci-danger: #ea868f;
+  --vmci-danger-hover: #f1aeb5;
+  --vmci-danger-rgb: 234, 134, 143;
+  --vmci-on-danger: #2c0b0e;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "table",
+  "version": "1.0.0",
+  "description": "Tabel met zoeken, sorteren, pagina's, selectie en kolombreedtes; cards op mobiel.",
+  "dependencies": {
+    "empty-state": "^1.0.0",
+    "hooks": "^1.0.0",
+    "list": "^1.0.0",
+    "search-input": "^1.0.0",
+    "styles": "^1.0.0",
+    "vmci-provider": "^1.0.0"
+  },
+  "npmDependencies": {
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "clsx": "^2.1.1",
+    "react": "^18.3.0 || ^19.0.0"
+  }
+}

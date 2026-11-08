@@ -1,11 +1,9 @@
 import { Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
-import { ThemeProvider } from './contexts/ThemeContext'
 import { ROUTES, ProtectedRoute } from './config/routes'
 import AppHeader from './components/AppHeader'
-import { VMCISpinner } from './components/VMCIUIComponents'
-import { useHttpActivity } from './hooks/useHttpActivity'
+import { LoadingState, Spinner, ThemeProvider, VMCIProvider, useHttpActivity } from '@vmci/ui'
 
 // Every API call goes through the shared axiosInstance (see axiosConfig.ts), which tracks
 // in-flight requests for us - so this one spinner, driven by useHttpActivity, covers every
@@ -17,11 +15,11 @@ function AppContent() {
   return (
     <div className="App">
       <AppHeader />
-      <VMCISpinner active={isLoadingHttp}>
+      <Spinner active={isLoadingHttp}>
         <Suspense
           fallback={
             <div className="container mt-5">
-              <p>Laden...</p>
+              <LoadingState size="lg" />
             </div>
           }
         >
@@ -52,20 +50,23 @@ function AppContent() {
             />
           </Routes>
         </Suspense>
-      </VMCISpinner>
+      </Spinner>
     </div>
   )
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <AppContent />
-        </Router>
+    <VMCIProvider>
+      {/* The old storage key, so users keep the theme they picked before the library. */}
+      <ThemeProvider storageKey="scanner-theme">
+        <AuthProvider>
+          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AppContent />
+          </Router>
+        </AuthProvider>
       </ThemeProvider>
-    </AuthProvider>
+    </VMCIProvider>
   )
 }
 
