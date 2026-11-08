@@ -29,10 +29,6 @@ function statusTone(account: AdminAccount): StatusTone {
   return 'success'
 }
 
-// Table truncates text cells with an ellipsis by default; a name or address is never shown
-// shortened, so these columns wrap instead.
-const WRAP = 'text-wrap text-break'
-
 function AdminAccounts() {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -66,6 +62,7 @@ function AdminAccounts() {
     }
   }
 
+  // A name or address is never shown shortened: those columns wrap instead of ending in "…".
   const columns: TableColumn<AdminAccount>[] = [
     {
       id: 'name',
@@ -73,9 +70,9 @@ function AdminAccounts() {
       accessorFn: (a) => `${a.surName} ${a.firstName}`,
       cell: (a) => `${a.firstName} ${a.surName}`,
       onClick: (a) => navigate(adminAccountEditPath(a.id)),
-      className: WRAP,
+      wrap: true,
     },
-    { id: 'email', header: 'E-mailadres', accessorKey: 'email', className: WRAP },
+    { id: 'email', header: 'E-mailadres', accessorKey: 'email', wrap: true },
     { id: 'role', header: 'Rol', accessorKey: 'roleName', fitContent: true },
     {
       id: 'status',

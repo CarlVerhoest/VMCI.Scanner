@@ -62,6 +62,14 @@
   opacity: 0.7;
 }
 
+/* Column with `wrap`: the value is shown in full over several lines instead of with "…". In cards
+   values always wrap already. */
+.vmci-data__cell.vmci-table__cell--wrap {
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+
 .vmci-table__resizer {
   position: absolute;
   top: 0;

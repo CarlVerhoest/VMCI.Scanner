@@ -222,17 +222,17 @@
       }
     },
     "table": {
-      "version": "1.0.0",
-      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "version": "1.1.0",
+      "commit": "960f5cc8f4dbebf8dbba0d64c4892f17601510f5",
       "files": {
-        "CHANGELOG.md": "i9WR6V18AUstPkb3",
+        "CHANGELOG.md": "Zeisi90THR43sH7f",
         "MIGRATION.md": "iF0OA8x2qUx0Rii6",
-        "Table.css": "rMtwFbBgtgVGwSHR",
+        "Table.css": "WlzluYaqsB/GErch",
         "Table.labels.ts": "q1OOzw91jL06r0Rw",
-        "Table.tsx": "F+++q9BLML8wGZOp",
+        "Table.tsx": "S1/8L/YKi606WLWD",
         "TablePagination.tsx": "HnfhFBPY7PHF3Vd0",
         "columnWidths.ts": "FA1BuZDwTC0eCnt1",
-        "component.json": "F3Dzui0pqqxiKJM0",
+        "component.json": "nN3O+5OmwPyqzhFE",
         "index.ts": "sFX/D8Z5hYyzetyU",
         "pagination.ts": "SxbEv8rdFwVlQNlt"
       }

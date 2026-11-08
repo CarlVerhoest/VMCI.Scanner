@@ -65,7 +65,7 @@ const columns: TableColumn<Account>[] = [
 row actions through `ActionMenu`, a "new" button in `toolbarStart`).
 
 **Names are never shortened.** `Table` truncates text cells with an ellipsis by default; columns
-holding a name or an address pass `className: 'text-wrap text-break'` so they wrap instead.
+holding a name or an address pass `wrap: true` so they wrap instead.
 
 ## Loading Data for Table
 

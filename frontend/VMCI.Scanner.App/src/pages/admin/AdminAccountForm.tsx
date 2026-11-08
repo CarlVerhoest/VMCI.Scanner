@@ -275,8 +275,8 @@ function RecipientsPanel({ accountId }: { accountId: string }) {
 
   const columns: TableColumn<Recipient>[] = [
     // Wrapped, not truncated: an address is never shown shortened.
-    { id: 'label', header: 'Omschrijving', accessorFn: (r) => r.label ?? '', className: 'text-wrap text-break' },
-    { id: 'email', header: 'E-mailadres', accessorKey: 'email', className: 'text-wrap text-break' },
+    { id: 'label', header: 'Omschrijving', accessorFn: (r) => r.label ?? '', wrap: true },
+    { id: 'email', header: 'E-mailadres', accessorKey: 'email', wrap: true },
     {
       id: 'remove',
       header: '',

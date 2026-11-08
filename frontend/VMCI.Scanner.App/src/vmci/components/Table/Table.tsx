@@ -63,6 +63,11 @@ export type TableColumn<T> = ColumnAccessor<T> & {
   /** Extra classes for the cells (merged), e.g. `d-none d-lg-block` to drop on small screens. */
   className?: string
   headerClassName?: string
+  /**
+   * Wrap long values over several lines instead of cutting them off with "…", for values that
+   * must always be read in full (names, addresses). Rows then grow in height. Default false.
+   */
+  wrap?: boolean
   /** A control (e.g. ActionMenu): sized to its content, never resized; in cards top-right. */
   fitContent?: boolean
 }
@@ -539,6 +544,7 @@ export function Table<T>({
                         col.fitContent
                           ? 'col-auto vmci-data__cell vmci-data__cell--fit'
                           : 'col vmci-data__cell',
+                        col.wrap && !col.fitContent && 'vmci-table__cell--wrap',
                         col.className,
                       )}
                       style={{
