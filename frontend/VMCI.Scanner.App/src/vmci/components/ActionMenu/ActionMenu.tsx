@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 import clsx from 'clsx'
 import Dropdown from 'react-bootstrap/Dropdown'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -10,6 +10,10 @@ import './ActionMenu.css'
 
 // Holds the row object for the items; wrapped so `null` can be a legitimate row value.
 const ActionMenuContext = createContext<{ dataObject: unknown } | null>(null)
+
+// Fixed positioning so the menu escapes a scrolling table. Kept as one object so the popper
+// options don't change on every render.
+const POPPER_CONFIG = { strategy: 'fixed' } as const
 
 export interface ActionMenuProps<T> {
   /** The row (or other object) every item's `onClick` receives. */
@@ -74,9 +78,10 @@ export function ActionMenu<T>({
 }: ActionMenuProps<T>) {
   const text = useLabels('actionMenu', actionMenuLabels, labels)
   const name = aria['aria-label'] ?? text.toggle
+  const [open, setOpen] = useState(false)
   return (
     <ActionMenuContext.Provider value={{ dataObject }}>
-      <Dropdown className="vmci-action-menu">
+      <Dropdown className="vmci-action-menu" onToggle={setOpen}>
         <Dropdown.Toggle
           bsPrefix="vmci-action-menu__toggle"
           // No variant: react-bootstrap would add btn-primary.
@@ -88,9 +93,13 @@ export function ActionMenu<T>({
         >
           <FontAwesomeIcon icon={faEllipsisVertical} fixedWidth aria-hidden="true" />
         </Dropdown.Toggle>
-        {/* Fixed positioning so the menu escapes a scrolling table. */}
-        <Dropdown.Menu align="end" popperConfig={{ strategy: 'fixed' }}>
-          {children}
+        {/*
+          renderOnMount: the popper exists before the first open. Created on the first open
+          instead, its first fixed-position measurement put the menu at the top of the window.
+          The items render only while open, so a closed menu holds no buttons.
+        */}
+        <Dropdown.Menu align="end" popperConfig={POPPER_CONFIG} renderOnMount>
+          {open && children}
         </Dropdown.Menu>
       </Dropdown>
     </ActionMenuContext.Provider>

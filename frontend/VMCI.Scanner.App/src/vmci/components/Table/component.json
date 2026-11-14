@@ -1,6 +1,6 @@
 {
   "name": "table",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Tabel met zoeken, sorteren, pagina's, selectie en kolombreedtes; cards op mobiel.",
   "dependencies": {
     "empty-state": "^1.0.0",
@@ -8,6 +8,7 @@
     "list": "^1.0.0",
     "search-input": "^1.0.0",
     "styles": "^1.0.0",
+    "swipe-to-delete": "^1.0.0",
     "vmci-provider": "^1.0.0"
   },
   "npmDependencies": {

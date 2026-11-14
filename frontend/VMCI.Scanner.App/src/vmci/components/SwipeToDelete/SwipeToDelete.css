@@ -1,0 +1,58 @@
+.vmci-swipe {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--bs-border-radius-lg);
+}
+
+/* The red layer the content slides away from. */
+.vmci-swipe__behind {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 1.25rem;
+  background-color: var(--vmci-danger);
+  color: var(--vmci-on-danger);
+  font-weight: 600;
+}
+
+.vmci-swipe--left .vmci-swipe__behind {
+  justify-content: flex-end;
+}
+
+.vmci-swipe--right .vmci-swipe__behind {
+  justify-content: flex-start;
+}
+
+.vmci-swipe__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: var(--vmci-surface);
+  /* Vertical scrolling stays with the browser; horizontal moves are ours. */
+  touch-action: pan-y;
+  transition: transform 0.25s ease;
+}
+
+.vmci-swipe--dragging .vmci-swipe__content {
+  transition: none;
+  user-select: none;
+}
+
+.vmci-swipe__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vmci-swipe__button {
+  flex-shrink: 0;
+  margin-inline-end: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vmci-swipe__content {
+    transition: none;
+  }
+}

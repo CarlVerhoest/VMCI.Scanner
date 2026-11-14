@@ -24,6 +24,7 @@ regex: <h[1-6][^>]*>\s*<(FontAwesomeIcon|i)\b
 | `<Card.Header className="bg-brand-gradient d-flex …"><h5><FontAwesomeIcon icon={faPlane}/> My Aircraft</h5><Button…/></Card.Header>` | `<SectionHeader variant="band" icon={faPlane} title="My Aircraft" actions={<Button…/>} />` als eerste kind van de `Card` |
 | titel van de pagina in `<h2>` / `<h5>` | `<PageHeader title=… />` (een `<h1>`; met `headingLevel` te kiezen) |
 | goudgradiënt `#f2cd5c → #ddb13e` (eLogger, hardcoded) | `variant="band"` volgt `--vmci-accent`. Wil eLogger de gradiënt behouden, zet dan in `app-tokens.css`: `.vmci-header--band { background: linear-gradient(135deg, var(--elogger-gold), …); color: var(--elogger-navy); }` |
+| eLogger: knoppen en jaarkeuze naast de titel in de header, ook op mobiel | `stackActions={false}` (vanaf 1.1.0); zonder deze prop schuiven de acties op mobiel onder de titel |
 | `.bg-navy-section` | `SectionHeader` (plain), of `variant="band"` met een app-specifieke klasse |
 | `text-shadow`, `!important`-regels | weg |
 
