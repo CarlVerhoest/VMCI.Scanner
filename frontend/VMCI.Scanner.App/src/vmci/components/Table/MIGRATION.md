@@ -71,7 +71,7 @@ regex: claudine-uicontrol-|level-up-uicontrol-|scanner-uicontrol-
 
 Vervang de combinatie van `<table>` op desktop en cards op mobiel door één `Table`. Verwijder daarbij de theme-specifieke klassen (`table-dark`, `bg-dark` op basis van `useTheme()`). **Behoud functionaliteit:**
 - **Server-side paginering** (eLogger `PagedResult`) wordt **nog niet** ondersteund: dat staat op "later". Laat die lijst voorlopig staan, of laad alles in één keer als het aantal klein is.
-- **Vegen om te verwijderen** in de mobiele lijst: wikkel de cards of rijen in `SwipeToDelete` (zie SwipeToDelete/MIGRATION.md). Dat kan ook rond een List.
+- **Vegen om te verwijderen** in de mobiele lijst: geef `onRowSwipeDelete={vraagBevestiging}` mee (vanaf 1.2.0). Elke card wordt dan een `SwipeToDelete`; VMCI veegde naar rechts tot 50 %: `swipeDeleteDirection="right" swipeDeleteThreshold={0.5}`. Houd een verwijderknop of menu-item in een kolom voor muis en toetsenbord. Rond een List wikkel je de cards zelf in `SwipeToDelete` (zie SwipeToDelete/MIGRATION.md).
 
 ## Controlelijst
 

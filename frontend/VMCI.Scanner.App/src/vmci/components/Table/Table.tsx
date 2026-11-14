@@ -27,6 +27,7 @@ import { useBreakpointUp, type Breakpoint } from '../../hooks/useMediaQuery'
 import { EmptyState } from '../EmptyState/EmptyState'
 import { displayValue, headerText, keyOfRow, renderHeader, type RowKey } from '../List/dataUtils'
 import { SearchInput } from '../SearchInput/SearchInput'
+import { SwipeToDelete } from '../SwipeToDelete/SwipeToDelete'
 import { useLabels } from '../VMCIProvider/vmciContext'
 import {
   MIN_COLUMN_WIDTH,
@@ -114,6 +115,16 @@ export interface TableProps<T> extends Omit<
   cardBreakpoint?: Breakpoint | false
   /** Replaces the default empty message. */
   emptyState?: ReactNode
+  /**
+   * Swipe a card to delete its row (card layout only, below `cardBreakpoint`). Called once the
+   * swipe passed the threshold and was released; usually it opens a confirmation. The swipe is a
+   * touch shortcut: keep a delete button or menu item in a column for mouse and keyboard.
+   */
+  onRowSwipeDelete?: (row: T) => void
+  /** Direction of the delete swipe on cards. Default `left`. */
+  swipeDeleteDirection?: 'left' | 'right'
+  /** Part of the card width to swipe before release deletes (0-1). Default 0.4. */
+  swipeDeleteThreshold?: number
   /** Overrides the default texts. */
   labels?: Partial<TableLabels>
 }
@@ -141,6 +152,9 @@ export function Table<T>({
   columnWidthsStorageKey,
   cardBreakpoint = 'md',
   emptyState,
+  onRowSwipeDelete,
+  swipeDeleteDirection = 'left',
+  swipeDeleteThreshold,
   labels,
   className,
   ...rest
@@ -300,9 +314,12 @@ export function Table<T>({
 
   // ---- interaction ----
   function onRowMouseClick(event: ReactMouseEvent<HTMLElement>, row: Row<T>) {
+    const inControl = isInsideControl(event.target, event.currentTarget)
     select(row)
-    containerRef.current?.focus({ preventScroll: true })
-    if (onRowClick && !isInsideControl(event.target, event.currentTarget)) onRowClick(row.original)
+    // A control keeps its focus (Enter on a button is also a click), so its own keyboard
+    // handling keeps working, e.g. ↓ and Escape in an action menu.
+    if (!inControl) containerRef.current?.focus({ preventScroll: true })
+    if (onRowClick && !inControl) onRowClick(row.original)
   }
 
   // ↑/↓ move the selection within the page; Enter opens the selected row.
@@ -569,7 +586,7 @@ export function Table<T>({
           {rows.map((row, displayIndex) => {
             const fields = columns.filter((c) => !c.fitContent)
             const controls = columns.filter((c) => c.fitContent)
-            return (
+            const card = (
               // Rows are reached through the grid's focus and arrow keys (activedescendant).
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
               <div
@@ -613,6 +630,22 @@ export function Table<T>({
                   </div>
                 )}
               </div>
+            )
+            if (!onRowSwipeDelete) return card
+            // The wrapper is layout only: the card itself stays the grid row. No button of its
+            // own, because a button between rowgroup and row would break the grid's structure.
+            return (
+              <SwipeToDelete
+                key={row.id}
+                role="presentation"
+                className="vmci-table__card-swipe"
+                direction={swipeDeleteDirection}
+                threshold={swipeDeleteThreshold}
+                showButton={false}
+                onDelete={() => onRowSwipeDelete(row.original)}
+              >
+                {card}
+              </SwipeToDelete>
             )
           })}
         </div>

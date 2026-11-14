@@ -92,3 +92,28 @@
     min-height: 2.75rem;
   }
 }
+
+/* stackActions={false}: compact actions stay on the title's row; a long title wraps instead. */
+.vmci-header--inline-actions {
+  flex-wrap: nowrap;
+}
+
+.vmci-header--inline-actions .vmci-header__text {
+  flex: 1 1 auto;
+}
+
+.vmci-header--inline-actions .vmci-header__actions {
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+@media (max-width: 575.98px) {
+  .vmci-header--inline-actions .vmci-header__actions {
+    width: auto;
+  }
+
+  .vmci-header--inline-actions .vmci-header__actions > .btn {
+    flex: 0 0 auto;
+  }
+}

@@ -4,6 +4,7 @@ import { appHeaderLabelsEn } from '../components/AppHeader/AppHeader.labels'
 import { dialogsLabelsEn } from '../components/Dialogs/Dialogs.labels'
 import { emptyStateLabelsEn } from '../components/EmptyState/EmptyState.labels'
 import { formActionsLabelsEn } from '../components/FormActions/FormActions.labels'
+import { addButtonLabelsEn } from '../components/IconButton/AddButton.labels'
 import { infoTipLabelsEn } from '../components/InfoTip/InfoTip.labels'
 import { labeledValueLabelsEn } from '../components/LabeledValue/LabeledValue.labels'
 import { listLabelsEn } from '../components/List/List.labels'
@@ -12,6 +13,7 @@ import { searchInputLabelsEn } from '../components/SearchInput/SearchInput.label
 import { shareActionsLabelsEn } from '../components/ShareActions/ShareActions.labels'
 import { selectorLabelsEn, booleanSelectLabelsEn } from '../components/Selector/Selector.labels'
 import { spinnerLabelsEn } from '../components/Spinner/Spinner.labels'
+import { swipeToDeleteLabelsEn } from '../components/SwipeToDelete/SwipeToDelete.labels'
 import { tableLabelsEn } from '../components/Table/Table.labels'
 import { themeSwitchLabelsEn } from '../components/ThemeSwitch/ThemeSwitch.labels'
 import { validationChecklistLabelsEn } from '../components/ValidationChecklist/ValidationChecklist.labels'
@@ -27,6 +29,7 @@ type CompleteLabels = { [K in VMCILabelKey]: VMCILabelRegistry[K] }
  */
 export const enLabels = {
   actionMenu: actionMenuLabelsEn,
+  addButton: addButtonLabelsEn,
   appHeader: appHeaderLabelsEn,
   booleanSelect: booleanSelectLabelsEn,
   dialogs: dialogsLabelsEn,
@@ -40,6 +43,7 @@ export const enLabels = {
   selector: selectorLabelsEn,
   shareActions: shareActionsLabelsEn,
   spinner: spinnerLabelsEn,
+  swipeToDelete: swipeToDeleteLabelsEn,
   table: tableLabelsEn,
   themeSwitch: themeSwitchLabelsEn,
   validationChecklist: validationChecklistLabelsEn,

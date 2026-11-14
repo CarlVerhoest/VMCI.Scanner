@@ -3,15 +3,15 @@
   "target": "src/vmci",
   "components": {
     "action-menu": {
-      "version": "1.0.0",
-      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "version": "1.0.1",
+      "commit": "33319200c42beb19fec802f9a58f9b822930ae1c",
       "files": {
         "ActionMenu.css": "WLB+J9TcUzFusRFF",
         "ActionMenu.labels.ts": "m/nkivdpfwRXahsO",
-        "ActionMenu.tsx": "zlJZD4Kls5la7DfT",
-        "CHANGELOG.md": "C9+MXP2Kf81Kt1Eg",
+        "ActionMenu.tsx": "/1D01D34hULVb5s/",
+        "CHANGELOG.md": "h64veBEDjEPSXtVJ",
         "MIGRATION.md": "RM7+TRdqVgUT9a7q",
-        "component.json": "eWFSzW+xs8KrTF47",
+        "component.json": "DtL2M4RDL/7K7Q/P",
         "index.ts": "6fiOjC/ApLaiICd6"
       }
     },
@@ -136,14 +136,14 @@
       }
     },
     "page-header": {
-      "version": "1.0.0",
-      "commit": "56d1951deec234eb21d32b33938e0f67912673cd",
+      "version": "1.1.0",
+      "commit": "33319200c42beb19fec802f9a58f9b822930ae1c",
       "files": {
-        "CHANGELOG.md": "S8GuK4AmudgnC+93",
-        "MIGRATION.md": "rCNOEW+IYc0sqCGl",
-        "PageHeader.css": "vnrTv2/sT1D+VsAe",
-        "PageHeader.tsx": "HQKfy0RlQMIGC8Jt",
-        "component.json": "LSYvo64l6xiLDGQn",
+        "CHANGELOG.md": "PwJue2HfSgy6w3De",
+        "MIGRATION.md": "NtvEki6MrGzfKMt+",
+        "PageHeader.css": "tOyY2B2xgUUsCDUB",
+        "PageHeader.tsx": "Wzdv+eiphY2tOgBB",
+        "component.json": "lDpSsmP2yEpcE0fA",
         "index.ts": "G/K4Z1dVkSpR76zN"
       }
     },
@@ -222,17 +222,17 @@
       }
     },
     "table": {
-      "version": "1.1.0",
-      "commit": "960f5cc8f4dbebf8dbba0d64c4892f17601510f5",
+      "version": "1.2.1",
+      "commit": "33319200c42beb19fec802f9a58f9b822930ae1c",
       "files": {
-        "CHANGELOG.md": "Zeisi90THR43sH7f",
-        "MIGRATION.md": "iF0OA8x2qUx0Rii6",
+        "CHANGELOG.md": "IVlKI/uaTaJzT+lG",
+        "MIGRATION.md": "SNQvOW19l8cjSVE9",
         "Table.css": "WlzluYaqsB/GErch",
         "Table.labels.ts": "q1OOzw91jL06r0Rw",
-        "Table.tsx": "S1/8L/YKi606WLWD",
+        "Table.tsx": "iD3YC0oJsmlotld6",
         "TablePagination.tsx": "HnfhFBPY7PHF3Vd0",
         "columnWidths.ts": "FA1BuZDwTC0eCnt1",
-        "component.json": "nN3O+5OmwPyqzhFE",
+        "component.json": "aX747k5iwwAPickT",
         "index.ts": "sFX/D8Z5hYyzetyU",
         "pagination.ts": "SxbEv8rdFwVlQNlt"
       }
@@ -320,6 +320,33 @@
         "component.json": "oqwsdQzAaDpapGLH",
         "index.ts": "fyPtExLrOs0FV2Go",
         "shareUtils.ts": "43YQ/hdyySSK9ZIy"
+      }
+    },
+    "icon-button": {
+      "version": "1.0.0",
+      "commit": "33319200c42beb19fec802f9a58f9b822930ae1c",
+      "files": {
+        "AddButton.labels.ts": "UQM37rowc31bG90G",
+        "AddButton.tsx": "IBdMM7zbLXFnOKCU",
+        "CHANGELOG.md": "NUd2tBx75mP1T36r",
+        "IconButton.css": "AWu2fXKBHb5kg38i",
+        "IconButton.tsx": "ZRKN05vZ49D89bVB",
+        "MIGRATION.md": "t2y3XyCLWW00jvPE",
+        "component.json": "uVL09cgYCEyB+jOU",
+        "index.ts": "wYkfQAnbhFKTEPUq"
+      }
+    },
+    "swipe-to-delete": {
+      "version": "1.0.0",
+      "commit": "33319200c42beb19fec802f9a58f9b822930ae1c",
+      "files": {
+        "CHANGELOG.md": "kgHx+TqgNDzOkE1c",
+        "MIGRATION.md": "kus1EwIzHUNz2IIi",
+        "SwipeToDelete.css": "AUs01lrCrZDqiB/i",
+        "SwipeToDelete.labels.ts": "6/uQoR5xHYPd/SLr",
+        "SwipeToDelete.tsx": "CBspZyUvR3ZE1HfA",
+        "component.json": "PRCPfFcozacY5zby",
+        "index.ts": "vaEMmZZ6XLhcH6lk"
       }
     }
   }

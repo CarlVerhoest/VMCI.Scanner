@@ -1,6 +1,6 @@
 {
   "name": "page-header",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PageHeader en SectionHeader: titel met icoon, ondertitel en acties.",
   "dependencies": {
     "styles": "^1.0.0"

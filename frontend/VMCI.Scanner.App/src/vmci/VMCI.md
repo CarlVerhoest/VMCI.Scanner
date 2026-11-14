@@ -39,7 +39,7 @@ Deze app gebruikt VMCI-componenten (React 18.3+ of 19, TypeScript, Bootstrap 5.3
 | `npm run vmci -- list` | Alle componenten in de repo, hun versie en of ze in de app zitten. |
 | `npm run vmci -- status` | Per geïnstalleerde component: de versie, een beschikbare update (**BREAKING** bij een nieuwe major) en lokale wijzigingen. |
 | `npm run vmci -- add <naam…>` | Een component kopiëren, samen met de componenten waarvan hij afhangt. Meldt ontbrekende npm-packages. |
-| `npm run vmci -- update [<naam…>]` | Nieuwere versies ophalen en hun CHANGELOG tonen. Stopt bij lokale wijzigingen of conflicterende ranges. |
+| `npm run vmci -- update [<naam…>]` | Nieuwere versies ophalen en hun CHANGELOG tonen, en `VMCI.md` bijwerken. Stopt bij lokale wijzigingen of conflicterende ranges. |
 | `npm run vmci -- diff <naam>` | De lokale wijzigingen tegenover de gekopieerde versie. |
 | `npm run vmci -- contribute <naam> --bump patch\|minor\|major -m "…"` | Lokale wijzigingen als branch in de repo zetten. |
 | `npm run vmci -- remove <naam…>` | Een component verwijderen. Dat kan niet als een andere component ervan afhangt. |
@@ -88,10 +88,18 @@ Voer dit alleen uit als de gebruiker erom vraagt of als `vmci.json` nog ontbreek
 8. Voeg `@src/vmci/VMCI.md` toe aan de `CLAUDE.md` van de app.
 9. Controleer: de typecheck en `npm run build` van de app moeten slagen. Commit daarna `vmci.json` en `src/vmci/`.
 
+## Wanneer controleren
+
+Voer de commando's uit in de map waar `vmci.json` staat; `<repo>` is het pad in `vmci.json` (`repo`).
+
+1. **Bij het begin van werk aan de frontend** (de eerste keer in een sessie): `git -C <repo> pull` en `npm run vmci -- status`. Meld updates (vooral **BREAKING**), een verouderde `VMCI.md` en lokale wijzigingen aan de gebruiker. Pas updates niet toe zonder akkoord.
+2. **Vóór een commit of PR die `src/vmci/` of `vmci.json` raakt**: `npm run vmci -- status` toont geen "lokaal gewijzigd" zonder `contribute`-branch, en er staat geen update open voor de componenten in die commit. Is dat wel zo, meld het en los het eerst op (`contribute` of `update`).
+3. **Na `vmci contribute`**, zodra de branch volgens de poort op `main` van de repo staat: voer in de app `npm run vmci -- update <naam>` uit, zodat de kopie weer gelijk is aan de repo, en commit `vmci.json` en `src/vmci/`.
+
 ## Updaten
 
 1. Doe `git -C <repo> pull` en daarna `npm run vmci -- status`.
-2. Voer `npm run vmci -- update` uit (of per component) en lees de CHANGELOG-regels die getoond worden. Bij **BREAKING** staat daar wat de app moet aanpassen: zoek alle gebruiksplaatsen en pas ze aan.
+2. Voer `npm run vmci -- update` uit (of per component) en lees de CHANGELOG-regels die getoond worden. Zonder nieuwe componentversies werkt `update` alleen `VMCI.md` bij. Bij **BREAKING** staat daar wat de app moet aanpassen: zoek alle gebruiksplaatsen en pas ze aan.
 3. Stopt `update` op een conflict, meld dat dan aan de gebruiker. Een voorbeeld: component A vraagt B `^1`, maar B wordt 2.0.0. Dan moet A eerst in de repo bijgewerkt worden.
 4. Installeer de npm-packages die `vmci` meldt. Controleer typecheck, build en tests, en commit `vmci.json` en `src/vmci/`.
 
@@ -149,6 +157,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 | `FormActions` | Opslaan/Annuleren onderaan een formulier (`isBusy`, `disabled`, `extra`) | `FormActions` uit `FormControls.tsx`, KAZM-formulierfooters: [FormActions/MIGRATION.md](./components/FormActions/MIGRATION.md) |
 | `ValidationChecklist` | Live lijst van vereisten (bv. wachtwoordregels) | eLogger `ValidationItem`: [ValidationChecklist/MIGRATION.md](./components/ValidationChecklist/MIGRATION.md) |
 | `SearchInput` | Zoekveld met wisknop en Escape | KAZM `FilterControl`: [SearchInput/MIGRATION.md](./components/SearchInput/MIGRATION.md) |
+| `PasswordInput` | Wachtwoordveld met oogknop (tonen/verbergen), `autoComplete` `current-password`/`new-password` | Claudine `PasswordInput`, losse `type="password"`-velden: [PasswordInput/MIGRATION.md](./components/PasswordInput/MIGRATION.md) |
 | `SegmentedControl` | Kleine keuzegroep als aaneengesloten knoppen (radio's) | eLogger `DateTimeDisplayToggle`, keuzegroepen met `btn-group`, `*-mode-option`: [SegmentedControl/MIGRATION.md](./components/SegmentedControl/MIGRATION.md) |
 | `NumberInput` | Getal in Belgische notatie, rekent uitdrukkingen uit, rekenmachine (F9), −/+ met `step`, `min`/`max`, `prefix`/`suffix` | Claudine `VMCINumberInput`, KAZM `MyNumericInput`/`MyNumericField`, eLogger `NumericInputControl`: [NumberInput/MIGRATION.md](./components/NumberInput/MIGRATION.md) |
 | `Calculator`, `CalculatorButton`, `calculate`, `formatNumber`, … | Zwevende rekenmachine; exacte parser voor Belgische notatie | Claudine `VMCICalculator(Button)`, `calculation.ts`: [Calculator/MIGRATION.md](./components/Calculator/MIGRATION.md) |
@@ -156,7 +165,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 | `DatePicker` | Datum typen (masker) of kiezen; `mode`: date, month of datetime; locale uit VMCIProvider | `VMCIDatePicker`, KAZM `MyDatePicker`/`DateField`/`DateTimeField`, VMCI `MonthSelector`: [DatePicker/MIGRATION.md](./components/DatePicker/MIGRATION.md) |
 | `TimeInput` | Tijdstip (uu:mm) op een dag, in een tijdzone, met de optionele knop UTC/lokaal | KAZM `TimeField`, eLogger `TimezoneAwareTimeInput`: [TimeInput/MIGRATION.md](./components/TimeInput/MIGRATION.md) |
 | `@vmci/ui/be`: `RRNInput`, `KBOInput`, `isValidRrn`, `parseRrn`, `isValidKbo`, … | Belgische rijksregister- en ondernemingsnummers | `VMCIRRNInput`, `rrn.ts`, `kbo.ts`, KAZM `RRNInputField`: [be/MIGRATION.md](./be/MIGRATION.md) |
-| `Table` | Zoeken, sorteren, pagina's (met vensters, paginagrootte), selectie (↑/↓, Enter), kolombreedtes; cards op mobiel | `VMCITable`, KAZM `MyTable`, zelfgebouwde tabellen en cards: [Table/MIGRATION.md](./components/Table/MIGRATION.md) |
+| `Table` | Zoeken, sorteren, pagina's (met vensters, paginagrootte), selectie (↑/↓, Enter), kolombreedtes; cards op mobiel, met `onRowSwipeDelete` wegvegen | `VMCITable`, KAZM `MyTable`, zelfgebouwde tabellen en cards: [Table/MIGRATION.md](./components/Table/MIGRATION.md) |
 | `List` | Eenvoudige rijen en kolommen; cards op mobiel | `VMCIList`, KAZM `MyList`: [List/MIGRATION.md](./components/List/MIGRATION.md) |
 | `ActionMenu` (+ `.Item`) | "⋮"-menu met acties per rij | `VMCIActionMenu`, KAZM `MyActionMenu`: [ActionMenu/MIGRATION.md](./components/ActionMenu/MIGRATION.md) |
 | `SwipeToDelete` | Vegen om te verwijderen (plus een knop) rond een card of rij | swipe-logica in VMCI-cards en eLogger-lijsten: [SwipeToDelete/MIGRATION.md](./components/SwipeToDelete/MIGRATION.md) |
@@ -164,7 +173,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 | `ConfirmDialog`, `MessageDialog`, `FormModal` | Bevestigen (met `children` als samenvatting, `isBusy`, `error`); melding of vraag (ok, okCancel, yesNo); formulier in een modal | `ConfirmDialog` (Claudine-lijn), VMCI `*DeleteConfirm`, eLogger `*DeleteModal`, KAZM `SimpleModal`/`NumericModal`, VMCI `ErrorModal` en zelfgebouwde modals: [Dialogs/MIGRATION.md](./components/Dialogs/MIGRATION.md) |
 | `DialogProvider`, `useConfirm`, `useMessage` | `await confirm({ title, action })` zonder eigen state; één provider rond de app | idem |
 | `AppHeader` | Bovenbalk: logo, hoofdlinks (inline vanaf `inlineBreakpoint`, anders hamburgermenu), gebruikersmenu of `signedOutContent`; zonder router, `onNavigate` voor client-side navigatie | Scanner `components/AppHeader.tsx`: [AppHeader/MIGRATION.md](./components/AppHeader/MIGRATION.md) |
-| `PageHeader`, `SectionHeader` | Titel van een pagina of sectie (icoon, ondertitel, acties); `variant="band"` | eLogger `bg-brand-gradient`-headers, VMCI cardheaders: [PageHeader/MIGRATION.md](./components/PageHeader/MIGRATION.md) |
+| `PageHeader`, `SectionHeader` | Titel van een pagina of sectie (icoon, ondertitel, acties); `variant="band"`; `stackActions={false}` houdt compacte acties op mobiel naast de titel | eLogger `bg-brand-gradient`-headers, VMCI cardheaders: [PageHeader/MIGRATION.md](./components/PageHeader/MIGRATION.md) |
 | `ShareActions`, `downloadBlob`, `shareFile`, `canShareFile`, `toFile`, `fileNameFromContentDisposition` | Delen (Web Share API, alleen waar bestanden gedeeld kunnen worden) en Downloaden voor een bestand in het geheugen; fouten via `onError` | Scanner: knoppen in `Scan.tsx` en `services/download.ts`: [ShareActions/MIGRATION.md](./components/ShareActions/MIGRATION.md) |
 | `FileUpload`, `FileListUpload`, `compressImage` | Eén of meer bestanden: kiezen, slepen of camera; `accept`, `maxSizeBytes`, `processFile`; thumbnail, bestaand bestand, eigen `actions` | Claudine `FileUpload`/`FileListUpload`, VMCI `FileInput` + `fileUtils`: [FileUpload/MIGRATION.md](./components/FileUpload/MIGRATION.md) |
 | `ImageViewer` | Fullscreen afbeelding: zoom, pinch, verschuiven, draaien, download | VMCI `ImageViewerModal`: [ImageViewer/MIGRATION.md](./components/ImageViewer/MIGRATION.md) |

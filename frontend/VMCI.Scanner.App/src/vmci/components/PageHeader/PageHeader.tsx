@@ -17,13 +17,29 @@ interface HeaderBaseProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title'>
   variant?: 'plain' | 'band'
   /** Heading level, to fit the page outline. */
   headingLevel?: HeadingLevel
+  /**
+   * On phones the actions move below the title, full width (default `true`). `false` keeps
+   * compact actions (icon buttons, a small select) on the title's row.
+   */
+  stackActions?: boolean
 }
 
 const Header = forwardRef<
   HTMLDivElement,
   HeaderBaseProps & { kind: 'page' | 'section'; headingLevel: HeadingLevel }
 >(function Header(
-  { title, icon, subtitle, actions, variant = 'plain', headingLevel, kind, className, ...rest },
+  {
+    title,
+    icon,
+    subtitle,
+    actions,
+    variant = 'plain',
+    headingLevel,
+    stackActions = true,
+    kind,
+    className,
+    ...rest
+  },
   ref,
 ) {
   const Heading = `h${headingLevel}` as const
@@ -31,7 +47,13 @@ const Header = forwardRef<
     <div
       ref={ref}
       {...rest}
-      className={clsx('vmci-header', `vmci-header--${kind}`, `vmci-header--${variant}`, className)}
+      className={clsx(
+        'vmci-header',
+        `vmci-header--${kind}`,
+        `vmci-header--${variant}`,
+        !stackActions && 'vmci-header--inline-actions',
+        className,
+      )}
     >
       <div className="vmci-header__text">
         <Heading className="vmci-header__title">
